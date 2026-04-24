@@ -1,5 +1,9 @@
 package com.example.quanlynhatro.data.model;
 
+/**
+ * Lớp KhachThue đại diện cho một người thuê trọ.
+ * Model này chứa các thông tin cá nhân cơ bản để quản lý khách hàng.
+ */
 public class KhachThue {
     private int id;
     private String hoTen;
@@ -13,8 +17,10 @@ public class KhachThue {
     private String createdAt;
     private String updatedAt;
 
+    // Constructor mặc định
     public KhachThue() {}
 
+    // Constructor đầy đủ tham số
     public KhachThue(int id, String hoTen, String soDienThoai, String cccd, String ngaySinh,
                      String gioiTinh, String diaChiThuongTru, String email, String ghiChu,
                      String createdAt, String updatedAt) {
@@ -31,6 +37,7 @@ public class KhachThue {
         this.updatedAt = updatedAt;
     }
 
+    // --- GETTER và SETTER ---
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getHoTen() { return hoTen; }

@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * DatabaseHelper là lớp trung gian giúp ứng dụng Android làm việc với cơ sở dữ liệu SQLite.
+ * Nó kế thừa từ SQLiteOpenHelper để quản lý việc tạo mới, cập nhật và kết nối CSDL.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "quan_ly_nha_tro.db";
     public static final int DATABASE_VERSION = 2;
@@ -21,6 +25,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_THANH_TOAN = "thanh_toan";
     public static final String TABLE_SU_CO_BAO_TRI = "su_co_bao_tri";
 
+    // --- ĐỊNH NGHĨA CÁC CỘT CHUNG ---
+    // Tại sao dùng hằng số (public static final)? 
+    // 1. Tránh gõ sai tên cột (ví dụ gõ "id" thành "id_").
+    // 2. Nếu muốn đổi tên cột, chỉ cần sửa ở 1 nơi duy nhất này.
     public static final String COL_ID = "id";
     public static final String COL_CREATED_AT = "created_at";
     public static final String COL_UPDATED_AT = "updated_at";
@@ -105,7 +113,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_HOA_DON_CT_CHI_SO_CU = "chi_so_cu";
     public static final String COL_HOA_DON_CT_CHI_SO_MOI = "chi_so_moi";
 
-    public static final String COL_THANH_TOAN_HOA_DON_ID = "hoa_don_id";
+    // --- BẢNG THANH TOÁN ---
+    public static final String COL_THANH_TOAN_HOA_DON_ID = "hoa_don_id"; // Liên kết tới bảng Hóa Đơn
     public static final String COL_THANH_TOAN_NGAY_THANH_TOAN = "ngay_thanh_toan";
     public static final String COL_THANH_TOAN_SO_TIEN = "so_tien";
     public static final String COL_THANH_TOAN_PHUONG_THUC = "phuong_thuc";
@@ -142,13 +151,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TRANG_THAI_SU_CO_DA_XU_LY = "DA_XU_LY";
     public static final String TRANG_THAI_SU_CO_HUY = "HUY";
 
+    // --- CÁC LOẠI DỊCH VỤ MẶC ĐỊNH ---
+    // Đây là các giá trị cố định để hệ thống nhận diện loại phí khi tính toán.
     public static final String LOAI_DICH_VU_TIEN_PHONG = "TIEN_PHONG";
     public static final String LOAI_DICH_VU_DIEN = "DIEN";
     public static final String LOAI_DICH_VU_NUOC = "NUOC";
     public static final String LOAI_DICH_VU_RAC = "RAC";
     public static final String LOAI_DICH_VU_WIFI = "WIFI";
     public static final String LOAI_DICH_VU_GUI_XE = "GUI_XE";
-    public static final String LOAI_DICH_VU_PHAT_SINH = "PHAT_SINH";
+    // --- CÁC CÂU LỆNH SQL TẠO BẢNG ---
+    // Ghi chú cho người mới: Dấu + dùng để nối các chuỗi lại với nhau cho dễ đọc.
+    // INTEGER PRIMARY KEY AUTOINCREMENT: Cột ID tự động tăng, duy nhất cho mỗi dòng.
+    // FOREIGN KEY: Khóa ngoại dùng để liên kết các bảng với nhau (ví dụ: Hợp đồng phải thuộc về một Phòng).
 
     private static final String SQL_CREATE_PHONG =
             "CREATE TABLE " + TABLE_PHONG + " ("
@@ -330,17 +344,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ");";
 
     public DatabaseHelper(Context context) {
+        // Gọi constructor của lớp cha (SQLiteOpenHelper) để khởi tạo file CSDL
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * onConfigure được gọi trước khi onCreate hoặc onUpgrade.
+     * Ở đây chúng ta bật tính năng Foreign Key (Khóa ngoại) để đảm bảo tính toàn vẹn dữ liệu.
+     */
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
         db.setForeignKeyConstraintsEnabled(true);
     }
 
+    /**
+     * onCreate được gọi lần đầu tiên khi ứng dụng được cài đặt và CSDL chưa tồn tại.
+     * Đây là nơi chúng ta tạo ra các bảng và dữ liệu mẫu ban đầu.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Sử dụng Transaction giúp đảm bảo: hoặc là tất cả bảng được tạo thành công, 
+        // hoặc là không có bảng nào được tạo (nếu xảy ra lỗi giữa chừng).
         db.beginTransaction();
         try {
             db.execSQL(SQL_CREATE_PHONG);
@@ -355,19 +380,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_THANH_TOAN);
             db.execSQL(SQL_CREATE_SU_CO_BAO_TRI);
 
-            createIndexes(db);
-            seedLoaiDichVu(db);
+            createIndexes(db); // Tạo chỉ mục để tìm kiếm nhanh hơn
+            seedLoaiDichVu(db); // Thêm dữ liệu mẫu ban đầu
 
-            db.setTransactionSuccessful();
+            db.setTransactionSuccessful(); // Đánh dấu mọi thứ đã ổn
         } finally {
-            db.endTransaction();
+            db.endTransaction(); // Kết thúc quá trình (hoàn tất hoặc hủy bỏ)
         }
     }
 
+    /**
+     * onUpgrade được gọi khi bạn tăng số DATABASE_VERSION (ví dụ từ 1 lên 2).
+     * Thông thường, chúng ta sẽ xóa các bảng cũ và gọi lại onCreate để tạo bảng mới.
+     * Lưu ý: Cách này sẽ làm mất hết dữ liệu cũ!
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.beginTransaction();
         try {
+            // Xóa theo thứ tự ngược lại để tránh lỗi ràng buộc khóa ngoại
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_SU_CO_BAO_TRI);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_THANH_TOAN);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_HOA_DON_CHI_TIET);
@@ -386,6 +417,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Index (Chỉ mục) giống như mục lục của một cuốn sách.
+     * Nó giúp CSDL tìm kiếm dữ liệu cực nhanh mà không cần quét qua toàn bộ các dòng.
+     */
     private void createIndexes(SQLiteDatabase db) {
         db.execSQL("CREATE INDEX IF NOT EXISTS idx_phong_so_phong ON " + TABLE_PHONG + " (" + COL_PHONG_SO_PHONG + ")");
         db.execSQL("CREATE INDEX IF NOT EXISTS idx_hop_dong_phong_trang_thai ON " + TABLE_HOP_DONG + " (" + COL_HOP_DONG_PHONG_ID + ", " + COL_HOP_DONG_TRANG_THAI + ")");
@@ -414,6 +449,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_LOAI_DICH_VU_KIEU_TINH, kieuTinh);
         values.put(COL_LOAI_DICH_VU_DON_VI, donVi);
         values.put(COL_LOAI_DICH_VU_HOAT_DONG, 1);
+        // CONFLICT_IGNORE: Nếu mã loại dịch vụ đã tồn tại rồi thì không báo lỗi, chỉ đơn giản là bỏ qua.
         db.insertWithOnConflict(TABLE_LOAI_DICH_VU, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 }

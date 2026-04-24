@@ -1,5 +1,9 @@
 package com.example.quanlynhatro.data.model;
 
+/**
+ * Lớp HoaDon chứa thông tin về hóa đơn tiền phòng hàng tháng.
+ * Nó liên kết với bảng Hóa Đơn trong CSDL.
+ */
 public class HoaDon {
     private int id;
     private int hopDongId;
@@ -20,6 +24,10 @@ public class HoaDon {
     private String updatedAt;
 
     public HoaDon() {}
+
+    // --- GETTER và SETTER ---
+    // Vì các biến ở trên là private, nên ta cần các phương thức public này 
+    // để các lớp khác có thể "Lấy" (Get) hoặc "Ghi" (Set) giá trị vào biến.
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
