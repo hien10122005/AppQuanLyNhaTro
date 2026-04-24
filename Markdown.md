@@ -1,79 +1,155 @@
-# 🏠 DỰ ÁN: QUẢN LÝ NHÀ TRỌ (QUANLYNHATRO)
-**Branding:** H-TECH SOLUTIONS
-**Platform:** Android Native (Jetpack Compose)
-**Database:** SQLite (Local) / Firebase (Cloud)
+# DỰ ÁN: QUẢN LÝ NHÀ TRỌ
+
+**Tên package:** `com.example.quanlynhatro`  
+**Nền tảng:** Android Native  
+**Công nghệ giao diện:** Java + XML  
+**Cơ sở dữ liệu:** SQLite local  
+**Mô hình hoạt động:** Offline
 
 ---
 
 ## 1. GIỚI THIỆU TỔNG QUAN
-Dự án được xây dựng nhằm tối ưu hóa việc quản lý vận hành nhà trọ, tòa nhà, và căn hộ dịch vụ. Hệ thống tập trung vào trải nghiệm người dùng hiện đại với giao diện **Dark Mode**, **Glassmorphism**, và kiến trúc **Bento Grid** giúp theo dõi dữ liệu nhanh chóng và chính xác.
+
+Đây là ứng dụng Android hỗ trợ quản lý nhà trọ theo hướng gọn, dễ dùng và không phụ thuộc internet. Toàn bộ dữ liệu được lưu cục bộ bằng SQLite để chủ trọ có thể thao tác ngay trên thiết bị kể cả khi không có kết nối mạng.
+
+Mục tiêu chính của ứng dụng:
+
+- Quản lý danh sách phòng trọ.
+- Quản lý khách thuê và hợp đồng.
+- Theo dõi tiền phòng, điện, nước và hóa đơn hàng tháng.
+- Hỗ trợ vận hành theo mô hình app offline đơn giản, ổn định.
 
 ---
 
-## 2. HỆ THỐNG DATA MODELS (CƠ SỞ DỮ LIỆU)
+## 2. CÁC NHÓM DỮ LIỆU CHÍNH
 
-Để hệ thống có khả năng mở rộng, các Model được phân cấp chặt chẽ như sau:
+### Phòng trọ
 
-### A. Quản lý Không gian
-* **Location (Khu trọ):** `id, name, address, description`
-* **Block (Dãy/Tòa):** `id, location_id, name`
-* **Floor (Tầng):** `id, block_id, floor_number`
-* **Room (Phòng):** `id, floor_id, room_number, type, price, area, status (Available, Occupied, Fixing), max_people`
+- `id`
+- `so_phong`
+- `loai_phong`
+- `gia_phong`
+- `dien_tich`
+- `trang_thai`
+- `ghi_chu`
 
-### B. Quản lý Khách thuê & Pháp lý
-* **Tenant (Khách thuê):** `id, name, phone, email, id_card_number (CCCD), dob, address_origin`
-* **Contract (Hợp đồng):** `id, room_id, representative_tenant_id, start_date, end_date, deposit_amount, status`
-* **Member (Thành viên ở cùng):** `id, contract_id, name, phone, id_card_number`
+### Khách thuê
 
-### C. Tài chính & Vận hành
-* **Service (Dịch vụ):** `id, name, unit_price, unit_type (Kwh, M3, Thang)`
-* **Invoice (Hóa đơn):** `id, contract_id, month, year, elec_old, elec_new, water_old, water_new, total_amount, payment_status, created_at`
-* **Maintenance (Bảo trì):** `id, room_id, issue_description, cost, status, report_date`
+- `id`
+- `ho_ten`
+- `so_dien_thoai`
+- `cccd`
+- `ngay_sinh`
+- `dia_chi_thuong_tru`
 
----
+### Hợp đồng
 
-## 3. CÁC CHỨC NĂNG CỐT LÕI (CORE FEATURES)
+- `id`
+- `phong_id`
+- `khach_thue_id`
+- `ngay_bat_dau`
+- `ngay_ket_thuc`
+- `tien_coc`
+- `trang_thai`
 
-### 📊 Dashboard & Analytics (MVP)
-* Thống kê nhanh: Tổng số phòng, phòng trống, phòng đã thuê.
-* Biểu đồ doanh thu hàng tháng (Line Chart).
-* Cảnh báo công nợ và hợp đồng sắp hết hạn.
+### Hóa đơn
 
-### 🏢 Quản lý Sơ đồ phòng
-* Xem theo cấu trúc Khu -> Dãy -> Tầng -> Phòng.
-* Thay đổi trạng thái phòng trực quan bằng màu sắc.
-* Bộ lọc tìm kiếm nhanh theo số phòng hoặc tên khách.
-
-### 📝 Hợp đồng & Khách thuê
-* Lưu trữ hồ sơ khách thuê số hóa (ảnh CCCD).
-* Tự động nhắc lịch gia hạn hợp đồng.
-
-### ⚡ Quản lý Chỉ số & Hóa đơn
-* Nhập số điện, nước định kỳ hàng tháng.
-* Tự động tính tiền dựa trên biểu phí bậc thang (Logic QuanLyDien).
-* Xuất hóa đơn dạng hình ảnh/PDF để gửi qua Zalo/SMS.
-
-### 🛠️ Bảo trì & Sự cố
-* Ghi nhận báo hỏng từ khách thuê.
-* Theo dõi chi phí sửa chữa để tính toán lợi nhuận ròng.
+- `id`
+- `hop_dong_id`
+- `thang`
+- `nam`
+- `tien_phong`
+- `so_dien_cu`
+- `so_dien_moi`
+- `so_nuoc_cu`
+- `so_nuoc_moi`
+- `tong_tien`
+- `trang_thai_thanh_toan`
 
 ---
 
-## 4. CÔNG NGHỆ TRIỂN KHAI (TECH STACK)
-* **UI Framework:** Jetpack Compose (Modern Android UI).
-* **Architecture:** MVVM (Model-View-ViewModel).
-* **Local Database:** Room Database (SQLite wrapper).
-* **Icons:** Lucide Icons / Material Symbols.
-* **Design Pattern:** Glassmorphism UI & Bento Grid Layout.
+## 3. CHỨC NĂNG CỐT LÕI
+
+### Quản lý phòng
+
+- Thêm, sửa, xóa phòng.
+- Cập nhật trạng thái phòng: trống, đang thuê, đang sửa.
+- Xem danh sách và chi tiết từng phòng.
+
+### Quản lý khách thuê
+
+- Thêm và cập nhật thông tin khách thuê.
+- Gắn khách thuê với phòng hoặc hợp đồng.
+- Lưu thông tin cơ bản phục vụ quản lý lâu dài.
+
+### Quản lý hợp đồng
+
+- Tạo hợp đồng thuê mới.
+- Theo dõi ngày bắt đầu, ngày kết thúc, tiền cọc.
+- Kiểm tra hợp đồng còn hiệu lực hay đã hết hạn.
+
+### Quản lý hóa đơn
+
+- Nhập chỉ số điện, nước theo tháng.
+- Tính tổng tiền phòng và chi phí phát sinh.
+- Theo dõi hóa đơn đã thanh toán hoặc chưa thanh toán.
 
 ---
 
-## 5. LỘ TRÌNH PHÁT TRIỂN (ROADMAP)
+## 4. CÔNG NGHỆ SỬ DỤNG
 
-1.  **Phase 1:** Thiết kế Database Room & Tạo giao diện khung (Bento Dashboard).
-2.  **Phase 2:** Triển khai Module quản lý Phòng và Khách thuê.
-3.  **Phase 3:** Xây dựng Logic tính hóa đơn và xuất file PDF.
-4.  **Phase 4:** Tích hợp Chart báo cáo và Notification nhắc nợ.
+- **Ngôn ngữ:** Java
+- **Giao diện:** XML
+- **IDE:** Android Studio
+- **Database:** SQLite với `SQLiteOpenHelper`
+- **Thư viện giao diện hiện có:** AppCompat, Material, ConstraintLayout
+
+Phạm vi hiện tại:
+
+- Không dùng Jetpack Compose.
+- Không dùng Firebase.
+- Không phụ thuộc cloud để lưu dữ liệu.
 
 ---
-**H-TECH SOLUTIONS - Build for the future.**
+
+## 5. ĐỊNH HƯỚNG PHÁT TRIỂN
+
+1. Hoàn thiện cấu trúc dữ liệu SQLite cho các bảng chính.
+2. Xây dựng màn hình quản lý phòng.
+3. Bổ sung màn hình khách thuê và hợp đồng.
+4. Hoàn thiện chức năng tính hóa đơn điện nước.
+5. Tối ưu giao diện và kiểm tra dữ liệu đầu vào.
+
+---
+
+## 6. PHẠM VI CHỨC NĂNG
+
+Để phù hợp với app offline viết bằng Java + XML, nên chia chức năng theo mức ưu tiên như sau:
+
+### MVP - Chức năng chính
+
+- Quản lý phòng.
+- Quản lý khách thuê.
+- Quản lý hợp đồng.
+- Quản lý hóa đơn tiền phòng, điện, nước.
+- Ghi nhận hóa đơn đã thanh toán hoặc chưa thanh toán.
+
+### Nên bổ sung sớm
+
+- Tìm kiếm và lọc dữ liệu.
+- Hiển thị trạng thái phòng: trống, đang thuê, đang sửa.
+- Cảnh báo hợp đồng sắp hết hạn.
+- Ghi nhận chi phí phát sinh hoặc dịch vụ khác.
+
+### Có thể làm ở giai đoạn sau
+
+- Thống kê và báo cáo.
+- Xuất PDF hoặc in hóa đơn.
+- Lưu hình ảnh giấy tờ như CCCD.
+- Sao lưu và phục hồi dữ liệu.
+
+---
+
+## 7. GHI CHÚ
+
+Tài liệu này được chuẩn hóa theo code hiện tại của repo. Nếu sau này dự án chuyển sang công nghệ khác như Room, Kotlin hoặc Jetpack Compose thì cần cập nhật lại tài liệu để tránh lệch với mã nguồn.
