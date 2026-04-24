@@ -94,6 +94,19 @@ Mục tiêu chính của ứng dụng:
 - Tính tổng tiền phòng và chi phí phát sinh.
 - Theo dõi hóa đơn đã thanh toán hoặc chưa thanh toán.
 
+### Dashboard và thống kê
+
+- Hiển thị tổng tiền thu theo tháng.
+- Thống kê số phòng trống và số phòng đang thuê.
+- Hiển thị số hóa đơn chưa thanh toán.
+- Hỗ trợ chủ trọ theo dõi nhanh tình hình vận hành.
+
+### Quản lý sự cố và bảo trì
+
+- Ghi nhận các sự cố như hỏng điện, nước, nội thất.
+- Theo dõi chi phí sửa chữa phát sinh.
+- Lưu ngày ghi nhận, trạng thái xử lý và ghi chú.
+
 ---
 
 ## 4. CÔNG NGHỆ SỬ DỤNG
@@ -137,13 +150,13 @@ Phạm vi hiện tại:
 ### Nên bổ sung sớm
 
 - Tìm kiếm và lọc dữ liệu.
+- Dashboard và thống kê tổng quan.
 - Hiển thị trạng thái phòng: trống, đang thuê, đang sửa.
 - Cảnh báo hợp đồng sắp hết hạn.
-- Ghi nhận chi phí phát sinh hoặc dịch vụ khác.
+- Quản lý sự cố, bảo trì và chi phí phát sinh.
 
 ### Có thể làm ở giai đoạn sau
 
-- Thống kê và báo cáo.
 - Xuất PDF hoặc in hóa đơn.
 - Lưu hình ảnh giấy tờ như CCCD.
 - Sao lưu và phục hồi dữ liệu.

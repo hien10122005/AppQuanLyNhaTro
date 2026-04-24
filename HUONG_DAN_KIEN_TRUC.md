@@ -1,5 +1,4 @@
 # TÀI LIỆU KIẾN TRÚC DỰ ÁN: QUẢN LÝ NHÀ TRỌ
-chào 
 **Package hiện tại:** `com.example.quanlynhatro`  
 **Nền tảng:** Android Native  
 **UI:** Java + XML  
@@ -156,9 +155,10 @@ Vì vậy khi phát triển tiếp, mọi tài liệu và code mới nên bám t
 ### Nên có sớm sau MVP
 
 - Tìm kiếm và lọc danh sách phòng, khách thuê, hóa đơn.
+- Dashboard và thống kê tổng quan.
 - Cảnh báo hợp đồng sắp hết hạn.
 - Hiển thị phòng trống, đang thuê, đang sửa.
-- Ghi nhận chi phí phát sinh hoặc dịch vụ bổ sung nếu cần.
+- Quản lý sự cố, bảo trì và chi phí phát sinh.
 
 Nhóm này giúp app dùng thực tế thuận tiện hơn nhưng không bắt buộc phải hoàn thành ở phiên bản đầu tiên.
 
@@ -170,6 +170,11 @@ Nhóm này giúp app dùng thực tế thuận tiện hơn nhưng không bắt b
 - Sao lưu và phục hồi dữ liệu SQLite.
 
 Nhóm này mang tính nâng cao, nên triển khai sau khi luồng nghiệp vụ chính đã ổn định.
+
+Gợi ý triển khai:
+
+- `Dashboard`: hiển thị tổng tiền thu trong tháng, số hóa đơn chưa thanh toán, số phòng đang thuê, tỷ lệ lấp đầy.
+- `Bảo trì`: ghi nhận sự cố như điện, nước, nội thất, kèm chi phí sửa chữa và ngày xử lý.
 
 ---
 
