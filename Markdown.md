@@ -125,17 +125,38 @@ Phạm vi hiện tại:
 
 ---
 
-## 5. ĐỊNH HƯỚNG PHÁT TRIỂN
+## 5. TRẠNG THÁI CODE HIỆN TẠI
 
-1. Hoàn thiện cấu trúc dữ liệu SQLite cho các bảng chính.
-2. Xây dựng màn hình quản lý phòng.
-3. Bổ sung màn hình khách thuê và hợp đồng.
-4. Hoàn thiện chức năng tính hóa đơn điện nước.
-5. Tối ưu giao diện và kiểm tra dữ liệu đầu vào.
+Hiện tại codebase đã có:
+
+- `DatabaseHelper` với schema SQLite chính.
+- Model cho các bảng quan trọng như phòng, khách thuê, hợp đồng, hóa đơn, thanh toán, bảo trì.
+- Repository nền cho `phong`, `khach_thue`, `hop_dong`, `hoa_don`.
+- Màn hình menu chính để điều hướng module.
+- Bộ màn hình khung cho phòng, khách thuê, hợp đồng, chỉ số, hóa đơn, thu tiền, tổng quan và bảo trì.
+
+Hiện tại codebase chưa có:
+
+- CRUD hoàn chỉnh cho tất cả module.
+- Adapter và binding dữ liệu thật cho danh sách.
+- Luồng lập hóa đơn hoàn chỉnh từ chỉ số và bảng giá.
+- Dashboard dùng dữ liệu thật.
 
 ---
 
-## 6. PHẠM VI CHỨC NĂNG
+## 6. ĐỊNH HƯỚNG PHÁT TRIỂN
+
+1. Hoàn thiện CRUD quản lý phòng.
+2. Hoàn thiện CRUD khách thuê.
+3. Hoàn thiện hợp đồng và trạng thái phòng.
+4. Hoàn thiện nhập chỉ số điện nước.
+5. Hoàn thiện lập hóa đơn và thu tiền.
+6. Nối dashboard với dữ liệu thật.
+7. Bổ sung bảo trì, tìm kiếm và cảnh báo.
+
+---
+
+## 7. PHẠM VI CHỨC NĂNG
 
 Để phù hợp với app offline viết bằng Java + XML, nên chia chức năng theo mức ưu tiên như sau:
 
@@ -163,6 +184,6 @@ Phạm vi hiện tại:
 
 ---
 
-## 7. GHI CHÚ
+## 8. GHI CHÚ
 
 Tài liệu này được chuẩn hóa theo code hiện tại của repo. Nếu sau này dự án chuyển sang công nghệ khác như Room, Kotlin hoặc Jetpack Compose thì cần cập nhật lại tài liệu để tránh lệch với mã nguồn.

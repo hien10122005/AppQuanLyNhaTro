@@ -159,6 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String LOAI_DICH_VU_RAC = "RAC";
     public static final String LOAI_DICH_VU_WIFI = "WIFI";
     public static final String LOAI_DICH_VU_GUI_XE = "GUI_XE";
+    public static final String LOAI_DICH_VU_PHAT_SINH = "PHAT_SINH";
     // --- CÁC CÂU LỆNH SQL TẠO BẢNG ---
     // Ghi chú cho người mới: Dấu + dùng để nối các chuỗi lại với nhau cho dễ đọc.
     // INTEGER PRIMARY KEY AUTOINCREMENT: Cột ID tự động tăng, duy nhất cho mỗi dòng.

@@ -58,6 +58,24 @@ Repository hiện tại đang được định hướng theo các nguyên tắc 
 - Ưu tiên kiến trúc đơn giản, phù hợp với app Android Java quy mô nhỏ đến vừa.
 - Tập trung hoàn thiện nghiệp vụ cốt lõi trước khi mở rộng thêm các tính năng nâng cao.
 
+## Trạng thái triển khai hiện tại
+
+Hiện tại repo đã vượt qua mức khởi tạo tối thiểu và đang ở giai đoạn có nền tảng để phát triển chức năng:
+
+- Đã có `DatabaseHelper` với schema SQLite bám theo tài liệu thiết kế CSDL.
+- Đã tạo các bảng chính, index, foreign key và seed dữ liệu cho `loai_dich_vu`.
+- Đã có model cho các thực thể chính như phòng, khách thuê, hợp đồng, hóa đơn, thanh toán, bảo trì.
+- Đã có repository nền cho `phong`, `khach_thue`, `hop_dong`, `hoa_don`.
+- Đã có bộ màn hình khung bằng Java + XML cho các module chính.
+- `MainActivity` đã được đổi thành màn hình menu điều hướng tới các module.
+
+Chưa hoàn thiện ở thời điểm này:
+
+- Chưa có CRUD hoàn chỉnh cho toàn bộ module.
+- Chưa gắn adapter và dữ liệu thật vào các danh sách `RecyclerView`.
+- Chưa có luồng nghiệp vụ hoàn chỉnh cho hợp đồng, chỉ số, lập hóa đơn, thu tiền và bảo trì.
+- Chưa có dashboard dùng dữ liệu thật từ CSDL.
+
 ## Chức năng chính của hệ thống
 
 ### 1. Quản lý phòng
@@ -168,26 +186,37 @@ Lưu ý: phần mô tả dưới đây là bản tóm tắt. Thiết kế chi ti
 ### Bảng `hoa_don`
 
 - `id`
+- `ma_hoa_don`
 - `hop_dong_id`
+- `phong_id`
 - `thang`
 - `nam`
-- `tien_phong`
-- `so_dien_cu`
-- `so_dien_moi`
-- `so_nuoc_cu`
-- `so_nuoc_moi`
+- `ngay_lap`
+- `han_thanh_toan`
 - `tong_tien`
-- `trang_thai_thanh_toan`
+- `da_thanh_toan`
+- `con_no`
+- `trang_thai`
 
-### Bảng `bao_tri_su_co` hoặc tương đương
+### Bảng `thanh_toan`
+
+- `id`
+- `hoa_don_id`
+- `ngay_thanh_toan`
+- `so_tien`
+- `phuong_thuc`
+- `ma_giao_dich`
+
+### Bảng `su_co_bao_tri`
 
 - `id`
 - `phong_id`
-- `noi_dung_su_co`
-- `chi_phi`
+- `hop_dong_id`
+- `tieu_de`
+- `noi_dung`
 - `ngay_bao`
-- `trang_thai_xu_ly`
-- `ghi_chu`
+- `trang_thai`
+- `chi_phi`
 
 ## Kiến trúc dự án
 
@@ -221,20 +250,40 @@ app/src/main/java/com/example/quanlynhatro/
 │   │   ├── KhachThue.java
 │   │   ├── HopDong.java
 │   │   ├── HoaDon.java
-│   │   └── BaoTri.java
+│   │   ├── HoaDonChiTiet.java
+│   │   ├── LoaiDichVu.java
+│   │   ├── BangGiaDichVu.java
+│   │   ├── ChiSoDichVuThang.java
+│   │   ├── ThanhToan.java
+│   │   └── SuCoBaoTri.java
 │   └── repository/
 │       ├── PhongRepository.java
 │       ├── KhachThueRepository.java
 │       ├── HopDongRepository.java
-│       ├── HoaDonRepository.java
-│       └── BaoTriRepository.java
+│       └── HoaDonRepository.java
 ├── ui/
 │   ├── phong/
+│   │   ├── DanhSachPhongActivity.java
+│   │   ├── ChiTietPhongActivity.java
+│   │   └── ThemSuaPhongActivity.java
 │   ├── khach_thue/
+│   │   ├── DanhSachKhachThueActivity.java
+│   │   └── ThemSuaKhachThueActivity.java
 │   ├── hop_dong/
+│   │   ├── DanhSachHopDongActivity.java
+│   │   └── ThemSuaHopDongActivity.java
+│   ├── chi_so/
+│   │   └── NhapChiSoActivity.java
 │   ├── hoa_don/
+│   │   ├── DanhSachHoaDonActivity.java
+│   │   ├── LapHoaDonActivity.java
+│   │   ├── ChiTietHoaDonActivity.java
+│   │   └── ThuTienActivity.java
 │   ├── thong_ke/
+│   │   └── TongQuanActivity.java
 │   └── bao_tri/
+│       ├── DanhSachBaoTriActivity.java
+│       └── ThemSuaBaoTriActivity.java
 └── utils/
 ```
 
@@ -244,45 +293,54 @@ app/src/main/res/layout/
 ├── activity_main.xml
 ├── activity_danh_sach_phong.xml
 ├── activity_chi_tiet_phong.xml
+├── activity_them_sua_phong.xml
 ├── activity_danh_sach_khach_thue.xml
+├── activity_them_sua_khach_thue.xml
 ├── activity_danh_sach_hop_dong.xml
+├── activity_them_sua_hop_dong.xml
+├── activity_nhap_chi_so.xml
 ├── activity_danh_sach_hoa_don.xml
+├── activity_lap_hoa_don.xml
+├── activity_chi_tiet_hoa_don.xml
+├── activity_thu_tien.xml
 ├── activity_tong_quan.xml
-├── activity_bao_tri.xml
+├── activity_danh_sach_bao_tri.xml
+├── activity_them_sua_bao_tri.xml
 ├── item_phong.xml
 ├── item_khach_thue.xml
-├── item_hop_dong.xml
-├── item_hoa_don.xml
-└── item_bao_tri.xml
+└── item_hoa_don.xml
 ```
 
-Lưu ý: đây là cấu trúc định hướng để phát triển tiếp. Ở thời điểm hiện tại, repo vẫn đang ở giai đoạn khởi tạo cơ bản và chưa có đầy đủ các module trên.
+Lưu ý: repo hiện đã có phần lớn các file khung ở trên, nhưng nhiều màn hình vẫn mới ở mức scaffold giao diện và chưa gắn nghiệp vụ thật.
 
 ## Trạng thái hiện tại của repository
 
-Hiện tại dự án mới ở giai đoạn nền tảng:
+Hiện tại dự án đã có nền tảng kỹ thuật khá rõ:
 
-- Đã có `MainActivity.java`.
-- Đã có `activity_main.xml`.
-- Chưa triển khai đầy đủ các màn hình nghiệp vụ.
-- Chưa hoàn thiện cơ sở dữ liệu SQLite.
-- Chưa có đầy đủ repository, model và chức năng nghiệp vụ.
+- Đã có schema SQLite chạy được trong `DatabaseHelper`.
+- Đã có model và repository nền cho các bảng cốt lõi.
+- Đã có menu điều hướng và nhiều màn hình khung cho các module.
+- Đã build thành công với các file Java/XML mới.
 
-Điều đó có nghĩa đây là thời điểm phù hợp để chuẩn hóa kiến trúc và phát triển đúng hướng ngay từ đầu.
+Tuy nhiên đây vẫn là giai đoạn đầu của phần nghiệp vụ:
+
+- Nhiều màn hình mới chỉ là form hoặc danh sách khung.
+- Chưa gắn dữ liệu thật lên `RecyclerView`.
+- Chưa hoàn thiện CRUD và luồng xử lý hóa đơn, thanh toán, bảo trì.
 
 ## Hướng phát triển đề xuất
 
 Thứ tự triển khai nên đi như sau:
 
-1. Thiết kế cơ sở dữ liệu SQLite.
-2. Xây dựng model dữ liệu.
-3. Tạo `DatabaseHelper`.
-4. Hoàn thiện chức năng quản lý phòng.
-5. Hoàn thiện chức năng khách thuê và hợp đồng.
-6. Xây dựng chức năng hóa đơn.
-7. Bổ sung dashboard, tìm kiếm, lọc và cảnh báo.
-8. Bổ sung quản lý sự cố, bảo trì.
-9. Mở rộng sang sao lưu dữ liệu, xuất PDF và các tính năng nâng cao.
+1. Hoàn thiện CRUD cho quản lý phòng.
+2. Hoàn thiện CRUD cho khách thuê.
+3. Hoàn thiện hợp đồng và cập nhật trạng thái phòng.
+4. Hoàn thiện nhập chỉ số điện nước.
+5. Xây dựng luồng lập hóa đơn từ CSDL đã có.
+6. Hoàn thiện thu tiền và cập nhật công nợ.
+7. Nối dashboard với dữ liệu thật.
+8. Bổ sung bảo trì, tìm kiếm, lọc và cảnh báo.
+9. Sau cùng mới làm PDF, backup/restore và các tính năng nâng cao.
 
 ## Cách chạy dự án
 

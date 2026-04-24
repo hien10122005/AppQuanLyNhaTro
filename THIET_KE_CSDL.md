@@ -2,6 +2,12 @@
 
 Tài liệu này là thiết kế CSDL chi tiết cho dự án **Quản Lý Nhà Trọ**, dùng làm cơ sở triển khai thực tế bằng `SQLiteOpenHelper` trong ứng dụng Android `Java + XML`.
 
+Trạng thái hiện tại:
+
+- Phần lớn schema trong tài liệu này đã được hiện thực hóa vào `DatabaseHelper`.
+- Các bảng chính, khóa ngoại, unique constraint, index và seed `loai_dich_vu` đã được tạo trong code.
+- Tài liệu này vẫn là nguồn chuẩn để tiếp tục viết repository, CRUD và luồng nghiệp vụ.
+
 ## 1. Mục tiêu thiết kế
 
 Schema được thiết kế theo các nguyên tắc sau:
@@ -628,3 +634,294 @@ Tài liệu này nên được xem là nguồn chuẩn khi bạn bắt đầu vi
 - model Java
 - repository
 - luồng lập hóa đơn và thanh toán
+
+# 12. Giải thích CSDL và Logic Vận Hành
+
+Phần này mô tả chi tiết cách mỗi bảng trong CSDL hoạt động, mối quan hệ giữa các bảng, và luồng xử lý nghiệp vụ thực tế từ lúc khách vào thuê đến lúc thanh toán xong hóa đơn.
+
+---
+
+## 12.1. Tổng quan kiến trúc dữ liệu
+
+Toàn bộ hệ thống xoay quanh 3 nhóm chức năng chính:
+
+| Nhóm | Các bảng liên quan | Mục đích |
+|---|---|---|
+| **Quản lý phòng & người thuê** | `phong`, `khach_thue`, `hop_dong`, `hop_dong_thanh_vien` | Ai đang thuê phòng nào, từ khi nào |
+| **Quản lý dịch vụ & chi phí** | `loai_dich_vu`, `bang_gia_dich_vu`, `chi_so_dich_vu_thang` | Tính tiền điện, nước, các loại phí |
+| **Quản lý hóa đơn & thanh toán** | `hoa_don`, `hoa_don_chi_tiet`, `thanh_toan` | Lập và theo dõi việc thu tiền |
+
+Bảng `su_co_bao_tri` đứng độc lập, phục vụ cho việc ghi nhận và xử lý sự cố hỏng hóc.
+
+---
+
+## 12.2. Luồng chính: Từ phòng trống → Có người thuê
+
+### Bước 1: Tạo phòng (bảng `phong`)
+
+Khi mới bắt đầu, chủ trọ nhập thông tin từng phòng:
+
+```
+phong {
+  so_phong: "P101"           -- Mã phòng, duy nhất
+  gia_phong_mac_dinh: 2500000 -- Giá gốc, dùng làm mặc định
+  trang_thai: "TRONG"        -- Ban đầu phòng để trống
+}
+```
+
+> **Quan trọng:** `gia_phong_mac_dinh` chỉ là giá tham khảo. Giá thực tế khi ký hợp đồng sẽ được chốt riêng trong bảng `hop_dong`.
+
+### Bước 2: Tạo khách thuê (bảng `khach_thue`)
+
+Trước khi ký hợp đồng, chủ trọ phải nhập thông tin khách:
+
+```
+khach_thue {
+  ho_ten: "Nguyen Van A"
+  so_dien_thoai: "0901234567"  -- NOT NULL, bắt buộc phải có
+  cccd: "012345678901"          -- UNIQUE, không được trùng
+  ngay_sinh, gioi_tinh, ...
+}
+```
+
+> Một khách thuê (1 bản ghi `khach_thue`) có thể có **nhiều hợp đồng** qua các năm khác nhau — đây là thiết kế chuẩn, tránh nhập lại thông tin.
+
+### Bước 3: Ký hợp đồng (bảng `hop_dong`)
+
+Hợp đồng là bản ghi kết nối Phòng ↔ Khách thuê, đồng thời chốt các điều khoản:
+
+```
+hop_dong {
+  phong_id: 1                     -- FK → phong(id)
+  khach_thue_dai_dien_id: 5       -- FK → khach_thue(id)
+  gia_thue_chot: 2700000          -- Giá thực tế 2 bên thỏa thuận
+  tien_coc: 2700000               -- Tiền đặt cọc
+  ngay_bat_dau: "2024-03-01"
+  ngay_ket_thuc: "2025-03-01"     -- NULL = hợp đồng không xác định hạn
+  trang_thai: "HIEU_LUC"
+}
+```
+
+**Sau khi ký hợp đồng:** Ứng dụng phải cập nhật `phong.trang_thai = "DANG_THUE"` để phòng không còn hiển thị là trống nữa.
+
+### Bước 4: Thêm người ở cùng (bảng `hop_dong_thanh_vien`)
+
+Nếu phòng có nhiều người ở, mỗi người thêm vào là 1 dòng:
+
+```
+hop_dong_thanh_vien {
+  hop_dong_id: 10
+  khach_thue_id: 5    -- Người đại diện (cùng với trong hop_dong)
+  vai_tro: "DAI_DIEN"
+}
+hop_dong_thanh_vien {
+  hop_dong_id: 10
+  khach_thue_id: 6    -- Người ở cùng
+  vai_tro: "THANH_VIEN"
+  ngay_tham_gia: "2024-05-01"  -- Có thể vào sau
+}
+```
+
+> **Lưu ý:** Người đại diện thường cũng được thêm vào bảng `hop_dong_thanh_vien` với `vai_tro = "DAI_DIEN"` để có đủ lịch sử. Cột `ngay_roi_di` giúp ghi nhận khi ai đó rời đi trước khi hết hợp đồng.
+
+---
+
+## 12.3. Luồng dịch vụ: Từ cấu hình giá → Ghi chỉ số
+
+### Bước 1: Định nghĩa loại dịch vụ (bảng `loai_dich_vu`)
+
+Bảng này được seed sẵn khi tạo CSDL, chứa các danh mục phí chuẩn:
+
+| ma_loai | ten_loai | kieu_tinh | don_vi | Ý nghĩa |
+|---|---|---|---|---|
+| `TIEN_PHONG` | Tiền phòng | `CO_DINH` | tháng | Thu đều mỗi tháng |
+| `DIEN` | Tiền điện | `THEO_CHI_SO` | kWh | Tính theo số công tơ |
+| `NUOC` | Tiền nước | `THEO_CHI_SO` | m3 | Tính theo đồng hồ nước |
+| `RAC` | Phí rác | `CO_DINH` | tháng | Thu cố định |
+| `WIFI` | Wifi | `CO_DINH` | tháng | Thu cố định |
+| `GUI_XE` | Gửi xe | `SO_LUONG` | xe | Nhân đơn giá × số xe |
+| `PHAT_SINH` | Phí khác | `CO_DINH` | lần | Phí phát sinh bất thường |
+
+**Ba kiểu tính phí:**
+- **`CO_DINH`**: Lấy `so_luong_mac_dinh` (thường = 1) × `don_gia`. Ví dụ: 1 tháng × 30.000đ = 30.000đ.
+- **`THEO_CHI_SO`**: Lấy `(chi_so_moi - chi_so_cu)` × `don_gia`. Ví dụ: (150 - 100) kWh × 3.500đ = 175.000đ.
+- **`SO_LUONG`**: Lấy số lượng thực tế nhập tay × `don_gia`. Ví dụ: 2 xe × 100.000đ = 200.000đ.
+
+### Bước 2: Thiết lập bảng giá (bảng `bang_gia_dich_vu`)
+
+Đây là nơi chủ trọ nhập đơn giá cụ thể:
+
+```
+-- Giá điện chung toàn nhà
+bang_gia_dich_vu { loai_dich_vu_id: 2, phong_id: NULL, don_gia: 3500, ngay_hieu_luc: "2024-01-01" }
+
+-- Phòng 101 thỏa thuận giá điện riêng cao hơn
+bang_gia_dich_vu { loai_dich_vu_id: 2, phong_id: 1, don_gia: 3800, ngay_hieu_luc: "2024-03-01" }
+```
+
+**Quy tắc ưu tiên khi lấy đơn giá:**
+1. Tìm bản ghi có `phong_id = <phòng cần tính>` và `ngay_hieu_luc` gần nhất với ngày lập hóa đơn.
+2. Nếu không có giá riêng → dùng bản ghi có `phong_id IS NULL` (giá chung).
+3. Cột `ngay_het_hieu_luc` cho phép thiết lập giá có thời hạn (ví dụ: giá ưu đãi 3 tháng).
+
+### Bước 3: Ghi chỉ số hàng tháng (bảng `chi_so_dich_vu_thang`)
+
+Cuối mỗi tháng, chủ trọ đi ghi số điện/nước từng phòng:
+
+```
+chi_so_dich_vu_thang {
+  phong_id: 1
+  loai_dich_vu_id: 2   -- Điện
+  thang: 4, nam: 2024
+  chi_so_cu: 1200       -- Số đầu tháng (lấy từ tháng trước)
+  chi_so_moi: 1347      -- Số cuối tháng vừa đọc
+  so_luong_tieu_thu: 147 -- Tự tính: 1347 - 1200
+  ngay_chot: "2024-04-28"
+}
+```
+
+> **Ràng buộc UNIQUE** `(phong_id, loai_dich_vu_id, thang, nam)` đảm bảo mỗi phòng chỉ có **một bản ghi chỉ số điện/nước cho mỗi tháng**, tránh nhập trùng.
+
+---
+
+## 12.4. Luồng hóa đơn & thanh toán
+
+### Bước 1: Lập hóa đơn (bảng `hoa_don`)
+
+Khi đến kỳ thu tiền (thường đầu tháng), hệ thống tạo một hóa đơn tổng:
+
+```
+hoa_don {
+  ma_hoa_don: "HD-2024-04-P101"  -- Mã tự sinh
+  hop_dong_id: 10
+  phong_id: 1
+  thang: 4, nam: 2024
+  ngay_lap: "2024-05-01"
+  han_thanh_toan: "2024-05-10"
+  tong_tien_truoc_giam: 3200000
+  giam_tru: 0
+  tong_tien: 3200000
+  da_thanh_toan: 0
+  con_no: 3200000
+  trang_thai: "CHUA_THANH_TOAN"
+}
+```
+
+> **Ràng buộc UNIQUE** `(hop_dong_id, thang, nam)` đảm bảo mỗi hợp đồng **chỉ có một hóa đơn duy nhất** cho mỗi tháng.
+
+### Bước 2: Tạo chi tiết hóa đơn (bảng `hoa_don_chi_tiet`)
+
+Mỗi dòng là một khoản phí, được tạo tự động từ các dịch vụ đã cấu hình:
+
+```
+-- Dòng 1: Tiền phòng
+hoa_don_chi_tiet {
+  hoa_don_id: 100, loai_dich_vu_id: 1
+  ten_muc_phi: "Tiền phòng tháng 4/2024"
+  so_luong: 1, don_gia_ap_dung: 2700000
+  thanh_tien: 2700000
+}
+-- Dòng 2: Tiền điện
+hoa_don_chi_tiet {
+  hoa_don_id: 100, loai_dich_vu_id: 2
+  ten_muc_phi: "Tiền điện tháng 4/2024 (147 kWh)"
+  so_luong: 147, don_gia_ap_dung: 3500
+  thanh_tien: 514500
+  chi_so_cu: 1200, chi_so_moi: 1347   -- Lưu lại để in hóa đơn
+}
+```
+
+**Công thức tính `tong_tien` của hóa đơn:**
+```
+tong_tien_truoc_giam = SUM(thanh_tien) của tất cả hoa_don_chi_tiet
+tong_tien = tong_tien_truoc_giam - giam_tru
+con_no = tong_tien - da_thanh_toan
+```
+
+### Bước 3: Ghi nhận thanh toán (bảng `thanh_toan`)
+
+Khi khách đưa tiền, tạo một bản ghi thanh toán:
+
+```
+thanh_toan {
+  hoa_don_id: 100
+  ngay_thanh_toan: "2024-05-07"
+  so_tien: 3200000
+  phuong_thuc: "TIEN_MAT"   -- hoặc "CHUYEN_KHOAN"
+  ma_giao_dich: NULL         -- Chỉ dùng khi chuyển khoản
+}
+```
+
+**Sau khi tạo bản ghi thanh toán, hệ thống cập nhật lại hóa đơn:**
+
+```
+da_thanh_toan += so_tien_vua_thu
+con_no = tong_tien - da_thanh_toan
+
+-- Cập nhật trạng thái:
+IF con_no == 0         → trang_thai = "DA_THANH_TOAN"
+IF con_no < tong_tien  → trang_thai = "THANH_TOAN_MOT_PHAN"
+IF da_thanh_toan == 0  → trang_thai = "CHUA_THANH_TOAN"
+```
+
+> Cho phép khách trả **nhiều lần** (trả góp) — mỗi lần trả là 1 bản ghi `thanh_toan`, đến khi `con_no = 0` thì hóa đơn mới chuyển sang `DA_THANH_TOAN`.
+
+---
+
+## 12.5. Luồng kết thúc hợp đồng
+
+Khi khách trả phòng, hệ thống thực hiện theo trình tự:
+
+1. Lập hóa đơn tháng cuối (nếu chưa có).
+2. Đảm bảo tất cả hóa đơn cũ đã ở trạng thái `DA_THANH_TOAN`.
+3. Hoàn trả tiền cọc (có thể trừ chi phí sửa chữa nếu cần).
+4. Cập nhật `hop_dong.trang_thai = "DA_THANH_LY"`.
+5. Cập nhật `phong.trang_thai = "TRONG"` để phòng sẵn sàng cho thuê lại.
+
+---
+
+## 12.6. Luồng bảo trì và sự cố (bảng `su_co_bao_tri`)
+
+Khi có hỏng hóc trong phòng:
+
+```
+su_co_bao_tri {
+  phong_id: 1
+  hop_dong_id: 10          -- Có thể NULL nếu hỏng khi phòng trống
+  tieu_de: "Vòi nước bị rỉ"
+  noi_dung: "Vòi nước trong nhà vệ sinh chảy không tắt được"
+  ngay_bao: "2024-04-15"
+  muc_do_uu_tien: "CAO"    -- THAP / TRUNG_BINH / CAO / KHAN_CAP
+  trang_thai: "MOI_TAO"
+  chi_phi: 0               -- Cập nhật sau khi sửa xong
+}
+```
+
+**Vòng đời trạng thái:**
+```
+MOI_TAO → DANG_XU_LY → DA_XU_LY
+                      ↘ HUY (nếu báo nhầm)
+```
+
+Khi xử lý xong, cập nhật:
+```
+trang_thai: "DA_XU_LY"
+chi_phi: 150000
+ngay_xu_ly: "2024-04-16"
+nguoi_xu_ly: "Thợ sửa ống nước Bá"
+```
+
+---
+
+## 12.7. Ràng buộc toàn vẹn dữ liệu quan trọng
+
+| Ràng buộc | Áp dụng ở đâu | Tác dụng |
+|---|---|---|
+| `FOREIGN KEY` | Toàn bộ các bảng | Không thể xóa phòng đang có hợp đồng |
+| `UNIQUE (so_phong)` | `phong` | Không được đặt trùng số phòng |
+| `UNIQUE (cccd)` | `khach_thue` | Mỗi người chỉ có 1 hồ sơ |
+| `UNIQUE (ma_hop_dong)` | `hop_dong` | Mã hợp đồng không được trùng |
+| `UNIQUE (phong_id, loai_dich_vu_id, thang, nam)` | `chi_so_dich_vu_thang` | Mỗi tháng chỉ ghi chỉ số 1 lần |
+| `UNIQUE (hop_dong_id, thang, nam)` | `hoa_don` | Mỗi tháng chỉ có 1 hóa đơn/hợp đồng |
+| `setForeignKeyConstraintsEnabled(true)` | `DatabaseHelper` | Bật kiểm tra FK trong SQLite |
+
