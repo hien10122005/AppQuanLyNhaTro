@@ -1,13 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bg_deep_dark"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TODO: tu thiet ke giao dien nhap chi so" />
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- ===== HEADER ===== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chốt Điện Nước"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="24dp"
+            android:text="Nhập chỉ số hàng tháng cho từng phòng"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp" />
+
+        <!-- ===== CARD 1: CHỌN PHÒNG ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn Phòng"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Spinner để chọn phòng từ danh sách -->
+            <Spinner
+                android:id="@+id/spinnerPhong"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/glass_surface_high"
+                android:padding="8dp"
+                android:popupBackground="@color/bg_deep_dark" />
+
+            <!-- Hiển thị tháng/năm đang nhập -->
+            <TextView
+                android:id="@+id/tvThangNam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tháng --/----"
+                android:textColor="#B0B0B0"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- ===== CARD 2: CHỈ SỐ ĐIỆN ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Tiêu đề card điện, có icon emoji cho dễ nhận biết -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ Điện (kWh)"
+                android:textColor="@color/primary_blue"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Hiển thị chỉ số cũ lấy từ DB (sẽ cập nhật khi chọn phòng) -->
+            <TextView
+                android:id="@+id/tvDienChiSoCu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Chỉ số cũ: --"
+                android:textColor="#B0B0B0"
+                android:textSize="14sp" />
+
+            <!-- Ô nhập chỉ số mới. inputType="numberDecimal" chỉ cho nhập số -->
+            <EditText
+                android:id="@+id/etDienMoi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/glass_surface_high"
+                android:hint="Nhập chỉ số mới..."
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#606060"
+                android:textSize="16sp" />
+
+            <!-- Kết quả tính tự động: Chỉ số mới - Chỉ số cũ = Tiêu thụ -->
+            <TextView
+                android:id="@+id/tvDienTieuThu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tiêu thụ: -- kWh"
+                android:textColor="@color/success_green"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- ===== CARD 3: CHỈ SỐ NƯỚC ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💧 Nước (m³)"
+                android:textColor="@color/success_green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Hiển thị chỉ số nước cũ từ DB -->
+            <TextView
+                android:id="@+id/tvNuocChiSoCu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Chỉ số cũ: --"
+                android:textColor="#B0B0B0"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etNuocMoi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/glass_surface_high"
+                android:hint="Nhập chỉ số mới..."
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#606060"
+                android:textSize="16sp" />
+
+            <!-- Kết quả tính tự động tiêu thụ nước -->
+            <TextView
+                android:id="@+id/tvNuocTieuThu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tiêu thụ: -- m³"
+                android:textColor="@color/success_green"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- ===== NÚT LƯU ===== -->
+        <Button
+            android:id="@+id/btnLuuChiSo"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="💾  Lưu Chỉ Số"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

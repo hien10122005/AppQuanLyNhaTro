@@ -10,15 +10,6 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_danh_sach_hoa_don);
-        Button btnLapHoaDon = findViewById(R.id.btnLapHoaDon);
-        Button btnThuTien = findViewById(R.id.btnThuTien);
 
-        btnLapHoaDon.setOnClickListener(v -> startActivity(
-                new android.content.Intent(this, LapHoaDonActivity.class)
-        ));
-        btnThuTien.setOnClickListener(v -> startActivity(
-                new android.content.Intent(this, ThuTienActivity.class)
-        ));
     }
 }

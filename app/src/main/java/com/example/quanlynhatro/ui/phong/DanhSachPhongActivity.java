@@ -11,9 +11,6 @@ public class DanhSachPhongActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danh_sach_phong);
-        Button btnThemPhong = findViewById(R.id.btnThemPhong);
-        btnThemPhong.setOnClickListener(v -> startActivity(
-                new android.content.Intent(this, ThemSuaPhongActivity.class)
-        ));
+
     }
 }

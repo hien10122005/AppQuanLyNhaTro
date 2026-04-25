@@ -14,9 +14,6 @@ public class DanhSachHopDongActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danh_sach_hop_dong);
 
-        Button btnThemHopDong = findViewById(R.id.btnThemHopDong);
-        btnThemHopDong.setOnClickListener(v -> startActivity(
-                new Intent(this, ThemSuaHopDongActivity.class)
-        ));
+        
     }
 }

@@ -13,10 +13,5 @@ public class DanhSachBaoTriActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danh_sach_bao_tri);
-
-        Button btnThemSuCo = findViewById(R.id.btnThemSuCo);
-        btnThemSuCo.setOnClickListener(v -> startActivity(
-                new Intent(this, ThemSuaBaoTriActivity.class)
-        ));
     }
 }

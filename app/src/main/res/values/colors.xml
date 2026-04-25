@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- H-TECH Design Tokens -->
+    <color name="bg_deep_dark">#10131B</color>
+    <color name="primary_blue">#007AFF</color>
+    <color name="success_green">#34C759</color>
+    <color name="warning_red">#FF3B30</color>
+    
+    <!-- Glassmorphism colors -->
+    <color name="glass_surface">#14FFFFFF</color> <!-- ~8% white -->
+    <color name="glass_border">#1EFFFFFF</color>  <!-- ~12% white -->
+    <color name="glass_surface_high">#1FFFFFFF</color> <!-- ~12% white -->
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Semi-transparent fill for glass effect -->
+    <solid android:color="@color/glass_surface" />
+    
+    <!-- 1px semi-transparent border as specified in design system -->
+    <stroke
+        android:width="1dp"
+        android:color="@color/glass_border" />
+    
+    <!-- 24dp corner radius as signature shape -->
+    <corners android:radius="24dp" />
+</shape>
