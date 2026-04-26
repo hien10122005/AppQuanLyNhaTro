@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTenPhi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tiền điện"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvSubInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số: 1250 → 1300 (50)"
+            android:textColor="#808BAA"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvThanhTien"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="175.000đ"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

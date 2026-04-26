@@ -1,20 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    ITEM HÓA ĐƠN - item_hoa_don.xml
+    Đây là layout cho MỖI DÒNG trong danh sách RecyclerView.
+    Mỗi item hiển thị: Icon phòng | Tên phòng + Khách | Tổng tiền + Chip trạng thái
+
+    Phong cách H-TECH: Glass card, bo góc 24dp, viền 1px mờ.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_glass_card"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="14dp">
 
-    <TextView
-        android:id="@+id/tvItemThangNam"
+    <!-- ===== TRÁI: Icon phòng (hình vuông bo góc) ===== -->
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_bento_blue"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Emoji biểu tượng phòng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📄"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- ===== GIỮA: Thông tin hóa đơn (tên phòng, khách thuê, mã HĐ) ===== -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvItemTongTien"
+        <!-- Tên phòng - chữ to, trắng, đậm -->
+        <TextView
+            android:id="@+id/tvTenPhong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phòng 101"
+            android:textColor="#FFFFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Tên khách thuê - chữ nhỏ, màu mờ -->
+        <TextView
+            android:id="@+id/tvTenKhach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Nguyễn Văn A"
+            android:textColor="#808BAA"
+            android:textSize="12sp" />
+
+        <!-- Mã hóa đơn + Hạn thanh toán -->
+        <TextView
+            android:id="@+id/tvMaVaHan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="HĐ-2604001 · Hạn: 10/05/2026"
+            android:textColor="#555E78"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- ===== PHẢI: Tổng tiền + Chip trạng thái ===== -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold" />
+        android:gravity="end|center_vertical"
+        android:orientation="vertical">
+
+        <!-- Tổng tiền hóa đơn -->
+        <TextView
+            android:id="@+id/tvTongTien"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1,250,000 đ"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!--
+            Chip trạng thái - màu sẽ được thay đổi bằng Java tùy trạng thái:
+            - Đã thu   → bg_chip_green + textColor success_green
+            - Chưa thu → bg_chip_red   + textColor warning_red
+            - Quá hạn  → bg_chip_orange + textColor #FF9500
+        -->
+        <TextView
+            android:id="@+id/tvTrangThai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_chip_green"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="Đã Thu"
+            android:textColor="@color/success_green"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

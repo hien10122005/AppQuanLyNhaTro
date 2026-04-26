@@ -118,6 +118,19 @@ public class PhongRepository {
         return 0;
     }
 
+    public List<Phong> getPhongByTrangThai(String trangThai) {
+        List<Phong> list = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try (Cursor cursor = db.query(DatabaseHelper.TABLE_PHONG, null,
+                DatabaseHelper.COL_PHONG_TRANG_THAI + "=?", new String[]{trangThai},
+                null, null, DatabaseHelper.COL_PHONG_SO_PHONG + " ASC")) {
+            while (cursor.moveToNext()) {
+                list.add(mapPhong(cursor));
+            }
+        }
+        return list;
+    }
+
     private Phong mapPhong(Cursor cursor) {
         Phong phong = new Phong();
         phong.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID)));

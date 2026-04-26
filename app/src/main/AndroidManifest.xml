@@ -21,20 +21,27 @@
         <activity android:name=".ui.hop_dong.DanhSachHopDongActivity" />
         <activity android:name=".ui.khach_thue.ThemSuaKhachThueActivity" />
         <activity android:name=".ui.phong.ThemSuaPhongActivity" />
-        <activity android:name=".ui.thong_ke.TongQuanActivity" />
+        <activity android:name=".ui.thong_ke.BaoCaoActivity" />
+        <activity
+            android:name=".ui.thong_ke.TongQuanActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.hoa_don.DanhSachHoaDonActivity" />
         <activity android:name=".ui.khach_thue.DanhSachKhachThueActivity" />
         <activity android:name=".ui.phong.ChiTietPhongActivity" />
         <activity android:name=".ui.phong.DanhSachPhongActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.setting.CaiDatActivity" />
+        <activity android:name=".ui.setting.CauHinhGiaDichVuActivity" />
+        <activity android:name=".ui.setting.ChinhSuaHoSoActivity" />
+        <activity android:name=".ui.setting.DoiMatKhauActivity" />
     </application>
+
+
+
+
 
 </manifest>

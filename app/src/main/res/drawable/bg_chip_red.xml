@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chip pill "Chưa Thu" màu đỏ -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#20FF3B30" />
+    <corners android:radius="999dp" />
+</shape>
