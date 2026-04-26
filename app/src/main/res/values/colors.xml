@@ -10,7 +10,12 @@
     <color name="warning_red">#FF3B30</color>
     
     <!-- Glassmorphism colors -->
-    <color name="glass_surface">#14FFFFFF</color> <!-- ~8% white -->
-    <color name="glass_border">#1EFFFFFF</color>  <!-- ~12% white -->
-    <color name="glass_surface_high">#1FFFFFFF</color> <!-- ~12% white -->
+    <color name="glass_surface">#26FFFFFF</color> <!-- ~15% white -->
+    <color name="glass_border">#33FFFFFF</color>  <!-- ~20% white -->
+    <color name="glass_surface_high">#40FFFFFF</color> <!-- ~25% white -->
+
+    <!-- Neon Colors -->
+    <color name="neon_yellow">#E0FF00</color>
+    <color name="neon_blue">#00FFFF</color>
+    <color name="neon_blue_bright">#33FBFF</color>
 </resources>

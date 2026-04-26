@@ -1,29 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_glass_card"
+    android:padding="16dp">
 
+    <!-- Left Content Column -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/llContent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        app:layout_constraintEnd_toStartOf="@id/tvTrangThai"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tvItemTenPhong"
-            android:layout_width="match_parent"
+            android:id="@+id/tvSoPhong"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="P.101"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.02" />
 
         <TextView
-            android:id="@+id/tvItemGiaPhong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/tvDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tầng 1 • 25m²"
+            android:textColor="#90FFFFFF"
+            android:textSize="13sp" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="#1AFFFFFF" />
+
+        <LinearLayout
+            android:id="@+id/llPriceContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvGiaPhong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3.500.000đ"
+                android:textColor="@color/primary_blue"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="6dp"
+                android:layout_marginBottom="4dp"
+                android:text="/tháng"
+                android:textColor="#60FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <!-- Status Chip (Right) -->
+    <TextView
+        android:id="@+id/tvTrangThai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_glass_card"
+        android:backgroundTint="#1534C759"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="Trống"
+        android:textColor="@color/success_green"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Service Icons -->
+    <LinearLayout
+        android:id="@+id/llServiceIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/llContent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/llPriceContainer">
+
+        <ImageView
+            android:id="@+id/btnElectricity"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_glass_circle_yellow"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="9dp"
+            android:src="@drawable/ic_bolt"
+            app:tint="@color/neon_yellow" />
+
+        <ImageView
+            android:id="@+id/btnWater"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_glass_circle_blue"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="9dp"
+            android:src="@drawable/ic_water_drop"
+            app:tint="@color/neon_blue" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
