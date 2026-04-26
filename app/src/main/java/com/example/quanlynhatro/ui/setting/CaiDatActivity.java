@@ -81,11 +81,13 @@ public class CaiDatActivity extends AppCompatActivity {
             Toast.makeText(this, "Cài đặt thông báo", Toast.LENGTH_SHORT).show()
         );
 
-        itemExportExcel.setOnClickListener(v -> 
-            Toast.makeText(this, "Xuất dữ liệu Excel", Toast.LENGTH_SHORT).show()
-        );
+        itemExportExcel.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, XuatExcelActivity.class);
+            startActivity(intent);
+        });
 
         itemChangePassword.setOnClickListener(v -> {
+
             android.content.Intent intent = new android.content.Intent(this, DoiMatKhauActivity.class);
             startActivity(intent);
         });
