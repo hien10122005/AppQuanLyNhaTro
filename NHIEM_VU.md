@@ -1,72 +1,116 @@
-# 📋 Danh Sách Nhiệm Vụ - Người 2: Luồng Nghiệp Vụ & Tài Chính
+# 📋 Danh Sách Nhiệm Vụ Chi Tiết - Dự Án QLNhaTro
 
-File này liệt kê các nhiệm vụ chuyên biệt của **Người 2** (phụ trách Tài chính & Luồng chính) để bạn dễ dàng theo dõi và không bị lẫn với các module khác.
-
----
-
-## ✅ Đã Hoàn Thành (Done)
-- [x] **Cấu trúc chính:** Thiết lập khung sườn chính của app (`activity_main.xml`, BottomNavigationView).
-- [x] **Nhập chỉ số:**
-    - [x] `activity_nhap_chi_so.xml`: Giao diện nhập số điện/nước.
-    - [x] `ChiSoRepository`: Logic xử lý lưu/truy vấn chỉ số.
-    - [x] `NhapChiSoActivity`: Logic điều khiển màn hình nhập chỉ số.
-- [x] **Màn Hình Tổng Quan (Dashboard):**
-    - [x] `activity_tong_quan.xml`: Thiết kế giao diện H-TECH (Hero Card, Bento Grid, Hóa đơn gần đây, Tỉ lệ lấp đầy, Bottom Nav).
-    - [x] Các drawable hỗ trợ: `bg_hero_card`, `bg_bento_*`, `bg_chip_*`, `progress_bar_green`, `bg_avatar_circle`.
-    - [x] `TongQuanActivity.java`: Query DB tính tổng phòng, tiền đã thu/chưa thu, hóa đơn quá hạn, tỉ lệ lấp đầy.
-- [x] **Cài đặt (Settings):**
-    - [x] `activity_cai_dat.xml`: Giao diện Bento Grid, Deep Dark & Glassmorphism.
-    - [x] `CaiDatActivity.java`: Logic điều hướng và xử lý sự kiện menu.
-    - [x] Hệ thống icon: `ic_settings_service`, `ic_people`, `ic_notifications`, `ic_excel`, `ic_lock`, `ic_logout`.
-- [x] **Cấu hình giá dịch vụ:**
-    - [x] `activity_cau_hinh_gia_dich_vu.xml`: Giao diện bento với các ô nhập liệu premium cho Điện, Nước, Internet, Rác.
-    - [x] `CauHinhGiaDichVuActivity.java`: Logic lưu trữ đơn giá vào Database qua `DichVuRepository`.
-    - [x] Cập nhật `DichVuRepository.java`: Thêm phương thức `saveBangGiaChung`.
-- [x] **Chỉnh sửa hồ sơ:**
-    - [x] `activity_chinh_sua_ho_so.xml`: Giao diện mờ ảo với khu vực Avatar và các trường thông tin Họ tên, SĐT, Email, Địa chỉ.
-    - [x] `ChinhSuaHoSoActivity.java`: Logic lưu trữ thông tin cá nhân bằng `SharedPreferences`.
-    - [x] `ic_camera.xml`: Icon mới cho nút thay đổi ảnh đại diện.
-    - [x] Tích hợp làm mới dữ liệu tại `CaiDatActivity`.
-- [x] **Đổi mật khẩu:**
-    - [x] `activity_doi_mat_khau.xml`: Giao diện bento với các trường mật khẩu và nút ẩn/hiện.
-    - [x] `DoiMatKhauActivity.java`: Logic kiểm tra mật khẩu cũ, độ dài mật khẩu mới và khớp mật khẩu.
-    - [x] `ic_visibility.xml`, `ic_visibility_off.xml`: Biểu tượng ẩn/hiện mật khẩu.
-- [x] **Xuất dữ liệu Excel:**
-    - [x] `activity_xuat_excel.xml`: Giao diện bento chọn loại dữ liệu và khoảng thời gian.
-    - [x] `XuatExcelActivity.java`: Logic xuất dữ liệu ra file `.csv` (tương thích Excel) sử dụng Scoped Storage (`CreateDocument`).
-    - [x] `ic_analytics.xml`, `ic_receipt.xml`: Các icon bổ trợ.
-- [x] Đã đẩy code lên GitHub.
-
-
-
-
+Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu `[x]` khi bạn hoàn thành một mục.
 
 ---
 
-## 🚀 Nhiệm Vụ Cần Làm Tiếp (To-Do)
-
-### 2. Nghiệp vụ Hóa Đơn (Module quan trọng nhất)
-- [x] **Danh sách hóa đơn:**
-    - [x] `activity_danh_sach_hoa_don.xml`: Giao diện danh sách.
-    - [x] `item_hoa_don.xml`: Thiết kế từng dòng hóa đơn (mã HĐ, tên phòng, tổng tiền, trạng thái).
-    - [x] `DanhSachHoaDonActivity` & `HoaDonAdapter`: Code logic hiển thị dữ liệu.
-- [x] **Chi tiết hóa đơn:**
-    - [x] `activity_chi_tiet_hoa_don.xml`: Hiển thị bảng kê chi tiết (Điện + Nước + Phòng + Dịch vụ).
-    - [x] `ChiTietHoaDonActivity`: Hiển thị dữ liệu cụ thể của 1 hóa đơn.
-
-### 3. Nghiệp vụ Liên Quan (Tài chính)
-- [x] **Lập hóa đơn tự động (`activity_lap_hoa_don.xml`):**
-    - [x] Code logic tính toán: `(Số mới - Số cũ) * Đơn giá`.
-    - [x] Tổng hợp các dịch vụ trong hợp đồng để tạo hóa đơn tháng mới.
-- [x] **Ghi nhận thu tiền (`activity_thu_tien.xml`):**
-    - [x] Màn hình xác nhận khách đã trả tiền.
-    - [x] Cập nhật trạng thái `da_thanh_toan = 1` trong Database.
-
-### 4. Thống kê & Báo cáo
-- [x] **Màn hình báo cáo (`activity_bao_cao.xml`):**
-    - [x] Thống kê doanh thu, số tiền đã thu, còn nợ theo tháng/năm.
-    - [x] Tỉ lệ lấp đầy phòng.
-    - [x] Phân tích nguồn thu chi tiết (Tiền phòng, điện, nước, dịch vụ khác).
+## 🏠 1. Quản Lý Phòng (Rooms)
+- [x] Thiết kế giao diện danh sách phòng (`activity_danh_sach_phong.xml`).
+- [x] Thiết kế giao diện chi tiết phòng (`activity_chi_tiet_phong.xml`).
+- [x] Thiết kế giao diện thêm/sửa phòng (`activity_them_sua_phong.xml`).
+- [ ] **Tạo `PhongAdapter.java`**: Xử lý hiển thị từng dòng phòng (Số phòng, Giá, Trạng thái).
+- [ ] **Xử lý `DanhSachPhongActivity.java`**:
+    - [ ] Lấy danh sách từ `PhongRepository`.
+    - [ ] Gán Adapter vào RecyclerView.
+    - [ ] Xử lý sự kiện Click vào phòng để xem chi tiết.
+- [ ] **Xử lý `ThemSuaPhongActivity.java`**:
+    - [ ] Ánh xạ các trường: Tên phòng, Loại phòng, Giá, Diện tích.
+    - [ ] Viết hàm Validate (không để trống tên và giá).
+    - [ ] Gọi `PhongRepository.insertPhong()` khi thêm mới.
+    - [ ] Gọi `PhongRepository.updatePhong()` khi chỉnh sửa.
+- [ ] **Xử lý `ChiTietPhongActivity.java`**:
+    - [ ] Hiển thị đầy đủ thông tin phòng.
+    - [ ] Thêm nút Xóa phòng (có hộp thoại xác nhận).
 
 ---
-*Ghi chú: Tập trung vào tính chính xác của con số và luồng thanh toán.*
+
+## 👥 2. Quản Lý Khách Thuê (Tenants)
+- [x] Thiết kế giao diện danh sách khách (`activity_danh_sach_khach_thue.xml`).
+- [ ] **Thiết kế giao diện chi tiết khách thuê** (`activity_chi_tiet_khach_thue.xml`) - *CHƯA CÓ*.
+- [x] Thiết kế giao diện thêm/sửa khách (`activity_them_sua_khach_thue.xml`).
+- [ ] **Tạo `KhachThueAdapter.java`**: Hiển thị tên, SĐT và CCCD khách.
+- [ ] **Xử lý `DanhSachKhachThueActivity.java`**:
+    - [ ] Load dữ liệu từ `KhachThueRepository`.
+    - [ ] Cài đặt thanh tìm kiếm khách theo tên hoặc SĐT.
+- [ ] **Xử lý `ThemSuaKhachThueActivity.java`**:
+    - [ ] Xử lý chọn ngày sinh (DatePicker).
+    - [ ] Lưu thông tin khách vào Database.
+
+---
+
+## 📜 3. Quản Lý Hợp Đồng (Contracts)
+- [x] Thiết kế giao diện danh sách hợp đồng (`activity_danh_sach_hop_dong.xml`).
+- [x] Thiết kế giao diện chi tiết hợp đồng (`activity_chi_tiet_hop_dong.xml`).
+- [ ] **Thiết kế lại giao diện thêm/sửa hợp đồng** (`activity_them_sua_hop_dong.xml`) - *HIỆN TẠI ĐANG TRỐNG (TODO)*.
+- [ ] **Tạo `HopDongAdapter.java`**: Hiển thị tên phòng + tên khách + ngày hết hạn.
+- [ ] **Xử lý `ThemSuaHopDongActivity.java`**:
+    - [ ] Load danh sách Phòng vào Spinner (chỉ hiện phòng "Trống").
+    - [ ] Load danh sách Khách thuê vào Spinner.
+    - [ ] Tính toán ngày kết thúc dựa trên thời hạn hợp đồng.
+    - [ ] **Logic quan trọng**: Khi ký hợp đồng xong, phải tự động cập nhật trạng thái Phòng sang "Đang thuê".
+
+---
+
+## ⚡ 4. Điện Nước & Dịch Vụ (Operations)
+- [x] Thiết kế giao diện cấu hình giá dịch vụ (`activity_cau_hinh_gia_dich_vu.xml`).
+- [x] Viết logic lưu đơn giá vào Database (`CauHinhGiaDichVuActivity.java`).
+- [x] Thiết kế giao diện nhập chỉ số (`activity_nhap_chi_so.xml`).
+- [x] **Xử lý `NhapChiSoActivity.java`**:
+    - [x] Load danh sách hợp đồng đang hiệu lực.
+    - [x] Tự động lấy chỉ số cũ từ tháng trước.
+    - [x] Tính toán số tiêu thu (Số mới - Số cũ).
+    - [x] Lưu vào bảng `chi_so_dich_vu_thang`.
+
+---
+
+## 💰 5. Hóa Đơn & Thu Tiền (Billing)
+- [x] **Lập hóa đơn (`LapHoaDonActivity.java`)**:
+    - [x] Logic tính tổng tiền: Phòng + Điện + Nước + Dịch vụ khác.
+    - [x] Tự động tạo mã hóa đơn duy nhất.
+- [x] **Danh sách hóa đơn**:
+    - [x] Hiển thị danh sách hóa đơn theo tháng/năm.
+    - [x] Phân biệt màu sắc: Đã thu (Xanh), Chưa thu (Đỏ).
+- [x] **Ghi nhận thu tiền (`ThuTienActivity.java`)**:
+    - [x] Nhập số tiền khách trả (hỗ trợ trả một phần).
+    - [x] Cập nhật số tiền "Còn nợ" trong hóa đơn.
+    - [x] Lưu lịch sử vào bảng `thanh_toan`.
+
+---
+
+## 📊 6. Thống Kê & Hệ Thống
+- [x] **Dashboard (`TongQuanActivity.java`)**:
+    - [x] Hiển thị tổng số phòng, phòng trống.
+    - [x] Hiển thị doanh thu dự kiến và thực thu tháng hiện tại.
+- [x] **Báo cáo (`BaoCaoActivity.java`)**:
+    - [x] Biểu đồ tỉ lệ thu tiền.
+    - [x] Thống kê nguồn thu chi tiết theo từng loại dịch vụ.
+- [x] **Cài đặt & Tiện ích**:
+    - [x] Chỉnh sửa hồ sơ chủ trọ.
+    - [x] Đổi mật khẩu.
+    - [x] Xuất báo cáo ra file Excel/CSV.
+
+---
+
+## 🔧 7. Bảo Trì & Sự Cố (Maintenance)
+- [x] Thiết kế giao diện danh sách bảo trì (`activity_danh_sach_bao_tri.xml`).
+- [x] Thiết kế form báo cáo sự cố mới (`activity_them_sua_bao_tri.xml`).
+- [ ] **Tạo `BaoTriAdapter.java`**: Hiển thị thẻ sự cố (Tên phòng, Loại hư hỏng, Ngày báo).
+- [ ] **Xử lý `DanhSachBaoTriActivity.java`**:
+    - [ ] Viết logic lọc theo tab: "Đang chờ", "Đang sửa", "Hoàn thành".
+    - [ ] Xử lý tìm kiếm sự cố theo phòng.
+- [ ] **Xử lý `ThemSuaBaoTriActivity.java`**:
+    - [ ] Chọn phòng bị sự cố từ danh sách.
+    - [ ] Chụp ảnh/Chọn ảnh minh họa (nếu có thể - tùy chọn).
+    - [ ] Cập nhật trạng thái và chi phí sửa chữa khi hoàn thành.
+
+---
+
+## 🎨 8. Tối Ưu & Đánh Bóng (Final Polish)
+- [ ] Kiểm tra lỗi khi Database trống (Empty States - Hiển thị hình ảnh "Không có dữ liệu").
+- [ ] **Bổ sung nút Xóa (Delete)** vào các màn hình Chi tiết (Phòng, Khách, Hợp đồng, Bảo trì).
+- [ ] Thêm hộp thoại xác nhận (Confirm Dialog) trước khi Xóa bất kỳ dữ liệu nào.
+- [ ] Kiểm tra tính phản hồi của giao diện trên các kích thước màn hình khác nhau.
+- [ ] Tối ưu tốc độ tải danh sách (Sử dụng DiffUtil nếu cần).
+
+---
+*Cập nhật: 26/04/2026 - Antigravity AI*

@@ -10,8 +10,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,8 +70,14 @@ public class TongQuanActivity extends AppCompatActivity {
     // ProgressBar: thanh tiến độ (xanh lá) thể hiện % thu tiền và % lấp đầy
     private ProgressBar pbTiLeThuTien;   // Thanh progress thu tiền trong Hero Card
     private ProgressBar pbLapDay;         // Thanh progress tỉ lệ lấp đầy
+    private TextView btnProfile;          // Nút Profile trên header
+    private TextView tvXemTatCaHoaDon;    // Nút "Xem tất cả" hóa đơn
+    private LinearLayout layoutTongPhong, layoutPhongDangO, layoutPhongTrong, layoutHoaDonQuaHan;
+    private LinearLayout btnQuickTenants, btnQuickContracts, btnQuickMeter, btnQuickMaintenance;
+
 
     // BottomNavigationView: thanh tab điều hướng ở dưới màn hình
+
     private BottomNavigationView bottomNavigation;
 
     // ============================================================
@@ -105,7 +113,11 @@ public class TongQuanActivity extends AppCompatActivity {
 
         // --- BƯỚC 5: Thiết lập sự kiện cho thanh điều hướng ---
         thietLapBottomNavigation();
+
+        // --- BƯỚC 6: Thiết lập sự kiện click cho các thẻ Bento ---
+        thietLapSuKienClick();
     }
+
 
     // ============================================================
     // BƯỚC 2: KHỞI TẠO VIEWS
@@ -130,7 +142,20 @@ public class TongQuanActivity extends AppCompatActivity {
         pbTiLeThuTien   = findViewById(R.id.pbTiLeThuTien);
         pbLapDay        = findViewById(R.id.pbLapDay);
         bottomNavigation = findViewById(R.id.bottom_navigation);
+        btnProfile      = findViewById(R.id.btnProfile);
+        tvXemTatCaHoaDon = findViewById(R.id.tvXemTatCaHoaDon);
+        layoutTongPhong = findViewById(R.id.layoutTongPhong);
+        layoutPhongDangO = findViewById(R.id.layoutPhongDangO);
+        layoutPhongTrong = findViewById(R.id.layoutPhongTrong);
+        layoutHoaDonQuaHan = findViewById(R.id.layoutHoaDonQuaHan);
+        
+        btnQuickTenants = findViewById(R.id.btnQuickTenants);
+        btnQuickContracts = findViewById(R.id.btnQuickContracts);
+        btnQuickMeter = findViewById(R.id.btnQuickMeter);
+        btnQuickMaintenance = findViewById(R.id.btnQuickMaintenance);
     }
+
+
 
     // ============================================================
     // BƯỚC 3: HIỂN THỊ NGÀY THÁNG
@@ -365,7 +390,61 @@ public class TongQuanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Thiết lập sự kiện click cho các thẻ Bento Grid và các nút khác trên dashboard.
+     */
+    private void thietLapSuKienClick() {
+        // Nhấn vào Profile -> Cài đặt
+        btnProfile.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.setting.CaiDatActivity.class));
+        });
+
+        // Nhấn vào thẻ Tổng Phòng -> Danh sách phòng
+        layoutTongPhong.setOnClickListener(v -> {
+            startActivity(new Intent(this, DanhSachPhongActivity.class));
+        });
+
+        // Nhấn vào thẻ Đang Ở -> Danh sách phòng
+        layoutPhongDangO.setOnClickListener(v -> {
+            startActivity(new Intent(this, DanhSachPhongActivity.class));
+        });
+
+        // Nhấn vào thẻ Phòng Trống -> Danh sách phòng
+        layoutPhongTrong.setOnClickListener(v -> {
+            startActivity(new Intent(this, DanhSachPhongActivity.class));
+        });
+
+        // Nhấn vào thẻ Quá Hạn -> Danh sách hóa đơn
+        layoutHoaDonQuaHan.setOnClickListener(v -> {
+            startActivity(new Intent(this, DanhSachHoaDonActivity.class));
+        });
+
+        // Nhấn vào "Xem tất cả" hóa đơn
+        tvXemTatCaHoaDon.setOnClickListener(v -> {
+            startActivity(new Intent(this, DanhSachHoaDonActivity.class));
+        });
+
+        // --- Tiện ích nhanh ---
+        btnQuickTenants.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.khach_thue.DanhSachKhachThueActivity.class));
+        });
+
+        btnQuickContracts.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.hop_dong.DanhSachHopDongActivity.class));
+        });
+
+        btnQuickMeter.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.chi_so.NhapChiSoActivity.class));
+        });
+
+        btnQuickMaintenance.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.bao_tri.DanhSachBaoTriActivity.class));
+        });
+    }
+
+
     // ============================================================
+
     // VÒNG ĐỜI ACTIVITY - onResume()
     // Hàm này chạy mỗi khi màn hình được hiển thị lại
     // (ví dụ: người dùng nhấn Back từ màn hình khác quay về)

@@ -179,9 +179,9 @@
                     android:layout_marginHorizontal="16dp"
                     android:background="#1AFFFFFF" />
 
-                <!-- Manage Staff -->
+                <!-- Quản lý Khách thuê -->
                 <LinearLayout
-                    android:id="@+id/itemManageStaff"
+                    android:id="@+id/itemManageTenants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
@@ -202,7 +202,87 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_weight="1"
-                        android:text="Quản lý nhân viên"
+                        android:text="Quản lý khách thuê"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#40FFFFFF" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#1AFFFFFF" />
+
+                <!-- Quản lý Hợp đồng -->
+                <LinearLayout
+                    android:id="@+id/itemManageContracts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_receipt"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        android:text="Quản lý hợp đồng"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#40FFFFFF" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#1AFFFFFF" />
+
+                <!-- Quản lý Bảo trì -->
+                <LinearLayout
+                    android:id="@+id/itemManageMaintenance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_settings_service"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        android:text="Yêu cầu bảo trì"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
 
@@ -213,6 +293,7 @@
                         app:tint="#40FFFFFF" />
                 </LinearLayout>
             </LinearLayout>
+
 
             <!-- HỆ THỐNG -->
             <TextView
@@ -425,10 +506,13 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@drawable/bg_bottom_nav"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/bottom_nav_icon_selector"
+        app:itemTextColor="@color/bottom_nav_text_selector"
+        app:itemTextAppearanceActive="@style/BottomNavLabel"
+        app:itemTextAppearanceInactive="@style/BottomNavLabel"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

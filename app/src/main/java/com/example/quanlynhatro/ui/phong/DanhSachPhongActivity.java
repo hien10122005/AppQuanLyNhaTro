@@ -37,13 +37,15 @@ public class DanhSachPhongActivity extends AppCompatActivity {
     private void initViews() {
         btnBack = findViewById(R.id.btnBack);
         btnThemPhong = findViewById(R.id.btnThemPhong);
-        recyclerPhong = findViewById(R.id.recyclerPhong);
+        recyclerPhong = findViewById(R.id.rvDanhSachPhong);
+
         bottomNavigation = findViewById(R.id.bottom_navigation);
 
         btnBack.setOnClickListener(v -> finish());
         btnThemPhong.setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng thêm phòng đang phát triển!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, ThemSuaPhongActivity.class));
         });
+
 
         recyclerPhong.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -66,9 +68,10 @@ public class DanhSachPhongActivity extends AppCompatActivity {
                     startActivity(new Intent(DanhSachPhongActivity.this, BaoCaoActivity.class));
                     return true;
                 } else if (id == R.id.nav_settings) {
-                    startActivity(new Intent(DanhSachPhongActivity.this, DanhSachKhachThueActivity.class));
+                    startActivity(new Intent(DanhSachPhongActivity.this, com.example.quanlynhatro.ui.setting.CaiDatActivity.class));
                     return true;
                 }
+
                 return false;
             }
         });

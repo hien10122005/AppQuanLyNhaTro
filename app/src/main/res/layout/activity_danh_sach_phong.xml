@@ -203,12 +203,12 @@
         android:layout_height="88dp"
         android:layout_gravity="bottom"
         android:background="@drawable/bg_bottom_nav"
-        app:itemActiveIndicatorColor="#F3E7FF"
         app:itemIconTint="@color/bottom_nav_icon_selector"
         app:itemTextColor="@color/bottom_nav_text_selector"
         app:itemTextAppearanceActive="@style/BottomNavLabel"
         app:itemTextAppearanceInactive="@style/BottomNavLabel"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

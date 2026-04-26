@@ -11,5 +11,13 @@ public class ThemSuaPhongActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_them_sua_phong);
+
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        
+        // Form views
+        // etSoPhong = findViewById(R.id.etSoPhong);
+        // etTenPhong = findViewById(R.id.etTenPhong);
+        // ... etc
     }
+
 }

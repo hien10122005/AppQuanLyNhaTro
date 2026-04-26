@@ -15,8 +15,9 @@ public class CaiDatActivity extends AppCompatActivity {
 
     private ImageView btnBack;
     private TextView btnEditProfile, tvUserName;
-    private LinearLayout itemConfigService, itemManageStaff, itemNotifications, itemExportExcel, itemChangePassword, itemLogout;
+    private LinearLayout itemConfigService, itemManageTenants, itemManageContracts, itemManageMaintenance, itemNotifications, itemExportExcel, itemChangePassword, itemLogout;
     private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
+
     private android.content.SharedPreferences sharedPreferences;
 
     @Override
@@ -47,12 +48,15 @@ public class CaiDatActivity extends AppCompatActivity {
         btnEditProfile = findViewById(R.id.btnEditProfile);
         tvUserName = findViewById(R.id.tvUserName);
         itemConfigService = findViewById(R.id.itemConfigService);
-        itemManageStaff = findViewById(R.id.itemManageStaff);
+        itemManageTenants = findViewById(R.id.itemManageTenants);
+        itemManageContracts = findViewById(R.id.itemManageContracts);
+        itemManageMaintenance = findViewById(R.id.itemManageMaintenance);
         itemNotifications = findViewById(R.id.itemNotifications);
         itemExportExcel = findViewById(R.id.itemExportExcel);
         itemChangePassword = findViewById(R.id.itemChangePassword);
         itemLogout = findViewById(R.id.itemLogout);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
 
         // Set active item in bottom nav
         bottomNavigationView.setSelectedItemId(R.id.nav_settings); 
@@ -72,10 +76,21 @@ public class CaiDatActivity extends AppCompatActivity {
         });
 
 
-        itemManageStaff.setOnClickListener(v -> 
+        itemManageTenants.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.khach_thue.DanhSachKhachThueActivity.class);
+            startActivity(intent);
+        });
 
-            Toast.makeText(this, "Quản lý nhân viên", Toast.LENGTH_SHORT).show()
-        );
+        itemManageContracts.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.hop_dong.DanhSachHopDongActivity.class);
+            startActivity(intent);
+        });
+
+        itemManageMaintenance.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.bao_tri.DanhSachBaoTriActivity.class);
+            startActivity(intent);
+        });
+
 
         itemNotifications.setOnClickListener(v -> 
             Toast.makeText(this, "Cài đặt thông báo", Toast.LENGTH_SHORT).show()
@@ -105,15 +120,16 @@ public class CaiDatActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_rooms) {
-                // To be implemented by user
+                startActivity(new android.content.Intent(this, com.example.quanlynhatro.ui.phong.DanhSachPhongActivity.class));
                 return true;
             } else if (id == R.id.nav_invoices) {
-                // To be implemented by user
+                startActivity(new android.content.Intent(this, com.example.quanlynhatro.ui.hoa_don.DanhSachHoaDonActivity.class));
                 return true;
             } else if (id == R.id.nav_reports) {
-                // To be implemented by user
+                startActivity(new android.content.Intent(this, com.example.quanlynhatro.ui.thong_ke.BaoCaoActivity.class));
                 return true;
             } else if (id == R.id.nav_settings) {
+
                 return true;
             }
             return false;

@@ -294,9 +294,10 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
                     startActivity(new Intent(DanhSachHoaDonActivity.this, com.example.quanlynhatro.ui.thong_ke.BaoCaoActivity.class));
                     return true;
                 } else if (id == R.id.nav_settings) {
-                    startActivity(new Intent(DanhSachHoaDonActivity.this, DanhSachKhachThueActivity.class));
+                    startActivity(new Intent(DanhSachHoaDonActivity.this, com.example.quanlynhatro.ui.setting.CaiDatActivity.class));
                     return true;
                 }
+
                 return false;
             }
         });

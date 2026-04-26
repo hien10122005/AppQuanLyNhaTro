@@ -126,9 +126,10 @@ public class BaoCaoActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_reports) {
                     return true;
                 } else if (id == R.id.nav_settings) {
-                    startActivity(new android.content.Intent(BaoCaoActivity.this, DanhSachKhachThueActivity.class));
+                    startActivity(new android.content.Intent(BaoCaoActivity.this, com.example.quanlynhatro.ui.setting.CaiDatActivity.class));
                     return true;
                 }
+
                 return false;
             }
         });

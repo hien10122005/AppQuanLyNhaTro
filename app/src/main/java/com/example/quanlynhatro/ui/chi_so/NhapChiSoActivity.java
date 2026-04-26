@@ -47,6 +47,8 @@ public class NhapChiSoActivity extends AppCompatActivity {
     private TextView tvNuocTieuThu;         // Hiển thị nước tiêu thụ (tính tự động)
     private EditText etNuocMoi;             // Ô nhập chỉ số nước mới
     private Button btnLuuChiSo;             // Nút lưu
+    private android.widget.ImageView btnBack; // Nút quay lại
+
 
     // --- Data (dữ liệu) ---
     private List<Phong> danhSachPhong;      // Danh sách phòng lấy từ DB
@@ -101,7 +103,11 @@ public class NhapChiSoActivity extends AppCompatActivity {
         setupTinhTieuThuTuDong();
         // Khi nhấn nút Lưu → kiểm tra và lưu vào DB
         btnLuuChiSo.setOnClickListener(v -> xuLyLuuChiSo());
+        
+        // Nút quay lại
+        btnBack.setOnClickListener(v -> finish());
     }
+
 
     /**
      * Ánh xạ (Map): Kết nối biến Java với ID View trong file XML.
@@ -117,7 +123,9 @@ public class NhapChiSoActivity extends AppCompatActivity {
         tvNuocTieuThu  = findViewById(R.id.tvNuocTieuThu);
         etNuocMoi      = findViewById(R.id.etNuocMoi);
         btnLuuChiSo    = findViewById(R.id.btnLuuChiSo);
+        btnBack        = findViewById(R.id.btnBack);
     }
+
 
     /**
      * Lấy danh sách phòng từ DB và hiển thị lên Spinner.
