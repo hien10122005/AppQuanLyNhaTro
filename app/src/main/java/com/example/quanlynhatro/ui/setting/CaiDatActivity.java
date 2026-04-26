@@ -51,11 +51,13 @@ public class CaiDatActivity extends AppCompatActivity {
             Toast.makeText(this, "Tính năng Chỉnh sửa đang được phát triển", Toast.LENGTH_SHORT).show()
         );
 
-        itemConfigService.setOnClickListener(v -> 
-            Toast.makeText(this, "Cấu hình dịch vụ", Toast.LENGTH_SHORT).show()
-        );
+        itemConfigService.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, CauHinhGiaDichVuActivity.class);
+            startActivity(intent);
+        });
 
         itemManageStaff.setOnClickListener(v -> 
+
             Toast.makeText(this, "Quản lý nhân viên", Toast.LENGTH_SHORT).show()
         );
 
