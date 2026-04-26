@@ -24,6 +24,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * LỚP XỬ LÝ XUẤT DỮ LIỆU RA EXCEL (DƯỚI DẠNG CSV)
+ * Chức năng chính: Truy vấn DB -> Chuyển thành văn bản CSV -> Ghi vào file hệ thống.
+ */
 public class XuatExcelActivity extends AppCompatActivity {
 
     private ImageView btnBack;
@@ -32,18 +36,25 @@ public class XuatExcelActivity extends AppCompatActivity {
     private TextView tvFromDate, tvToDate;
     private Button btnExport;
 
-    private String selectedDataType = "ROOMS"; // Default
+    private String selectedDataType = "ROOMS"; // Lưu loại dữ liệu người dùng chọn
     private Calendar calendarFrom = Calendar.getInstance();
     private Calendar calendarTo = Calendar.getInstance();
 
+    /**
+     * HÀM GỌI HỆ THỐNG: CreateDocument
+     * - Đây là hàm của Android (ActivityResultContracts) giúp mở trình chọn nơi lưu file.
+     * - "text/csv": Chỉ định định dạng file là CSV (Excel mở rất tốt).
+     */
     private final ActivityResultLauncher<String> createDocumentLauncher = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("text/csv"),
             uri -> {
                 if (uri != null) {
+                    // Sau khi người dùng chọn chỗ lưu, hàm saveFile sẽ được gọi để ghi dữ liệu
                     saveFile(uri);
                 }
             }
     );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +148,25 @@ public class XuatExcelActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * HÀM TẠO NỘI DUNG FILE CSV
+     * - sb.append('\ufeff'): Thêm ký tự BOM để Excel hiểu đây là file UTF-8 (không bị lỗi tiếng Việt).
+     * - PhongRepository: Gọi file xử lý DB để lấy dữ liệu thật.
+     */
     private String generateCsvContent() {
         StringBuilder sb = new StringBuilder();
-        // Add BOM for Excel UTF-8 support
+        // Thêm Byte Order Mark (BOM) để Excel nhận diện đúng mã UTF-8
         sb.append('\ufeff');
 
         switch (selectedDataType) {
             case "ROOMS":
+                // Tiêu đề cột
                 sb.append("ID,Số Phòng,Tên Phòng,Loại Phòng,Giá Thuê,Diện Tích,Số Người Tối Đa,Trạng Thái\n");
+                
+                // GỌI FILE KHÁC: Sử dụng PhongRepository để lấy dữ liệu từ SQLite
                 PhongRepository repo = new PhongRepository(this);
-                List<Phong> rooms = repo.getAllPhong();
+                List<Phong> rooms = repo.getAllPhong(); // Lấy danh sách từ file PhongRepository.java
+                
                 for (Phong r : rooms) {
                     sb.append(r.getId()).append(",")
                             .append(r.getSoPhong()).append(",")
@@ -158,6 +178,7 @@ public class XuatExcelActivity extends AppCompatActivity {
                             .append(r.getTrangThai()).append("\n");
                 }
                 break;
+
             case "TENANTS":
                 sb.append("ID,Họ Tên,SĐT,CCCD,Email,Quê Quán\n");
                 // To be implemented fully with KhachThueRepository
