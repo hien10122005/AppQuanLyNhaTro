@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_deep_dark">
@@ -94,7 +95,8 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp">
+                        android:paddingVertical="4dp"
+                        tools:ignore="UselessParent">
 
                         <View
                             android:layout_width="8dp"
@@ -113,6 +115,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvPriceHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -149,6 +152,7 @@
                             app:cardCornerRadius="24dp"
                             app:cardElevation="0dp">
                             <ImageView
+                                android:id="@+id/ivTenantAvatar"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
@@ -164,6 +168,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tvTenantName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sample_tenant_name"
@@ -172,6 +177,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tvTenantPhone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sample_phone"
@@ -180,13 +186,13 @@
                         </LinearLayout>
 
                         <ImageButton
+                            android:id="@+id/btnCallTenant"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:background="@drawable/bg_glass_circle_white"
                             android:backgroundTint="#1c2028"
                             android:contentDescription="@string/desc_phone_icon"
                             android:src="@android:drawable/stat_sys_phone_call"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:tint="@color/primary_blue" />
                     </LinearLayout>
                 </LinearLayout>
@@ -201,6 +207,7 @@
 
                 <!-- Meter Reading -->
                 <LinearLayout
+                    android:id="@+id/llMeterAction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -209,13 +216,17 @@
                     android:backgroundTint="#0DFFFFFF"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    tools:ignore="UseCompoundDrawables">
 
-                    <View
+                    <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_glass_circle_white"
-                        android:backgroundTint="#272a32" />
+                        android:backgroundTint="#272a32"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_electric_water"
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -230,6 +241,7 @@
 
                 <!-- Collect Money -->
                 <LinearLayout
+                    android:id="@+id/llCollectAction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -238,13 +250,18 @@
                     android:backgroundTint="#334B8EFF"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    tools:ignore="UseCompoundDrawables">
 
-                    <View
+                    <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_glass_circle_white"
-                        android:backgroundTint="#334B8EFF" />
+                        android:backgroundTint="#334B8EFF"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_banknote"
+                        app:tint="#53E16F"
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -260,6 +277,7 @@
 
                 <!-- Report Issue -->
                 <LinearLayout
+                    android:id="@+id/llReportAction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -268,13 +286,18 @@
                     android:backgroundTint="#0DFFFFFF"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    tools:ignore="UseCompoundDrawables">
 
-                    <View
+                    <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_glass_circle_white"
-                        android:backgroundTint="#272a32" />
+                        android:backgroundTint="#0DFFFFFF"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_wrench"
+                        app:tint="#FF5545"
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -325,6 +348,7 @@
                             android:textColor="#C1C6D7"
                             android:textSize="16sp" />
                         <TextView
+                            android:id="@+id/tvDepositValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sample_price"
@@ -352,6 +376,7 @@
                             android:textColor="#C1C6D7"
                             android:textSize="16sp" />
                         <TextView
+                            android:id="@+id/tvMoveInDateValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sample_move_in_date"
@@ -378,6 +403,7 @@
                             android:textColor="#C1C6D7"
                             android:textSize="16sp" />
                         <TextView
+                            android:id="@+id/tvExpiryDateValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sample_expiry_date"

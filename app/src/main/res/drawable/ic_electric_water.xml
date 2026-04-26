@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Lightning Bolt (Left) - Made wider and bolder -->
+    <path
+        android:fillColor="#FFCC00"
+        android:pathData="M9,2L3.5,12.5h4L6.5,21l7,-11H9L12,2H9z" />
+    
+    <!-- Water Drop (Right) - Positioned to complement the bolt -->
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M17.5,7.5c-2.8,2.8 -5.5,6 -5.5,9.5c0,3.3 2.7,6 5.5,6s5.5,-2.7 5.5,-6C23,13.5 20.3,10.3 17.5,7.5z" />
+</vector>

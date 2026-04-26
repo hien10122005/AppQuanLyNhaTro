@@ -43,4 +43,31 @@
     <string name="sample_phone">0901234567</string>
     <string name="sample_move_in_date">01/01/2026</string>
     <string name="sample_expiry_date">01/07/2026</string>
+    <string name="title_add_room">Thêm phòng mới</string>
+    <string name="hint_room_name">Tên phòng (ví dụ: 101)</string>
+    <string name="hint_floor">Tầng</string>
+    <string name="hint_price">Giá thuê / tháng</string>
+    <string name="hint_area">Diện tích (m²)</string>
+    <string name="label_room_status">Trạng thái phòng</string>
+    <string name="status_available">Trống (Sẵn sàng)</string>
+    <string name="status_maintenance">Đang sửa chữa</string>
+    <string name="section_basic_info">Thông tin cơ bản</string>
+    <string name="section_services">Dịch vụ mặc định</string>
+    <string name="hint_electricity_price">Giá điện (đ/kWh)</string>
+    <string name="hint_water_price">Giá nước (đ/m³)</string>
+    <string name="title_contract_detail">Chi tiết hợp đồng</string>
+    <string name="label_contract_code">Mã HD</string>
+    <string name="label_start_date">Ngày bắt đầu</string>
+    <string name="label_end_date">Ngày kết thúc</string>
+    <string name="section_financial">Thông tin tài chính</string>
+    <string name="label_rent_price_month">Giá thuê / tháng</string>
+    <string name="label_payment_cycle">Kỳ thanh toán</string>
+    <string name="label_payment_monthly">Hàng tháng (Ngày 05)</string>
+    <string name="section_tenant_rep">Người thuê (Chủ hộ)</string>
+    <string name="label_id_number">CCCD/CMND</string>
+    <string name="btn_extend_contract">Gia hạn hợp đồng</string>
+    <string name="btn_terminate_contract">Thanh lý hợp đồng</string>
+    <string name="desc_call_tenant">Gọi cho khách thuê</string>
+    <string name="status_active">Đang hiệu lực</string>
+
 </resources>

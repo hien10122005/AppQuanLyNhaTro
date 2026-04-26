@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/glass_surface"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- Top-right Badge (Visible for warning states) -->
+        <TextView
+            android:id="@+id/tvBadgeWarning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_chip_red"
+            android:backgroundTint="#33FF5545"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="Sắp hết hạn"
+            android:textColor="#FF5545"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Icon Container -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardBackgroundColor="#15FFFFFF"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                app:tint="@color/primary_blue" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Main Info -->
+        <LinearLayout
+            android:id="@+id/llMainInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/cvIcon"
+            app:layout_constraintEnd_toStartOf="@id/llPriceInfo"
+            app:layout_constraintStart_toEndOf="@id/cvIcon"
+            app:layout_constraintTop_toTopOf="@id/cvIcon">
+
+            <TextView
+                android:id="@+id/tvTenantName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nguyễn Văn A"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvRoomInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phòng 101 • Căn hộ cao cấp"
+                android:textColor="#8b90a0"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Price/Deposit Info -->
+        <LinearLayout
+            android:id="@+id/llPriceInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cvIcon">
+
+            <TextView
+                android:id="@+id/tvDeposit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3.500.000đ"
+                android:textColor="@color/primary_blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TIỀN CỌC"
+                android:textColor="#8b90a0"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+        </LinearLayout>
+
+        <!-- Date Info -->
+        <LinearLayout
+            android:id="@+id/llDateInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/cvIcon">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/ic_menu_today"
+                app:tint="#8b90a0" />
+
+            <TextView
+                android:id="@+id/tvDateRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="01/01/2024 - 01/01/2025"
+                android:textColor="#414755"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Progress Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/llDateInfo">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TIẾN ĐỘ HỢP ĐỒNG"
+                    android:textColor="#8b90a0"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvProgressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="8/12 tháng"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/pbContract"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:progress="66"
+                android:progressDrawable="@drawable/progress_bar_green"
+                android:progressTint="@color/primary_blue" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

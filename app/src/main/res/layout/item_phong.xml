@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@id/tvTrangThai"
+        app:layout_constraintEnd_toStartOf="@id/llStatusAction"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -72,21 +72,42 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Status Chip (Right) -->
-    <TextView
-        android:id="@+id/tvTrangThai"
+    <!-- Status & Action (Right) -->
+    <LinearLayout
+        android:id="@+id/llStatusAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_glass_card"
-        android:backgroundTint="#1534C759"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="Trống"
-        android:textColor="@color/success_green"
-        android:textSize="11sp"
-        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTrangThai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_glass_card"
+            android:backgroundTint="#1534C759"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="Trống"
+            android:textColor="@color/success_green"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnEditRoom"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_glass_circle_white"
+            android:backgroundTint="#15FFFFFF"
+            android:contentDescription="@string/desc_edit"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/white" />
+    </LinearLayout>
 
     <!-- Service Icons -->
     <LinearLayout
