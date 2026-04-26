@@ -36,7 +36,9 @@
         <activity android:name=".ui.phong.DanhSachPhongActivity" />
         <activity android:name=".ui.setting.CaiDatActivity" />
         <activity android:name=".ui.setting.CauHinhGiaDichVuActivity" />
+        <activity android:name=".ui.setting.ChinhSuaHoSoActivity" />
     </application>
+
 
 
 

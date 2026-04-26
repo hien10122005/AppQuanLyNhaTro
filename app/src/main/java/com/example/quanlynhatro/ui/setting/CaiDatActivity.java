@@ -14,24 +14,38 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class CaiDatActivity extends AppCompatActivity {
 
     private ImageView btnBack;
-    private TextView btnEditProfile;
+    private TextView btnEditProfile, tvUserName;
     private LinearLayout itemConfigService, itemManageStaff, itemNotifications, itemExportExcel, itemChangePassword, itemLogout;
-    private BottomNavigationView bottomNavigationView;
+    private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
+    private android.content.SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cai_dat);
 
+        sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE);
 
         initViews();
         setupEvents();
         setupBottomNavigation();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshProfileData();
+    }
+
+    private void refreshProfileData() {
+        String fullName = sharedPreferences.getString("fullName", "Hien Phan");
+        tvUserName.setText(fullName);
+    }
+
     private void initViews() {
         btnBack = findViewById(R.id.btnBack);
         btnEditProfile = findViewById(R.id.btnEditProfile);
+        tvUserName = findViewById(R.id.tvUserName);
         itemConfigService = findViewById(R.id.itemConfigService);
         itemManageStaff = findViewById(R.id.itemManageStaff);
         itemNotifications = findViewById(R.id.itemNotifications);
@@ -47,14 +61,16 @@ public class CaiDatActivity extends AppCompatActivity {
     private void setupEvents() {
         btnBack.setOnClickListener(v -> finish());
 
-        btnEditProfile.setOnClickListener(v -> 
-            Toast.makeText(this, "Tính năng Chỉnh sửa đang được phát triển", Toast.LENGTH_SHORT).show()
-        );
+        btnEditProfile.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, ChinhSuaHoSoActivity.class);
+            startActivity(intent);
+        });
 
         itemConfigService.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, CauHinhGiaDichVuActivity.class);
             startActivity(intent);
         });
+
 
         itemManageStaff.setOnClickListener(v -> 
 
