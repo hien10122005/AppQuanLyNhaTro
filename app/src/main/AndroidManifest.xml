@@ -37,7 +37,9 @@
         <activity android:name=".ui.setting.CaiDatActivity" />
         <activity android:name=".ui.setting.CauHinhGiaDichVuActivity" />
         <activity android:name=".ui.setting.ChinhSuaHoSoActivity" />
+        <activity android:name=".ui.setting.DoiMatKhauActivity" />
     </application>
+
 
 
 
