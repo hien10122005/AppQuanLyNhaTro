@@ -47,7 +47,7 @@ public class NhapChiSoActivity extends AppCompatActivity {
     private TextView tvNuocTieuThu;         // Hiển thị nước tiêu thụ (tính tự động)
     private EditText etNuocMoi;             // Ô nhập chỉ số nước mới
     private Button btnLuuChiSo;             // Nút lưu
-    private android.widget.ImageView btnBack; // Nút quay lại
+    private android.widget.ImageButton btnBack; // Nút quay lại
 
 
     // --- Data (dữ liệu) ---
@@ -152,14 +152,14 @@ public class NhapChiSoActivity extends AppCompatActivity {
 
         // ArrayAdapter.createFromResource không dùng được vì data động,
         // nên ta dùng ArrayAdapter(Context, layoutItem, mảngData)
-        // android.R.layout.simple_spinner_item = layout mặc định Android có sẵn cho Spinner
+        // Sử dụng layout tùy chỉnh item_spinner.xml để hiển thị chữ trắng
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.item_spinner,
                 tenPhong
         );
-        // Đặt layout cho phần dropdown (khi người dùng nhấn mở Spinner)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Đặt layout cho phần dropdown (phần hiện ra khi nhấn)
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerPhong.setAdapter(adapter);
     }
 

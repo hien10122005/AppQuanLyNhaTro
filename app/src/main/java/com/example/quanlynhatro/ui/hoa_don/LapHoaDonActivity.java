@@ -1,7 +1,5 @@
 package com.example.quanlynhatro.ui.hoa_don;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quanlynhatro.R;
 import com.example.quanlynhatro.data.database.DatabaseHelper;
+import com.example.quanlynhatro.data.model.ChiSoDichVuThang;
 import com.example.quanlynhatro.data.model.HoaDon;
 import com.example.quanlynhatro.data.model.HoaDonChiTiet;
 import com.example.quanlynhatro.data.model.HopDong;
 import com.example.quanlynhatro.data.model.LoaiDichVu;
 import com.example.quanlynhatro.data.model.Phong;
+import com.example.quanlynhatro.data.repository.ChiSoRepository;
 import com.example.quanlynhatro.data.repository.DichVuRepository;
 import com.example.quanlynhatro.data.repository.HoaDonRepository;
 import com.example.quanlynhatro.data.repository.HopDongRepository;
@@ -36,6 +36,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * LapHoaDonActivity: Màn hình xử lý lập hóa đơn hàng tháng.
+ * Logic xử lý:
+ *   1. Chọn Phòng + Tháng + Năm.
+ *   2. Tự động tính tiền phòng từ Hợp đồng.
+ *   3. Tự động lấy chỉ số Điện/Nước đã nhập trong tháng đó để tính tiền.
+ *   4. Tự động lấy các dịch vụ cố định (Wifi, Rác...) đang áp dụng cho phòng.
+ */
 public class LapHoaDonActivity extends AppCompatActivity {
 
     private Spinner spinnerPhong, spinnerThang, spinnerNam;
@@ -48,11 +56,13 @@ public class LapHoaDonActivity extends AppCompatActivity {
     private HopDongRepository hopDongRepository;
     private HoaDonRepository hoaDonRepository;
     private DichVuRepository dichVuRepository;
+    private ChiSoRepository chiSoRepository;
 
     private List<Phong> listPhong;
     private HopDong currentHopDong;
     private List<HoaDonChiTiet> currentListChiTiet = new ArrayList<>();
     private double tongTienCalculated = 0;
+    private boolean hasMissingReadings = false; // Cờ kiểm tra xem có thiếu chỉ số điện nước không
 
     private DecimalFormat formatter = new DecimalFormat("#,###");
 
@@ -72,6 +82,7 @@ public class LapHoaDonActivity extends AppCompatActivity {
         hopDongRepository = new HopDongRepository(this);
         hoaDonRepository = new HoaDonRepository(this);
         dichVuRepository = new DichVuRepository(this);
+        chiSoRepository = new ChiSoRepository(this);
     }
 
     private void initViews() {
@@ -88,7 +99,7 @@ public class LapHoaDonActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        // 1. Spinner Phòng: Chỉ hiện những phòng đang thuê (có hợp đồng hiệu lực)
+        // Load danh sách phòng đang thuê
         listPhong = phongRepository.getPhongByTrangThai(DatabaseHelper.TRANG_THAI_PHONG_DANG_THUE);
         List<String> tenPhongs = new ArrayList<>();
         for (Phong p : listPhong) {
@@ -98,26 +109,24 @@ public class LapHoaDonActivity extends AppCompatActivity {
         adapterPhong.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPhong.setAdapter(adapterPhong);
 
-        // 2. Spinner Tháng
+        // Tháng 1-12
         String[] thangs = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        ArrayAdapter<String> adapterThang = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, thangs);
-        spinnerThang.setAdapter(adapterThang);
+        spinnerThang.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, thangs));
 
-        // 3. Spinner Năm
+        // Năm (trước, hiện tại, sau)
         Calendar cal = Calendar.getInstance();
         int currentYear = cal.get(Calendar.YEAR);
         String[] nams = {String.valueOf(currentYear - 1), String.valueOf(currentYear), String.valueOf(currentYear + 1)};
-        ArrayAdapter<String> adapterNam = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nams);
-        spinnerNam.setAdapter(adapterNam);
+        spinnerNam.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nams));
 
-        // Mặc định chọn tháng hiện tại
         spinnerThang.setSelection(cal.get(Calendar.MONTH));
-        spinnerNam.setSelection(1); // Năm hiện tại
+        spinnerNam.setSelection(1);
     }
 
     private void setupEvents() {
         btnBack.setOnClickListener(v -> finish());
 
+        // Khi thay đổi bất kỳ Spinner nào -> Tính toán lại hóa đơn ngay lập tức
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -133,6 +142,9 @@ public class LapHoaDonActivity extends AppCompatActivity {
         btnLuuHoaDon.setOnClickListener(v -> saveInvoice());
     }
 
+    /**
+     * HÀM QUAN TRỌNG NHẤT: Tính toán các khoản phí của hóa đơn
+     */
     private void calculateInvoice() {
         if (listPhong.isEmpty()) return;
 
@@ -141,97 +153,106 @@ public class LapHoaDonActivity extends AppCompatActivity {
         int thang = Integer.parseInt(spinnerThang.getSelectedItem().toString());
         int nam = Integer.parseInt(spinnerNam.getSelectedItem().toString());
 
-        // 1. Kiểm tra hóa đơn đã tồn tại chưa
+        // 1. Kiểm tra xem tháng này đã lập hóa đơn chưa (Tránh trùng)
         if (hoaDonRepository.existsHoaDon(phong.getId(), thang, nam)) {
-            showError("Hóa đơn tháng này cho phòng này đã tồn tại!");
+            showError("Lỗi: Hóa đơn tháng " + thang + " của phòng này đã tồn tại!");
             return;
         }
 
-        // 2. Lấy hợp đồng hiệu lực
+        // 2. Tìm hợp đồng còn hiệu lực để lấy giá thuê
         currentHopDong = hopDongRepository.getHopDongHieuLucTheoPhong(phong.getId());
         if (currentHopDong == null) {
-            showError("Không tìm thấy hợp đồng hiệu lực cho phòng này!");
+            showError("Lỗi: Phòng này hiện không có hợp đồng thuê nào còn hiệu lực!");
             return;
         }
 
         tvKhachThue.setText("Hợp đồng: " + currentHopDong.getMaHopDong());
         
-        // 3. Bắt đầu tính toán
+        // Reset dữ liệu cũ
         currentListChiTiet.clear();
         tongTienCalculated = 0;
+        hasMissingReadings = false;
         layoutChiTiet.removeAllViews();
 
-        // --- A. Tiền phòng ---
+        // --- BƯỚC A: Tiền phòng ---
+        // Lấy giá từ hợp đồng đã chốt
         addDetailRow("Tiền thuê phòng", 1, currentHopDong.getGiaThueChot(), DatabaseHelper.LOAI_DICH_VU_TIEN_PHONG, null, null);
 
-        // --- B. Tiền điện & Nước (Theo chỉ số) ---
+        // --- BƯỚC B: Tiền Điện & Nước ---
+        // Logic: Phải lấy chỉ số chốt của tháng đang chọn
         processUtility(phong.getId(), thang, nam, DatabaseHelper.LOAI_DICH_VU_DIEN, "Tiền điện");
         processUtility(phong.getId(), thang, nam, DatabaseHelper.LOAI_DICH_VU_NUOC, "Tiền nước");
 
-        // --- C. Các dịch vụ cố định (Wifi, Rác...) ---
+        // --- BƯỚC C: Các phí dịch vụ khác (Wifi, Rác...) ---
         processFixedServices(phong.getId());
 
-        // Cập nhật UI
+        // Hiển thị tổng cộng
         tvTongTien.setText(formatter.format(tongTienCalculated) + "đ");
         layoutPreview.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.GONE);
-        btnLuuHoaDon.setEnabled(true);
+        
+        // Nếu thiếu chỉ số điện/nước thì cảnh báo và không cho lưu
+        if (hasMissingReadings) {
+            tvError.setText("Cảnh báo: Chưa nhập chỉ số Điện hoặc Nước cho tháng này. Hãy chốt số trước khi lập hóa đơn!");
+            tvError.setVisibility(View.VISIBLE);
+            btnLuuHoaDon.setEnabled(false);
+            btnLuuHoaDon.setAlpha(0.5f);
+        } else {
+            btnLuuHoaDon.setEnabled(true);
+            btnLuuHoaDon.setAlpha(1.0f);
+        }
     }
 
+    /**
+     * Xử lý tính tiền điện/nước dựa trên chỉ số tiêu thụ
+     */
     private void processUtility(int phongId, int thang, int nam, String maLoai, String tenHienThi) {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        
-        // Lấy ID loại dịch vụ
-        int loaiId = -1;
-        try (Cursor c = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, new String[]{DatabaseHelper.COL_ID}, 
-                DatabaseHelper.COL_LOAI_DICH_VU_MA_LOAI + "=?", new String[]{maLoai}, null, null, null)) {
-            if (c.moveToFirst()) loaiId = c.getInt(0);
-        }
+        int loaiId = chiSoRepository.getLoaiDichVuId(maLoai);
         if (loaiId == -1) return;
 
-        // Lấy chỉ số tháng này
-        try (Cursor c = db.query(DatabaseHelper.TABLE_CHI_SO_DICH_VU_THANG, null,
-                DatabaseHelper.COL_CHI_SO_PHONG_ID + "=? AND " + DatabaseHelper.COL_CHI_SO_LOAI_DICH_VU_ID + "=? AND "
-                + DatabaseHelper.COL_CHI_SO_THANG + "=? AND " + DatabaseHelper.COL_CHI_SO_NAM + "=?",
-                new String[]{String.valueOf(phongId), String.valueOf(loaiId), String.valueOf(thang), String.valueOf(nam)},
-                null, null, null)) {
-            
-            if (c.moveToFirst()) {
-                double csCu = c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_CU));
-                double csMoi = c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_MOI));
-                double tieuThu = c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_SO_LUONG_TIEU_THU));
-                double donGia = dichVuRepository.getDonGia(loaiId, phongId);
-                
-                addDetailRow(tenHienThi, tieuThu, donGia, maLoai, csCu, csMoi);
-            } else {
-                // Nếu chưa có chỉ số điện/nước, có thể cảnh báo nhưng vẫn cho lập (với số lượng 0)
-                // Tuy nhiên theo quy trình chuẩn nên bắt nhập chỉ số trước.
-            }
+        // Tìm chỉ số đã nhập trong database
+        ChiSoDichVuThang cs = chiSoRepository.getChiSoByThangNam(phongId, loaiId, thang, nam);
+        
+        if (cs != null) {
+            double donGia = dichVuRepository.getDonGia(loaiId, phongId);
+            addDetailRow(tenHienThi, cs.getSoLuongTieuThu(), donGia, maLoai, cs.getChiSoCu(), cs.getChiSoMoi());
+        } else {
+            // Đánh dấu là thiếu dữ liệu
+            hasMissingReadings = true;
+            // Vẫn add dòng vào UI nhưng để giá trị 0 để người dùng thấy là đang thiếu
+            addDetailRow(tenHienThi + " (Chưa có số)", 0, 0, maLoai, null, null);
         }
     }
 
+    /**
+     * Xử lý các dịch vụ tính trọn gói theo tháng (Wifi, Vệ sinh, Gửi xe...)
+     */
     private void processFixedServices(int phongId) {
         List<LoaiDichVu> allServices = dichVuRepository.getAllLoaiDichVu();
         for (LoaiDichVu dv : allServices) {
             String ma = dv.getMaLoai();
+            // Bỏ qua các loại đã tính riêng ở trên
             if (ma.equals(DatabaseHelper.LOAI_DICH_VU_DIEN) || ma.equals(DatabaseHelper.LOAI_DICH_VU_NUOC) 
-                    || ma.equals(DatabaseHelper.LOAI_DICH_VU_TIEN_PHONG) || ma.equals(DatabaseHelper.LOAI_DICH_VU_PHAT_SINH)) {
+                    || ma.equals(DatabaseHelper.LOAI_DICH_VU_TIEN_PHONG)) {
                 continue;
             }
             
             double donGia = dichVuRepository.getDonGia(dv.getId(), phongId);
+            // Chỉ thêm nếu dịch vụ này có cài đặt giá (đang áp dụng) cho phòng
             if (donGia > 0) {
                 addDetailRow(dv.getTenLoai(), 1, donGia, ma, null, null);
             }
         }
     }
 
+    /**
+     * Hàm phụ: Thêm một dòng chi phí vào danh sách và giao diện
+     */
     private void addDetailRow(String ten, double soLuong, double donGia, String maLoai, Double csCu, Double csMoi) {
         double thanhTien = soLuong * donGia;
         tongTienCalculated += thanhTien;
 
-        // Lưu vào list để sau này insert DB
+        // Tạo object chi tiết để lưu sau này
         HoaDonChiTiet ct = new HoaDonChiTiet();
         ct.setTenMucPhi(ten);
         ct.setSoLuong(soLuong);
@@ -239,11 +260,10 @@ public class LapHoaDonActivity extends AppCompatActivity {
         ct.setThanhTien(thanhTien);
         ct.setChiSoCu(csCu);
         ct.setChiSoMoi(csMoi);
-        // Cần tìm ID loại dịch vụ
-        ct.setLoaiDichVuId(getLoaiId(maLoai));
+        ct.setLoaiDichVuId(chiSoRepository.getLoaiDichVuId(maLoai));
         currentListChiTiet.add(ct);
 
-        // Hiển thị lên UI
+        // Vẽ dòng này lên màn hình (LayoutInflater giống như kéo thả Control động trong WinForms)
         View row = LayoutInflater.from(this).inflate(R.layout.item_hoa_don_chi_tiet_row, layoutChiTiet, false);
         TextView tvTen = row.findViewById(R.id.tvTenPhi);
         TextView tvSub = row.findViewById(R.id.tvSubInfo);
@@ -251,22 +271,28 @@ public class LapHoaDonActivity extends AppCompatActivity {
 
         tvTen.setText(ten);
         if (csCu != null && csMoi != null) {
-            tvSub.setText(String.format("Số: %s → %s (%s)", formatNum(csCu), formatNum(csMoi), formatNum(soLuong)));
+            tvSub.setText(String.format("Chỉ số: %s -> %s (Dùng %s)", formatNum(csCu), formatNum(csMoi), formatNum(soLuong)));
+        } else if (donGia > 0) {
+            tvSub.setText(String.format("Đơn giá: %s", formatter.format(donGia)));
         } else {
-            tvSub.setText(String.format("SL: %s x %s", formatNum(soLuong), formatter.format(donGia)));
+            tvSub.setText("-");
         }
         tvTien.setText(formatter.format(thanhTien) + "đ");
 
         layoutChiTiet.addView(row);
     }
 
+    /**
+     * Thực hiện lưu hóa đơn vào CSDL
+     */
     private void saveInvoice() {
-        if (currentHopDong == null || currentListChiTiet.isEmpty()) return;
+        if (currentHopDong == null || currentListChiTiet.isEmpty() || hasMissingReadings) return;
 
         int thang = Integer.parseInt(spinnerThang.getSelectedItem().toString());
         int nam = Integer.parseInt(spinnerNam.getSelectedItem().toString());
 
         HoaDon hd = new HoaDon();
+        // Tạo mã hóa đơn tự động: HD-202604-MAHD
         hd.setMaHoaDon("HD-" + nam + String.format("%02d", thang) + "-" + currentHopDong.getMaHopDong());
         hd.setHopDongId(currentHopDong.getId());
         hd.setPhongId(currentHopDong.getPhongId());
@@ -274,7 +300,7 @@ public class LapHoaDonActivity extends AppCompatActivity {
         hd.setNam(nam);
         hd.setNgayLap(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()));
         
-        // Hạn thanh toán sau 5 ngày
+        // Hạn thanh toán mặc định là 5 ngày sau khi lập
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, 5);
         hd.setHanThanhToan(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime()));
@@ -286,16 +312,18 @@ public class LapHoaDonActivity extends AppCompatActivity {
         hd.setConNo(tongTienCalculated);
         hd.setTrangThai(DatabaseHelper.TRANG_THAI_HOA_DON_CHUA_THANH_TOAN);
 
+        // 1. Lưu bảng chính (HoaDon)
         long hdId = hoaDonRepository.addHoaDon(hd);
         if (hdId > 0) {
+            // 2. Lưu các bảng phụ (Chi tiết từng loại phí)
             for (HoaDonChiTiet ct : currentListChiTiet) {
                 ct.setHoaDonId((int) hdId);
                 hoaDonRepository.addHoaDonChiTiet(ct);
             }
-            Toast.makeText(this, "Lập hóa đơn thành công!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Đã lập hóa đơn thành công!", Toast.LENGTH_LONG).show();
             finish();
         } else {
-            Toast.makeText(this, "Lỗi khi lưu hóa đơn!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi khi lưu dữ liệu!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -304,16 +332,6 @@ public class LapHoaDonActivity extends AppCompatActivity {
         tvError.setVisibility(View.VISIBLE);
         layoutPreview.setVisibility(View.GONE);
         btnLuuHoaDon.setEnabled(false);
-    }
-
-    private int getLoaiId(String maLoai) {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        try (Cursor c = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, new String[]{DatabaseHelper.COL_ID}, 
-                DatabaseHelper.COL_LOAI_DICH_VU_MA_LOAI + "=?", new String[]{maLoai}, null, null, null)) {
-            if (c.moveToFirst()) return c.getInt(0);
-        }
-        return 0;
     }
 
     private String formatNum(double d) {

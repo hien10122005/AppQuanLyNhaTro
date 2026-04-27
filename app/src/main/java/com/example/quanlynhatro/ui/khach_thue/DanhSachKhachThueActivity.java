@@ -21,6 +21,11 @@ public class DanhSachKhachThueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danh_sach_khach_thue);
 
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnThemKhachThue).setOnClickListener(v -> {
+            startActivity(new Intent(this, ThemSuaKhachThueActivity.class));
+        });
+
         bottomNavigation = findViewById(R.id.bottom_navigation);
         setupBottomNavigation();
     }

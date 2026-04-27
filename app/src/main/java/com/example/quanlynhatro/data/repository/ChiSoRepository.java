@@ -134,6 +134,33 @@ public class ChiSoRepository {
         return -1; // Không tìm thấy
     }
 
+    /**
+     * Lấy thông tin chỉ số chi tiết cho một tháng/năm cụ thể.
+     */
+    public ChiSoDichVuThang getChiSoByThangNam(int phongId, int loaiDichVuId, int thang, int nam) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try (Cursor cursor = db.query(DatabaseHelper.TABLE_CHI_SO_DICH_VU_THANG, null,
+                DatabaseHelper.COL_CHI_SO_PHONG_ID + "=? AND " + DatabaseHelper.COL_CHI_SO_LOAI_DICH_VU_ID + "=? AND "
+                + DatabaseHelper.COL_CHI_SO_THANG + "=? AND " + DatabaseHelper.COL_CHI_SO_NAM + "=?",
+                new String[]{String.valueOf(phongId), String.valueOf(loaiDichVuId), String.valueOf(thang), String.valueOf(nam)},
+                null, null, null)) {
+            
+            if (cursor.moveToFirst()) {
+                ChiSoDichVuThang cs = new ChiSoDichVuThang();
+                cs.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID)));
+                cs.setPhongId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_PHONG_ID)));
+                cs.setLoaiDichVuId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_LOAI_DICH_VU_ID)));
+                cs.setThang(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_THANG)));
+                cs.setNam(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_NAM)));
+                cs.setChiSoCu(cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_CU)));
+                cs.setChiSoMoi(cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_MOI)));
+                cs.setSoLuongTieuThu(cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CHI_SO_SO_LUONG_TIEU_THU)));
+                return cs;
+            }
+        }
+        return null;
+    }
+
     // ==========================================================================
     //  PHẦN 4: LƯU CHỈ SỐ MỚI VÀO DATABASE
     // ==========================================================================

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_deep_dark">
 
-    <!-- Header -->
+    <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#99000000"
-        app:elevation="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/bg_deep_dark"
+        app:liftOnScroll="false"
+        app:elevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -21,50 +21,52 @@
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_glass_circle_white"
+                android:backgroundTint="#20FFFFFF"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/primary_blue" />
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Thêm yêu cầu bảo trì"
+                android:text="Báo cáo sự cố"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LƯU"
-                android:textColor="@color/primary_blue"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:letterSpacing="0.05"
-                android:padding="8dp"
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_glass_circle_white"
+                android:backgroundTint="#20FFFFFF"
+                android:src="@drawable/ic_trash"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#FF5545"
+                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,21 +74,11 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Section 1: Room & Type -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="THÔNG TIN SỰ CỐ"
-                android:textColor="@color/primary_blue"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
-
+            <!-- Card 1: Main Info -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/glass_surface"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
@@ -97,75 +89,327 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Chọn phòng"
-                        android:textColorHint="#80FFFFFF"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue">
+                        android:text="THÔNG TIN SỰ CỐ"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1" />
 
-                        <AutoCompleteTextView
-                            android:id="@+id/spinnerRoom"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:textColor="@color/white" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <!-- Room Selection Dropdown -->
+                    <Spinner
+                        android:id="@+id/spinnerPhong"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="@color/white" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#26FFFFFF" />
+
+                    <!-- Title Input -->
+                    <EditText
+                        android:id="@+id/etTieuDe"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="Loại sự cố"
-                        android:textColorHint="#80FFFFFF"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/spinnerType"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:textColor="@color/white" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="Mô tả chi tiết"
-                        android:textColorHint="#80FFFFFF"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top"
-                            android:inputType="textMultiLine"
-                            android:minLines="3"
-                            android:textColor="@color/white" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                        android:background="@android:color/transparent"
+                        android:hint="Tiêu đề sự cố (VD: Hư vòi nước)"
+                        android:textColorHint="#60FFFFFF"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:inputType="textCapSentences" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Section 2: Details -->
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Symmetrical Bento Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="THỜI GIAN &amp; TRẠNG THÁI"
-                android:textColor="@color/primary_blue"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
+                android:columnCount="2"
+                android:alignmentMode="alignMargins"
+                android:columnOrderPreserved="false"
+                android:layout_marginBottom="16dp">
 
+                <!-- Priority Tile -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/glass_surface"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_bolt"
+                            app:tint="#FF9800"
+                            android:background="@drawable/bg_glass_circle_white"
+                            android:backgroundTint="#15FFFFFF"
+                            android:padding="7dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="ĐỘ ƯU TIÊN"
+                            android:textColor="#C1C6D7"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spinnerMucDoUuTien"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:backgroundTint="@color/white" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Status Tile -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/glass_surface"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_settings_service"
+                            app:tint="@color/primary_blue"
+                            android:background="@drawable/bg_glass_circle_white"
+                            android:backgroundTint="#15FFFFFF"
+                            android:padding="7dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="TRẠNG THÁI"
+                            android:textColor="#C1C6D7"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spinnerTrangThai"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:backgroundTint="@color/white" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Cost Tile -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/glass_surface"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_banknote"
+                            app:tint="@color/success_green"
+                            android:background="@drawable/bg_glass_circle_white"
+                            android:backgroundTint="#15FFFFFF"
+                            android:padding="7dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="CHI PHÍ"
+                            android:textColor="#C1C6D7"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <EditText
+                            android:id="@+id/etChiPhi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:background="@android:color/transparent"
+                            android:hint="0"
+                            android:textColorHint="#40FFFFFF"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:inputType="numberDecimal" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Processor Tile -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/glass_surface"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_people"
+                            app:tint="@color/white"
+                            android:background="@drawable/bg_glass_circle_white"
+                            android:backgroundTint="#15FFFFFF"
+                            android:padding="7dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="NGƯỜI XỬ LÝ"
+                            android:textColor="#C1C6D7"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <EditText
+                            android:id="@+id/etNguoiXuLy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:background="@android:color/transparent"
+                            android:hint="Tên thợ..."
+                            android:textColorHint="#40FFFFFF"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </GridLayout>
+
+            <!-- Dates Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/glass_surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_analytics"
+                            app:tint="#C1C6D7" />
+                        <EditText
+                            android:id="@+id/etNgayBao"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="Ngày báo cáo (yyyy-MM-dd)"
+                            android:textColorHint="#60FFFFFF"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:focusable="false" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="#26FFFFFF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_bolt"
+                            app:tint="#C1C6D7" />
+                        <EditText
+                            android:id="@+id/etNgayXuLy"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="Ngày xử lý xong"
+                            android:textColorHint="#60FFFFFF"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:focusable="false" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Description Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/glass_surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CHI TIẾT SỰ CỐ"
+                        android:textColor="#C1C6D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/etNoiDung"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:backgroundTint="#15FFFFFF"
+                        android:padding="16dp"
+                        android:hint="Mô tả cụ thể vấn đề..."
+                        android:textColorHint="#40FFFFFF"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:minLines="3"
+                        android:gravity="top" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Note Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -173,67 +417,60 @@
                 app:cardBackgroundColor="@color/glass_surface"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GHI CHÚ NỘI BỘ"
+                        android:textColor="#C1C6D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/etGhiChu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ngày yêu cầu"
-                        android:textColorHint="#80FFFFFF"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue"
-                        app:endIconMode="custom"
-                        app:endIconDrawable="@android:drawable/ic_menu_today">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:focusable="false"
-                            android:inputType="none"
-                            android:textColor="@color/white" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="Trạng thái"
-                        android:textColorHint="#80FFFFFF"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/spinnerStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:textColor="@color/white" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:backgroundTint="#15FFFFFF"
+                        android:padding="16dp"
+                        android:hint="Ghi chú thêm (Nếu có)..."
+                        android:textColorHint="#40FFFFFF"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:minLines="2"
+                        android:gravity="top" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDelete"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="8dp"
-                android:text="XÓA YÊU CẦU NÀY"
-                android:textColor="#ffb4aa"
-                android:visibility="gone"
-                tools:visibility="visible" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Bottom Action Bar -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        app:cardBackgroundColor="#F210131B"
+        app:cardElevation="24dp"
+        app:cardCornerRadius="0dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:text="LƯU BÁO CÁO SỰ CỐ"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            app:cornerRadius="20dp"
+            app:backgroundTint="@color/primary_blue"
+            app:icon="@drawable/ic_bolt"
+            app:iconGravity="textStart"
+            app:iconPadding="12dp" />
+    </androidx.cardview.widget.CardView>
 
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

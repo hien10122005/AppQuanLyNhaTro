@@ -15,11 +15,18 @@ public class DanhSachBaoTriActivity extends AppCompatActivity {
         setContentView(R.layout.activity_danh_sach_bao_tri);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnThemBaoTri).setOnClickListener(v -> {
+            startActivity(new Intent(this, ThemSuaBaoTriActivity.class));
+        });
+
         setupBottomNavigation();
     }
 
     private void setupBottomNavigation() {
         com.google.android.material.bottomnavigation.BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        // Highlight current tab if it exists in menu
+        // bottomNav.setSelectedItemId(R.id.nav_home); 
+        
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "quan_ly_nha_tro.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_PHONG = "phong";
     public static final String TABLE_KHACH_THUE = "khach_thue";
@@ -382,7 +382,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_SU_CO_BAO_TRI);
 
             createIndexes(db); // Tạo chỉ mục để tìm kiếm nhanh hơn
-            seedLoaiDichVu(db); // Thêm dữ liệu mẫu ban đầu
+            seedLoaiDichVu(db); // Thêm loại dịch vụ mặc định
+            seedSampleData(db); // Thêm dữ liệu mẫu để test
 
             db.setTransactionSuccessful(); // Đánh dấu mọi thứ đã ổn
         } finally {
@@ -452,5 +453,87 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_LOAI_DICH_VU_HOAT_DONG, 1);
         // CONFLICT_IGNORE: Nếu mã loại dịch vụ đã tồn tại rồi thì không báo lỗi, chỉ đơn giản là bỏ qua.
         db.insertWithOnConflict(TABLE_LOAI_DICH_VU, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    private void seedSampleData(SQLiteDatabase db) {
+        String now = "2026-04-26 12:00:00";
+
+        // 1. Thêm Phòng mẫu
+        insertPhong(db, "101", "Phòng 101", "Standard", 1500000, 20.5, 2, TRANG_THAI_PHONG_DANG_THUE, now);
+        insertPhong(db, "102", "Phòng 102", "Standard", 1500000, 20.5, 2, TRANG_THAI_PHONG_DANG_THUE, now);
+        insertPhong(db, "103", "Phòng 103", "VIP", 2500000, 35.0, 4, TRANG_THAI_PHONG_TRONG, now);
+        insertPhong(db, "201", "Phòng 201", "Standard", 1600000, 22.0, 2, TRANG_THAI_PHONG_DANG_THUE, now);
+        insertPhong(db, "202", "Phòng 202", "VIP", 2800000, 40.0, 4, TRANG_THAI_PHONG_BAO_TRI, now);
+
+        // 2. Thêm Khách thuê mẫu
+        long k1 = insertKhachThue(db, "Nguyễn Văn Anh", "0912345678", "123456789012", "1995-05-15", "Nam", "Hà Nội", "anh.nv@gmail.com", now);
+        long k2 = insertKhachThue(db, "Trần Thị Bình", "0987654321", "987654321098", "1998-10-20", "Nữ", "Hải Phòng", "binh.tt@gmail.com", now);
+        long k3 = insertKhachThue(db, "Lê Văn Cường", "0905123456", "456123789012", "1992-01-10", "Nam", "Đà Nẵng", "cuong.lv@gmail.com", now);
+
+        // 3. Thêm Hợp đồng mẫu
+        insertHopDong(db, "HD001", 1, k1, "2026-01-01", "2026-01-01", "2027-01-01", 1500000, 1500000, TRANG_THAI_HOP_DONG_HIEU_LUC, now);
+        insertHopDong(db, "HD002", 2, k2, "2026-02-15", "2026-02-15", "2027-02-15", 1500000, 1500000, TRANG_THAI_HOP_DONG_HIEU_LUC, now);
+        insertHopDong(db, "HD003", 4, k3, "2026-03-01", "2026-03-01", "2027-03-01", 1600000, 2000000, TRANG_THAI_HOP_DONG_HIEU_LUC, now);
+
+        // 4. Thêm Bảng giá dịch vụ mặc định cho một số phòng
+        // Phòng 101: Điện 3.5k, Nước 10k/m3
+        insertBangGia(db, 2, 1, 3500, now); // Điện
+        insertBangGia(db, 3, 1, 10000, now); // Nước
+        insertBangGia(db, 4, 1, 30000, now); // Rác (Cố định)
+        insertBangGia(db, 5, 1, 50000, now); // Wifi (Cố định)
+    }
+
+    private void insertPhong(SQLiteDatabase db, String so, String ten, String loai, double gia, double dt, int max, String tt, String now) {
+        ContentValues v = new ContentValues();
+        v.put(COL_PHONG_SO_PHONG, so);
+        v.put(COL_PHONG_TEN_PHONG, ten);
+        v.put(COL_PHONG_LOAI_PHONG, loai);
+        v.put(COL_PHONG_GIA_PHONG_MAC_DINH, gia);
+        v.put(COL_PHONG_DIEN_TICH, dt);
+        v.put(COL_PHONG_SO_NGUOI_TOI_DA, max);
+        v.put(COL_PHONG_TRANG_THAI, tt);
+        v.put(COL_CREATED_AT, now);
+        v.put(COL_UPDATED_AT, now);
+        db.insert(TABLE_PHONG, null, v);
+    }
+
+    private long insertKhachThue(SQLiteDatabase db, String ten, String sdt, String cccd, String ns, String gt, String dc, String email, String now) {
+        ContentValues v = new ContentValues();
+        v.put(COL_KHACH_THUE_HO_TEN, ten);
+        v.put(COL_KHACH_THUE_SO_DIEN_THOAI, sdt);
+        v.put(COL_KHACH_THUE_CCCD, cccd);
+        v.put(COL_KHACH_THUE_NGAY_SINH, ns);
+        v.put(COL_KHACH_THUE_GIOI_TINH, gt);
+        v.put(COL_KHACH_THUE_DIA_CHI_THUONG_TRU, dc);
+        v.put(COL_KHACH_THUE_EMAIL, email);
+        v.put(COL_CREATED_AT, now);
+        v.put(COL_UPDATED_AT, now);
+        return db.insert(TABLE_KHACH_THUE, null, v);
+    }
+
+    private void insertHopDong(SQLiteDatabase db, String ma, long pId, long kId, String nKy, String nBD, String nKT, double gia, double coc, String tt, String now) {
+        ContentValues v = new ContentValues();
+        v.put(COL_HOP_DONG_MA_HOP_DONG, ma);
+        v.put(COL_HOP_DONG_PHONG_ID, pId);
+        v.put(COL_HOP_DONG_KHACH_THUE_DAI_DIEN_ID, kId);
+        v.put(COL_HOP_DONG_NGAY_KY, nKy);
+        v.put(COL_HOP_DONG_NGAY_BAT_DAU, nBD);
+        v.put(COL_HOP_DONG_NGAY_KET_THUC, nKT);
+        v.put(COL_HOP_DONG_GIA_THUE_CHOT, gia);
+        v.put(COL_HOP_DONG_TIEN_COC, coc);
+        v.put(COL_HOP_DONG_TRANG_THAI, tt);
+        v.put(COL_CREATED_AT, now);
+        v.put(COL_UPDATED_AT, now);
+        db.insert(TABLE_HOP_DONG, null, v);
+    }
+
+    private void insertBangGia(SQLiteDatabase db, long ldvId, long pId, double gia, String now) {
+        ContentValues v = new ContentValues();
+        v.put(COL_BANG_GIA_LOAI_DICH_VU_ID, ldvId);
+        v.put(COL_BANG_GIA_PHONG_ID, pId);
+        v.put(COL_BANG_GIA_DON_GIA, gia);
+        v.put(COL_BANG_GIA_NGAY_HIEU_LUC, "2026-01-01");
+        v.put(COL_CREATED_AT, now);
+        db.insert(TABLE_BANG_GIA_DICH_VU, null, v);
     }
 }

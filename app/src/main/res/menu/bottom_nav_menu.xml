@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_today"
+        android:icon="@drawable/ic_home_nav"
         android:title="Trang chủ" />
     <item
         android:id="@+id/nav_rooms"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_room_nav"
         android:title="Phòng" />
     <item
         android:id="@+id/nav_invoices"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@drawable/ic_invoice_nav"
         android:title="Hóa đơn" />
     <item
         android:id="@+id/nav_reports"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/ic_report_nav"
         android:title="Báo cáo" />
     <item
         android:id="@+id/nav_settings"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/ic_settings_nav"
         android:title="Cài đặt" />
 </menu>

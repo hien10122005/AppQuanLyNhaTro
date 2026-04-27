@@ -1,328 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    DANH SÁCH HÓA ĐƠN - activity_danh_sach_hoa_don.xml
-    Phong cách H-TECH: Deep Dark + Glassmorphism + Electric Blue
-
-    Cấu trúc:
-    ConstraintLayout (root, bg đen)
-    ├── LinearLayout Header (Tiêu đề + Lọc tháng)
-    ├── LinearLayout Filter Chips (Tất cả / Chưa thu / Đã thu / Quá hạn)
-    ├── RecyclerView (danh sách hóa đơn - tự động từ Adapter)
-    └── BottomNavigationView (thanh tab dưới)
--->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_deep_dark">
 
-    <!-- ===== HEADER: Tiêu đề + Bộ lọc tháng ===== -->
-    <LinearLayout
-        android:id="@+id/layoutHeader"
+    <!-- App Bar Header -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="12dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:background="@color/bg_deep_dark"
+        app:liftOnScroll="false"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Dòng 1: Nút Back + Tiêu đề + Nút Thêm mới -->
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="72dp"
+            android:paddingHorizontal="16dp">
 
-            <!-- Nút quay lại -->
-            <TextView
+            <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/bg_glass_card"
-                android:gravity="center"
-                android:text="‹"
-                android:textColor="#FFFFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_glass_circle_white"
+                android:backgroundTint="#15FFFFFF"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
-            <!-- Tiêu đề màn hình -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="1"
-                android:text="Hóa Đơn"
-                android:textColor="#FFFFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <!-- Nút lập hóa đơn mới -->
-            <TextView
-                android:id="@+id/btnLapHoaDon"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:background="@drawable/bg_primary_button"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:text="+ Lập HĐ"
-                android:textColor="#FFFFFFFF"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Dòng 2: Bộ lọc tháng (Tháng trước / Tháng này / Tháng sau) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_glass_card"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="4dp">
-
-            <!-- Nút: Tháng trước -->
-            <TextView
-                android:id="@+id/btnThangTruoc"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:text="‹"
-                android:textColor="@color/primary_blue"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <!-- Hiển thị tháng/năm đang xem -->
-            <TextView
-                android:id="@+id/tvThangNam"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Tháng 4 / 2026"
-                android:textColor="#FFFFFFFF"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <!-- Nút: Tháng sau -->
-            <TextView
-                android:id="@+id/btnThangSau"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:text="›"
-                android:textColor="@color/primary_blue"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- ===== FILTER CHIPS: Lọc theo trạng thái hóa đơn ===== -->
-    <HorizontalScrollView
-        android:id="@+id/scrollFilter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp">
-
-            <!-- Chip: Tất cả -->
-            <TextView
-                android:id="@+id/chipTatCa"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/bg_primary_button"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:text="Tất cả"
-                android:textColor="#FFFFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <!-- Chip: Chưa thu -->
-            <TextView
-                android:id="@+id/chipChuaThu"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/bg_chip_red"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:text="Chưa thu"
-                android:textColor="@color/warning_red"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <!-- Chip: Đã thu -->
-            <TextView
-                android:id="@+id/chipDaThu"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/bg_chip_green"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:text="Đã thu"
-                android:textColor="@color/success_green"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <!-- Chip: Quá hạn -->
-            <TextView
-                android:id="@+id/chipQuaHan"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:background="@drawable/bg_chip_orange"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:text="Quá hạn"
-                android:textColor="#FF9500"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- ===== THỐNG KÊ NHANH: 3 số tóm tắt tháng này ===== -->
-    <LinearLayout
-        android:id="@+id/layoutThongKe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/bg_hero_card"
-        android:orientation="horizontal"
-        android:padding="14dp"
-        app:layout_constraintTop_toBottomOf="@id/scrollFilter"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!-- Cột: Tổng phải thu -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phải Thu"
-                android:textColor="#808BAA"
-                android:textSize="11sp" />
+                android:layout_marginStart="16dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnBack"
+                app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hóa đơn"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quản lý doanh thu tháng"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvTongPhaiThu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="--"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/btnExport"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_glass_circle_white"
+                android:backgroundTint="#15FFFFFF"
+                android:src="@android:drawable/ic_menu_save"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/primary_blue" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center_vertical"
-            android:background="#1AFFFFFF" />
-
-        <!-- Cột: Đã thu -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Đã Thu"
-                android:textColor="#808BAA"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/tvSummaryDaThu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="--"
-                android:textColor="@color/success_green"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center_vertical"
-            android:background="#1AFFFFFF" />
-
-        <!-- Cột: Còn nợ -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Còn Nợ"
-                android:textColor="#808BAA"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/tvSummaryChuaThu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="--"
-                android:textColor="@color/warning_red"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- ===== RECYCLERVIEW: Danh sách hóa đơn ===== -->
-    <!--
-        RecyclerView là View đặc biệt để hiển thị danh sách cuộn.
-        Nó sẽ tự động tái sử dụng các item để tiết kiệm bộ nhớ.
-        Dữ liệu thật sẽ được đưa vào từ Java qua Adapter.
-    -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerHoaDon"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/layoutThongKe"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
 
-    <!-- ===== BOTTOM NAVIGATION ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="100dp">
+
+            <!-- Month Navigator -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:paddingHorizontal="16dp">
+                <ImageButton
+                    android:id="@+id/btnThangTruoc"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_glass_circle_white"
+                    android:backgroundTint="#10FFFFFF"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/white"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"/>
+                <TextView
+                    android:id="@+id/tvThangNam"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Tháng 04 / 2026"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <ImageButton
+                    android:id="@+id/btnThangSau"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_glass_circle_white"
+                    android:backgroundTint="#10FFFFFF"
+                    android:rotation="180"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/white"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"/>
+            </LinearLayout>
+
+            <!-- Revenue Summary Stats -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/glass_surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TỔNG PHẢI THU"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1" />
+                    <TextView
+                        android:id="@+id/tvTongPhaiThu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="0 đ"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+                    
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#15FFFFFF"
+                        android:layout_marginVertical="16dp" />
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ĐÃ THU"
+                                android:textColor="#80FFFFFF"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvSummaryDaThu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="0 đ"
+                                android:textColor="@color/success_green"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CÒN NỢ"
+                                android:textColor="#80FFFFFF"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvSummaryChuaThu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="0 đ"
+                                android:textColor="#FF4D4D"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Search Bar -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/glass_surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_search"
+                        app:tint="#8b90a0" />
+                    <EditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Tìm phòng hoặc khách thuê..."
+                        android:textColor="@color/white"
+                        android:textColorHint="#4DFFFFFF"
+                        android:textSize="14sp"
+                        android:importantForAutofill="no"
+                        android:inputType="text" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Filter Tabs (Chips) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/chipTatCa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_primary_button"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="10dp"
+                        android:text="TẤT CẢ"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/chipChuaThu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:backgroundTint="#15FFFFFF"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="10dp"
+                        android:text="CHƯA THU"
+                        android:textColor="#C1C6D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:alpha="0.6"/>
+                    <TextView
+                        android:id="@+id/chipDaThu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:backgroundTint="#15FFFFFF"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="10dp"
+                        android:text="ĐÃ THU"
+                        android:textColor="#C1C6D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:alpha="0.6"/>
+                    <TextView
+                        android:id="@+id/chipQuaHan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:backgroundTint="#15FFFFFF"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="10dp"
+                        android:text="QUÁ HẠN"
+                        android:textColor="#C1C6D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:alpha="0.6"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerHoaDon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_hoa_don" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- FAB Add Invoice -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnLapHoaDon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primary_blue"
+        app:elevation="12dp"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -335,6 +359,5 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

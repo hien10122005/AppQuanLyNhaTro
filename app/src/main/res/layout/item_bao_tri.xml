@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/glass_surface"
     app:cardCornerRadius="24dp"
     app:cardElevation="0dp">
@@ -11,70 +12,157 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:background="@drawable/bg_glass_card">
+        android:background="@drawable/bg_glass_card"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/ivTypeIcon"
+        <!-- Priority indicator dot -->
+        <View
+            android:id="@+id/viewPriority"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_glass_circle_white"
+            android:backgroundTint="#FF5545"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Icon Section -->
+        <View
+            android:id="@+id/viewIconBg"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_glass_circle"
-            android:padding="12dp"
-            android:src="@drawable/ic_wrench"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_glass_circle_white"
+            android:backgroundTint="#15FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPriority" />
+
+        <ImageView
+            android:id="@+id/ivMaintenanceTypeIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_settings_service"
+            app:layout_constraintBottom_toBottomOf="@id/viewIconBg"
+            app:layout_constraintEnd_toEndOf="@id/viewIconBg"
+            app:layout_constraintStart_toStartOf="@id/viewIconBg"
+            app:layout_constraintTop_toTopOf="@id/viewIconBg"
             app:tint="@color/primary_blue" />
 
+        <!-- Content Section -->
         <TextView
-            android:id="@+id/tvRoomName"
+            android:id="@+id/tvItemRoomName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Phòng 101"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/tvStatus"
-            app:layout_constraintStart_toEndOf="@id/ivTypeIcon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/tvItemStatus"
+            app:layout_constraintStart_toEndOf="@id/viewIconBg"
+            app:layout_constraintTop_toTopOf="@id/viewIconBg"
+            tools:text="Phòng 102" />
 
         <TextView
-            android:id="@+id/tvIssueType"
+            android:id="@+id/tvItemIssueTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:text="Hỏng vòi nước bồn rửa"
-            android:textColor="#8b90a0"
-            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#C1C6D7"
+            android:textSize="13sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivTypeIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvRoomName" />
+            app:layout_constraintStart_toStartOf="@id/tvItemRoomName"
+            app:layout_constraintTop_toBottomOf="@id/tvItemRoomName"
+            tools:text="Hư hỏng vòi sen nhà tắm" />
 
         <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvItemIssueDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#80C1C6D7"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvItemRoomName"
+            app:layout_constraintTop_toBottomOf="@id/tvItemIssueTitle"
+            tools:text="Vòi sen bị rỉ nước liên tục từ sáng..." />
+
+        <!-- Meta Info Row -->
+        <LinearLayout
+            android:id="@+id/layoutMeta"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="24/04/2026"
-            android:textColor="#4DFFFFFF"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/tvIssueType"
-            app:layout_constraintTop_toBottomOf="@id/tvIssueType" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvItemRoomName"
+            app:layout_constraintTop_toBottomOf="@id/tvItemIssueDesc">
 
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_analytics"
+                app:tint="#66C1C6D7" />
+
+            <TextView
+                android:id="@+id/tvItemDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="#66C1C6D7"
+                android:textSize="10sp"
+                tools:text="24/04/2026" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="10dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="#26FFFFFF" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_banknote"
+                app:tint="#66C1C6D7" />
+
+            <TextView
+                android:id="@+id/tvItemCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="#66C1C6D7"
+                android:textSize="10sp"
+                tools:text="250,000đ" />
+        </LinearLayout>
+
+        <!-- Status Badge -->
         <TextView
-            android:id="@+id/tvStatus"
+            android:id="@+id/tvItemStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_chip_orange"
-            android:paddingHorizontal="12dp"
+            android:background="@drawable/bg_glass_card"
+            android:backgroundTint="#20FFC107"
+            android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:text="ĐANG CHỜ"
-            android:textColor="#ffb4aa"
-            android:textSize="10sp"
+            android:textColor="#FFC107"
+            android:textSize="9sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/tvItemRoomName"
+            tools:text="ĐANG SỬA" />
+
+        <!-- Quick Action: Chevron -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layoutMeta"
+            app:tint="#40C1C6D7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

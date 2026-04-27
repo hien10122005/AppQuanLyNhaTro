@@ -1,56 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_deep_dark"
-    android:orientation="vertical">
+    android:background="@color/bg_deep_dark">
 
-    <!-- Header Section -->
-    <RelativeLayout
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="#99000000"
-        android:paddingHorizontal="16dp">
+        android:layout_height="wrap_content"
+        android:background="@color/bg_deep_dark"
+        app:liftOnScroll="false"
+        app:elevation="0dp">
 
-        <ImageButton
-            android:id="@+id/ibBackContract"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_glass_circle_white"
-            android:backgroundTint="#15FFFFFF"
-            android:contentDescription="@string/desc_back"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/white" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingHorizontal="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/title_contract_detail"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_glass_circle"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
-        <ImageButton
-            android:id="@+id/ibEditContract"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_glass_circle_white"
-            android:backgroundTint="#15FFFFFF"
-            android:contentDescription="@string/desc_edit"
-            android:src="@drawable/ic_edit"
-            app:tint="@color/primary_blue" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin hợp đồng"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_glass_circle"
+                android:src="@android:drawable/ic_menu_edit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:clipToPadding="false"
+        android:paddingBottom="120dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,13 +68,12 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Hero Section -->
+            <!-- Main Info Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="#1AFFFFFF"
-                app:cardCornerRadius="28dp"
+                app:cardBackgroundColor="@color/glass_surface"
+                app:cardCornerRadius="32dp"
                 app:cardElevation="0dp">
 
                 <LinearLayout
@@ -74,38 +83,45 @@
                     android:padding="24dp">
 
                     <TextView
+                        android:id="@+id/tvSoHopDong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_chip_green"
-                        android:backgroundTint="#1A53E16F"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:text="@string/status_active"
-                        android:textColor="#53E16F"
+                        android:text="HĐ-2026-102"
+                        android:textColor="@color/primary_blue"
                         android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1" />
+
+                    <TextView
+                        android:id="@+id/tvTenKhach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Nguyễn Văn A"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvContractHeroTitle"
+                        android:id="@+id/tvPhong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/white"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="Hợp đồng Phòng 101" />
+                        android:layout_marginTop="4dp"
+                        android:text="Phòng: 102 (Tầng 1)"
+                        android:textColor="#80FFFFFF"
+                        android:textSize="15sp" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1px"
                         android:layout_marginVertical="20dp"
                         android:background="#1AFFFFFF" />
 
+                    <!-- Key Metrics -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -114,20 +130,20 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/label_start_date"
-                                android:textColor="#C1C6D7"
-                                android:textSize="12sp" />
+                                android:text="TIỀN THUÊ"
+                                android:textColor="@color/primary_blue"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
                             <TextView
-                                android:id="@+id/tvDateStartVal"
+                                android:id="@+id/tvGiaThue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="3.5M/th"
                                 android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                tools:text="01/01/2026" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -136,102 +152,142 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/label_end_date"
-                                android:textColor="#C1C6D7"
-                                android:textSize="12sp" />
+                                android:text="TIỀN CỌC"
+                                android:textColor="@color/primary_blue"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
                             <TextView
-                                android:id="@+id/tvDateEndVal"
+                                android:id="@+id/tvTienCoc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:text="3.500.000đ"
                                 android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                tools:text="01/01/2027" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Timeline -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:text="THỜI HẠN HỢP ĐỒNG"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp">
+                        <TextView
+                            android:id="@+id/tvNgayBatDau"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="01/01/2026"
+                            android:textColor="#B0B0B0"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tvNgayKetThuc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="01/01/2027"
+                            android:textColor="#B0B0B0"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progressThoiHan"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:progress="45"
+                        app:indicatorColor="@color/primary_blue"
+                        app:trackColor="#1AFFFFFF"
+                        app:trackCornerRadius="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvConLai"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_gravity="center"
+                        android:text="Còn lại: 185 ngày"
+                        android:textColor="#53E16F"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Financial Section -->
+            <!-- Tenant Details -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:text="THÔNG TIN KHÁCH THUÊ"
+                android:textColor="@color/primary_blue"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/glass_surface"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tvSdt"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/label_rent_price_month"
-                            android:textColor="#C1C6D7" />
-                        <TextView
-                            android:id="@+id/tvRentValueDisplay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            tools:text="3.500.000đ" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="16dp"
-                        android:background="#0DFFFFFF" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                        android:text="📞 0901 234 567"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/tvCccd"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/label_deposit"
-                            android:textColor="#C1C6D7" />
-                        <TextView
-                            android:id="@+id/tvDepositValueDisplay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/primary_blue"
-                            android:textStyle="bold"
-                            tools:text="3.500.000đ" />
-                    </LinearLayout>
+                        android:layout_marginTop="12dp"
+                        android:text="🪪 012345678901"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Action Buttons -->
-            <Button
-                android:id="@+id/btnActionExtendContract"
+            <!-- Actions -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGiaHan"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_marginBottom="12dp"
-                android:backgroundTint="#1AFFFFFF"
-                android:text="@string/btn_extend_contract"
-                android:textColor="@color/white" />
+                android:layout_marginTop="32dp"
+                android:text="GIA HẠN HỢP ĐỒNG"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:backgroundTint="@color/primary_blue"
+                app:cornerRadius="20dp" />
 
-            <Button
-                android:id="@+id/btnActionTerminateContract"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnThanhLy"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:backgroundTint="#1AFF5545"
-                android:text="@string/btn_terminate_contract"
-                android:textColor="#FF5545" />
+                android:layout_height="60dp"
+                android:layout_marginTop="12dp"
+                android:text="THANH LÝ HỢP ĐỒNG"
+                android:textColor="#FFB4AA"
+                app:strokeColor="#FFB4AA"
+                app:cornerRadius="20dp" />
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

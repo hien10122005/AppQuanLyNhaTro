@@ -114,6 +114,7 @@ public class CaiDatActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
+        bottomNavigationView.setSelectedItemId(R.id.nav_settings);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {

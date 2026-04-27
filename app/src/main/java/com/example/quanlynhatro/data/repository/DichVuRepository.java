@@ -96,5 +96,31 @@ public class DichVuRepository {
         
         db.insert(DatabaseHelper.TABLE_BANG_GIA_DICH_VU, null, values);
     }
+    public String getMaLoaiById(int id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try (Cursor cursor = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, new String[]{DatabaseHelper.COL_LOAI_DICH_VU_MA_LOAI},
+                DatabaseHelper.COL_ID + "=?", new String[]{String.valueOf(id)}, null, null, null)) {
+            if (cursor.moveToFirst()) return cursor.getString(0);
+        }
+        return "";
+    }
+
+    public LoaiDichVu getLoaiDichVuById(int id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try (Cursor cursor = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, null,
+                DatabaseHelper.COL_ID + "=?", new String[]{String.valueOf(id)}, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                LoaiDichVu dv = new LoaiDichVu();
+                dv.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID)));
+                dv.setMaLoai(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_LOAI_DICH_VU_MA_LOAI)));
+                dv.setTenLoai(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_LOAI_DICH_VU_TEN_LOAI)));
+                dv.setKieuTinh(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_LOAI_DICH_VU_KIEU_TINH)));
+                dv.setDonVi(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_LOAI_DICH_VU_DON_VI)));
+                return dv;
+            }
+        }
+        return null;
+    }
 }
+
 
