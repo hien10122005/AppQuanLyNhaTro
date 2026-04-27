@@ -25,6 +25,7 @@ public class ChiTietPhongActivity extends AppCompatActivity {
 
     private TextView tvTitle, tvPriceHeader, tvTenantName, tvTenantPhone;
     private ImageButton btnBack, btnEdit, btnDelete;
+    private androidx.cardview.widget.CardView btnRoomHistory;
     private LinearLayout llMeterAction, llCollectAction, llReportAction;
     
     private PhongRepository repository;
@@ -62,6 +63,7 @@ public class ChiTietPhongActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnEdit = findViewById(R.id.btnEdit);
         btnDelete = findViewById(R.id.btnDelete);
+        btnRoomHistory = findViewById(R.id.btnRoomHistory);
         llMeterAction = findViewById(R.id.llMeterAction);
         llCollectAction = findViewById(R.id.llCollectAction);
         llReportAction = findViewById(R.id.llReportAction);
@@ -106,6 +108,14 @@ public class ChiTietPhongActivity extends AppCompatActivity {
                     })
                     .setNegativeButton("Hủy", null)
                     .show();
+        });
+
+        btnRoomHistory.setOnClickListener(v -> {
+            // Xem lịch sử thuê phòng
+            // Intent intent = new Intent(this, LichSuThuePhongActivity.class);
+            // intent.putExtra("PHONG_ID", phongId);
+            // startActivity(intent);
+            Toast.makeText(this, "Tính năng xem lịch sử đang được cập nhật!", Toast.LENGTH_SHORT).show();
         });
     }
 

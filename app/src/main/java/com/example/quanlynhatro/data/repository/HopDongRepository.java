@@ -117,6 +117,28 @@ public class HopDongRepository {
         return hopDong;
     }
 
+    /**
+     * Lấy danh sách toàn bộ hợp đồng (cả cũ và mới) của một phòng để xem lịch sử thuê.
+     */
+    public List<HopDong> getLichSuThueTheoPhong(int phongId) {
+        List<HopDong> danhSach = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try (Cursor cursor = db.query(
+                DatabaseHelper.TABLE_HOP_DONG,
+                null,
+                DatabaseHelper.COL_HOP_DONG_PHONG_ID + "=?",
+                new String[]{String.valueOf(phongId)},
+                null,
+                null,
+                DatabaseHelper.COL_HOP_DONG_NGAY_BAT_DAU + " DESC"
+        )) {
+            while (cursor.moveToNext()) {
+                danhSach.add(mapHopDong(cursor));
+            }
+        }
+        return danhSach;
+    }
+
     private String now() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
     }

@@ -2,7 +2,10 @@ package com.example.quanlynhatro.ui.phong;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +27,14 @@ public class DanhSachPhongActivity extends AppCompatActivity {
     private RecyclerView recyclerPhong;
     private BottomNavigationView bottomNavigation;
     private android.view.View btnBack, btnThemPhong;
+    private TextView chipAll, chipTrong, chipDangThue, chipBaoTri;
+    private EditText etSearch;
     private PhongAdapter adapter;
     private com.example.quanlynhatro.data.repository.PhongRepository phongRepository;
+    
+    private java.util.List<com.example.quanlynhatro.data.model.Phong> listFull = new java.util.ArrayList<>();
+    private String currentSearchQuery = "";
+    private String currentStatusFilter = "Tất cả";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,85 @@ public class DanhSachPhongActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ThemSuaPhongActivity.class));
             });
         }
+
+        etSearch = findViewById(R.id.etSearch);
+        chipAll = findViewById(R.id.chipAll);
+        chipTrong = findViewById(R.id.chipTrong);
+        chipDangThue = findViewById(R.id.chipDangThue);
+        chipBaoTri = findViewById(R.id.chipBaoTri);
+
+        setupSearch();
+        setupFilters();
+    }
+
+    private void setupSearch() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchQuery = s.toString().toLowerCase().trim();
+                applyFilter();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void setupFilters() {
+        android.view.View.OnClickListener filterListener = v -> {
+            // Reset tất cả chips về màu mặc định (Glass)
+            resetChips();
+            
+            // Highlight chip được chọn (Primary Blue)
+            v.setBackgroundResource(R.drawable.bg_primary_button);
+            ((TextView)v).setTextColor(getResources().getColor(R.color.white));
+            ((TextView)v).setTypeface(null, android.graphics.Typeface.BOLD);
+            
+            currentStatusFilter = ((TextView)v).getText().toString();
+            applyFilter();
+        };
+
+        chipAll.setOnClickListener(filterListener);
+        chipTrong.setOnClickListener(filterListener);
+        chipDangThue.setOnClickListener(filterListener);
+        chipBaoTri.setOnClickListener(filterListener);
+    }
+
+    private void resetChips() {
+        TextView[] chips = {chipAll, chipTrong, chipDangThue, chipBaoTri};
+        for (TextView chip : chips) {
+            chip.setBackgroundResource(R.drawable.bg_glass_card);
+            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0x20FFFFFF));
+            chip.setTextColor(0xA0FFFFFF);
+            chip.setTypeface(null, android.graphics.Typeface.NORMAL);
+        }
+    }
+
+    private void applyFilter() {
+        java.util.List<com.example.quanlynhatro.data.model.Phong> filteredList = new java.util.ArrayList<>();
+        
+        for (com.example.quanlynhatro.data.model.Phong p : listFull) {
+            boolean matchSearch = p.getSoPhong().toLowerCase().contains(currentSearchQuery) || 
+                                 p.getTenPhong().toLowerCase().contains(currentSearchQuery);
+            
+            boolean matchStatus = currentStatusFilter.equals("Tất cả");
+            if (currentStatusFilter.equals("Trống")) {
+                matchStatus = p.getTrangThai().equals(com.example.quanlynhatro.data.database.DatabaseHelper.TRANG_THAI_PHONG_TRONG);
+            } else if (currentStatusFilter.equals("Đang thuê")) {
+                matchStatus = p.getTrangThai().equals(com.example.quanlynhatro.data.database.DatabaseHelper.TRANG_THAI_PHONG_DANG_THUE);
+            } else if (currentStatusFilter.equals("Bảo trì")) {
+                matchStatus = p.getTrangThai().equals(com.example.quanlynhatro.data.database.DatabaseHelper.TRANG_THAI_PHONG_BAO_TRI);
+            }
+            
+            if (matchSearch && matchStatus) {
+                filteredList.add(p);
+            }
+        }
+        
+        adapter.setDanhSachPhong(filteredList);
     }
 
     private void setupRecyclerView() {
@@ -110,8 +198,8 @@ public class DanhSachPhongActivity extends AppCompatActivity {
 
     private void loadData() {
         // Lấy danh sách từ Database và đổ vào Adapter
-        java.util.List<com.example.quanlynhatro.data.model.Phong> list = phongRepository.getAllPhong();
-        adapter.setDanhSachPhong(list);
+        listFull = phongRepository.getAllPhong();
+        applyFilter(); // Áp dụng filter hiện tại lên danh sách mới load
     }
 
     private void setupBottomNavigation() {

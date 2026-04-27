@@ -11,9 +11,9 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 - [x] **Logic**: Tạo `PhongAdapter.java` xử lý hiển thị danh sách phòng.
 - [x] **Logic**: Xử lý thêm/sửa phòng trong `ThemSuaPhongActivity.java`.
 - [x] **Logic**: Xử lý hiển thị thông tin và Xóa phòng (có xác nhận) trong `ChiTietPhongActivity.java`.
-- [ ] **Tìm kiếm**: Thêm ô tìm kiếm phòng theo số phòng hoặc tên phòng.
-- [ ] **Bộ lọc**: Lọc danh sách phòng theo trạng thái (Trống, Đang thuê, Bảo trì).
-- [ ] **Lịch sử**: Xem danh sách các khách thuê đã từng ở trong phòng này (truy vấn từ bảng hợp đồng cũ).
+- [x] **Tìm kiếm**: Thêm ô tìm kiếm phòng theo số phòng hoặc tên phòng.
+- [x] **Bộ lọc**: Lọc danh sách phòng theo trạng thái (Trống, Đang thuê, Bảo trì).
+- [x] **Lịch sử**: Xem danh sách các khách thuê đã từng ở trong phòng này (đã thêm nút & logic repository).
 
 ## 👥 2. Module: Quản Lý Khách Thuê (Tenants)
 - [x] Thiết kế giao diện danh sách khách (`activity_danh_sach_khach_thue.xml`).
