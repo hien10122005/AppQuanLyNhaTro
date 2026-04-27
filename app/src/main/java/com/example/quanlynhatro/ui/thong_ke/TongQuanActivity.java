@@ -305,11 +305,14 @@ public class TongQuanActivity extends AppCompatActivity {
         }
         curTien.close();
 
-        // --- Đếm hóa đơn quá hạn (chưa thanh toán) ---
+        // --- Đếm hóa đơn quá hạn (chưa thanh toán XONG và đã qua ngày hạn) ---
+        // Logic: han_thanh_toan < ngày_hiện_tại AND trang_thai != 'DA_THANH_TOAN'
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         Cursor curQuaHan = db.rawQuery(
                 "SELECT COUNT(*) FROM " + DatabaseHelper.TABLE_HOA_DON
-                + " WHERE " + DatabaseHelper.COL_HOA_DON_TRANG_THAI + " = ?",
-                new String[]{DatabaseHelper.TRANG_THAI_HOA_DON_CHUA_THANH_TOAN}
+                + " WHERE " + DatabaseHelper.COL_HOA_DON_HAN_THANH_TOAN + " < ?"
+                + " AND " + DatabaseHelper.COL_HOA_DON_TRANG_THAI + " != ?",
+                new String[]{today, DatabaseHelper.TRANG_THAI_HOA_DON_DA_THANH_TOAN}
         );
         int soQuaHan = 0;
         if (curQuaHan.moveToFirst()) {
@@ -418,9 +421,11 @@ public class TongQuanActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Nhấn vào thẻ Quá Hạn -> Danh sách hóa đơn
+        // Nhấn vào thẻ Quá Hạn -> Danh sách hóa đơn (lọc Quá hạn)
         layoutHoaDonQuaHan.setOnClickListener(v -> {
-            startActivity(new Intent(this, DanhSachHoaDonActivity.class));
+            Intent intent = new Intent(this, DanhSachHoaDonActivity.class);
+            intent.putExtra("FILTER_STATUS", "QUA_HAN");
+            startActivity(intent);
         });
 
         // Nhấn vào "Xem tất cả" hóa đơn
@@ -461,6 +466,15 @@ public class TongQuanActivity extends AppCompatActivity {
         // Ví dụ: Người dùng vừa thu tiền ở màn hình khác → quay lại Dashboard
         //        → Dashboard cần hiển thị lại số "Đã Thu" đã được cập nhật
         taiDuLieuVaHienThi();
+
+        // --- CẢNH BÁO THÔNG MINH (Smart Warning) ---
+        // Nếu có hóa đơn quá hạn, hiện thông báo nhắc nhở nhẹ nhàng
+        int soQuaHan = Integer.parseInt(tvHoaDonQuaHan.getText().toString());
+        if (soQuaHan > 0) {
+            android.widget.Toast.makeText(this, 
+                "⚠️ Bạn có " + soQuaHan + " hóa đơn đã quá hạn thanh toán!", 
+                android.widget.Toast.LENGTH_LONG).show();
+        }
     }
 
     // ============================================================

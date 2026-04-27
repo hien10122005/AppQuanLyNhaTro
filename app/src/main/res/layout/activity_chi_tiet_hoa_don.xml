@@ -312,6 +312,42 @@
                 app:icon="@drawable/ic_banknote"
                 app:iconGravity="textStart" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLichSuThanhToan"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="Lịch sử"
+                    android:textColor="@color/white"
+                    app:backgroundTint="#20FFFFFF"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_history"
+                    app:iconTint="@color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExportPdf"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Xuất PDF"
+                    android:textColor="@color/white"
+                    app:backgroundTint="#20FFFFFF"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_file_download"
+                    app:iconTint="@color/white" />
+
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuiZalo"
                 style="@style/Widget.Material3.Button.OutlinedButton"

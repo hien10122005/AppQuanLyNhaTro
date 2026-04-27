@@ -47,9 +47,9 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 - [x] **Logic**: Lập hóa đơn hàng tháng (Tổng tiền = Phòng + Điện + Nước + Dịch vụ).
 - [x] **Logic**: Danh sách hóa đơn phân loại theo tháng/năm.
 - [x] **Logic**: Ghi nhận thu tiền (Cho phép thu một phần, tự động tính toán số tiền còn nợ).
-- [ ] **Lịch sử**: Xem danh sách các đợt trả tiền của một hóa đơn (ai thu, ngày nào, bao nhiêu).
-- [ ] **Xuất bản**: Chức năng xuất hóa đơn ra file PDF hoặc ảnh để gửi cho khách qua mạng xã hội.
-- [ ] **Thông minh**: Cảnh báo danh sách các hóa đơn đã quá hạn thanh toán.
+- [x] **Lịch sử**: Xem danh sách các đợt trả tiền của một hóa đơn (ai thu, ngày nào, bao nhiêu).
+- [x] **Xuất bản**: Chức năng xuất hóa đơn ra file PDF hoặc ảnh để gửi cho khách qua mạng xã hội.
+- [x] **Thông minh**: Cảnh báo danh sách các hóa đơn đã quá hạn thanh toán.
 
 ## 📊 6. Module: Dashboard & Hệ Thống (System)
 - [x] **Dashboard**: Thống kê số lượng phòng trống và phòng đang ở.

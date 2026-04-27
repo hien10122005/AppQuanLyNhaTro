@@ -90,6 +90,13 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
         thietLapDieuHuongThang();
         thietLapBottomNavigation();
 
+        // Kiểm tra xem có yêu cầu lọc sẵn từ màn hình khác không (vd: từ Dashboard nhấn vào "Quá hạn")
+        String initialFilter = getIntent().getStringExtra("FILTER_STATUS");
+        if ("QUA_HAN".equals(initialFilter)) {
+            filterTrangThai = "QUA_HAN";
+            chonChip(chipQuaHan);
+        }
+
         // Tải dữ liệu lần đầu
         taiDuLieu();
     }
@@ -183,8 +190,7 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
 
         chipQuaHan.setOnClickListener(v -> {
             chonChip(chipQuaHan);
-            // Hóa đơn quá hạn = chưa thanh toán (dùng chung trạng thái)
-            filterTrangThai = DatabaseHelper.TRANG_THAI_HOA_DON_CHUA_THANH_TOAN;
+            filterTrangThai = "QUA_HAN";
             taiDuLieu();
         });
     }
@@ -245,15 +251,21 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
      *   4. Cập nhật Adapter và Summary Card
      */
     private void taiDuLieu() {
-        // --- Cập nhật tiêu đề tháng/năm ---
-        tvThangNam.setText("Tháng " + thangHienTai + " / " + namHienTai);
-
         // --- Lấy danh sách hóa đơn từ Repository ---
-        List<HoaDonVm> danhSach = repository.getDanhSachHoaDonVm(
-                thangHienTai,
-                namHienTai,
-                filterTrangThai // null = lấy tất cả, có giá trị = lọc theo trạng thái
-        );
+        List<HoaDonVm> danhSach;
+        if ("QUA_HAN".equals(filterTrangThai)) {
+            // Trường hợp đặc biệt: Lọc tất cả hóa đơn quá hạn (không phụ thuộc tháng/năm đang chọn trên Toolbar)
+            danhSach = repository.getDanhSachHoaDonQuaHan();
+            tvThangNam.setText("Hóa đơn quá hạn (Tất cả)");
+        } else {
+            // --- Cập nhật tiêu đề tháng/năm ---
+            tvThangNam.setText("Tháng " + thangHienTai + " / " + namHienTai);
+            danhSach = repository.getDanhSachHoaDonVm(
+                    thangHienTai,
+                    namHienTai,
+                    filterTrangThai // null = lấy tất cả, có giá trị = lọc theo trạng thái
+            );
+        }
 
         // Đưa dữ liệu mới vào Adapter → RecyclerView tự cập nhật hiển thị
         adapter.capNhatDanhSach(danhSach);

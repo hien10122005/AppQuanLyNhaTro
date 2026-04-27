@@ -4,7 +4,7 @@ package com.example.quanlynhatro.data.model;
  * Lớp KhachThue đại diện cho một người thuê trọ.
  * Model này chứa các thông tin cá nhân cơ bản để quản lý khách hàng.
  */
-public class KhachThue {
+public class KhachThue implements java.io.Serializable {
     private int id;
     private String hoTen;
     private String soDienThoai;

@@ -41,6 +41,7 @@
         <activity android:name=".ui.setting.ChinhSuaHoSoActivity" />
         <activity android:name=".ui.setting.DoiMatKhauActivity" />
         <activity android:name=".ui.setting.XuatExcelActivity" />
+        <activity android:name=".ui.hoa_don.LichSuThanhToanActivity" />
     </application>
 
 

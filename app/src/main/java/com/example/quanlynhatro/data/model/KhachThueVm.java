@@ -4,7 +4,7 @@ package com.example.quanlynhatro.data.model;
  * KhachThueVm (View Model) - Chứa thông tin khách thuê và tên phòng đang ở
  * Dùng để hiển thị lên danh sách.
  */
-public class KhachThueVm extends KhachThue {
+public class KhachThueVm extends KhachThue implements java.io.Serializable {
     private String tenPhong;
     private boolean dangThue;
 

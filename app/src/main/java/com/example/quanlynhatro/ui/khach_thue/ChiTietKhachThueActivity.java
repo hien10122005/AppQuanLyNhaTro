@@ -44,41 +44,31 @@ public class ChiTietKhachThueActivity extends AppCompatActivity {
 
     private void anhXaView() {
         tvAvatarInitials = findViewById(R.id.tvAvatarInitials);
-        tvHoTen = findViewById(R.id.tvDetailHoTen);
-        tvRoomName = findViewById(R.id.tvDetailRoomName);
-        tvSdt = findViewById(R.id.tvDetailSdt);
-        tvCccd = findViewById(R.id.tvDetailCccd);
-        tvNgaySinh = findViewById(R.id.tvDetailNgaySinh);
-        tvGioiTinh = findViewById(R.id.tvDetailGioiTinh);
-        tvDiaChi = findViewById(R.id.tvDetailDiaChi);
-        tvEmail = findViewById(R.id.tvDetailEmail);
+        tvHoTen = findViewById(R.id.tvFullName);
+        tvRoomName = findViewById(R.id.tvRoomNumber);
+        tvSdt = findViewById(R.id.tvPhone);
+        tvCccd = findViewById(R.id.tvIdCard);
+        tvNgaySinh = findViewById(R.id.tvBirthday);
+        tvGioiTinh = findViewById(R.id.tvGender);
+        tvDiaChi = findViewById(R.id.tvAddress); // Sẽ thêm vào XML
+        tvEmail = findViewById(R.id.tvEmail);   // Sẽ thêm vào XML
 
         btnCall = findViewById(R.id.btnCall);
-        btnSms = findViewById(R.id.btnSms);
-        btnEdit = findViewById(R.id.btnEditTenant);
-        btnDelete = findViewById(R.id.btnDeleteTenant);
+        btnSms = findViewById(R.id.btnMessage);
+        btnEdit = findViewById(R.id.btnEdit);
+        btnDelete = findViewById(R.id.btnTerminate);
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
+        // Layout dùng ConstraintLayout làm Toolbar nên không dùng setSupportActionBar
+        View btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
         }
-        toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Hiệu ứng hiện tiêu đề khi scroll lên
-        AppBarLayout appBarLayout = findViewById(R.id.appBar);
-        TextView tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
-        appBarLayout.addOnOffsetChangedListener((layout, verticalOffset) -> {
-            if (Math.abs(verticalOffset) >= layout.getTotalScrollRange()) {
-                tvToolbarTitle.setVisibility(View.VISIBLE);
-                tvToolbarTitle.setText(khachThue.getHoTen());
-            } else {
-                tvToolbarTitle.setVisibility(View.GONE);
-            }
-        });
+        // Hiệu ứng hiện tiêu đề khi scroll lên (nếu có AppBarLayout và tvTitle)
+        // AppBarLayout appBarLayout = findViewById(R.id.appBar); // Kiểm tra ID trong XML
+        // TextView tvTitle = findViewById(R.id.tvTitle);
     }
 
     private void hienThiDuLieu() {

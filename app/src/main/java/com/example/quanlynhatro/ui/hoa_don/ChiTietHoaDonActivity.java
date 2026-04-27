@@ -37,12 +37,15 @@ public class ChiTietHoaDonActivity extends AppCompatActivity {
     private TextView tvThanhTienDichVu, tvChiTietDichVu;
     
     private Button btnGhiNhanThuTien;
+    private com.google.android.material.button.MaterialButton btnLichSuThanhToan, btnExportPdf;
 
     private HoaDonRepository hoaDonRepository;
     private PhongRepository phongRepository;
     private DichVuRepository dichVuRepository;
 
     private int hoaDonId = -1;
+    private HoaDon currentHoaDon; // Lưu lại để dùng khi xuất PDF
+    private List<HoaDonChiTiet> currentChiTiet; // Lưu lại để dùng khi xuất PDF
     private DecimalFormat formatter = new DecimalFormat("#,###");
 
     @Override
@@ -78,6 +81,8 @@ public class ChiTietHoaDonActivity extends AppCompatActivity {
         tvThanhTienDichVu = findViewById(R.id.tvThanhTienDichVu);
         tvChiTietDichVu = findViewById(R.id.tvChiTietDichVu);
         btnGhiNhanThuTien = findViewById(R.id.btnGhiNhanThuTien);
+        btnLichSuThanhToan = findViewById(R.id.btnLichSuThanhToan);
+        btnExportPdf = findViewById(R.id.btnExportPdf);
     }
 
     private void loadData() {
@@ -87,25 +92,25 @@ public class ChiTietHoaDonActivity extends AppCompatActivity {
             return;
         }
 
-        HoaDon hoaDon = hoaDonRepository.getHoaDonById(hoaDonId);
-        if (hoaDon == null) return;
+        currentHoaDon = hoaDonRepository.getHoaDonById(hoaDonId);
+        if (currentHoaDon == null) return;
 
         // 1. Thông tin chung
-        Phong phong = phongRepository.getPhongById(hoaDon.getPhongId());
+        Phong phong = phongRepository.getPhongById(currentHoaDon.getPhongId());
         if (phong != null) {
             tvTenPhong.setText(phong.getTenPhong() != null ? phong.getTenPhong() : "Phòng " + phong.getSoPhong());
         }
-        tvKyHoaDon.setText("Kỳ hóa đơn: Tháng " + String.format("%02d", hoaDon.getThang()) + "/" + hoaDon.getNam());
-        tvTongTien.setText(formatTien(hoaDon.getTongTien()));
-        hienThiTrangThai(hoaDon.getTrangThai());
+        tvKyHoaDon.setText("Kỳ hóa đơn: Tháng " + String.format("%02d", currentHoaDon.getThang()) + "/" + currentHoaDon.getNam());
+        tvTongTien.setText(formatTien(currentHoaDon.getTongTien()));
+        hienThiTrangThai(currentHoaDon.getTrangThai());
 
         // 2. Xử lý phân loại từng dòng phí (Chi tiết hóa đơn)
-        List<HoaDonChiTiet> listChiTiet = hoaDonRepository.getChiTietHoaDon(hoaDonId);
+        currentChiTiet = hoaDonRepository.getChiTietHoaDon(hoaDonId);
         
         double tongTienDichVuKhac = 0;
         StringBuilder sbDichVuKhac = new StringBuilder();
 
-        for (HoaDonChiTiet ct : listChiTiet) {
+        for (HoaDonChiTiet ct : currentChiTiet) {
             // Lấy mã loại dịch vụ (DIEN, NUOC, PHONG...) để kiểm tra chính xác hơn dùng tên
             String maLoai = dichVuRepository.getMaLoaiById(ct.getLoaiDichVuId());
 
@@ -158,6 +163,29 @@ public class ChiTietHoaDonActivity extends AppCompatActivity {
             android.content.Intent intent = new android.content.Intent(this, ThuTienActivity.class);
             intent.putExtra("hoa_don_id", hoaDonId);
             startActivity(intent);
+        });
+
+        // Sự kiện xem lịch sử các đợt trả tiền (Item 5.4 trong NHIEM_VU)
+        btnLichSuThanhToan.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(this, LichSuThanhToanActivity.class);
+            intent.putExtra("hoa_don_id", hoaDonId);
+            startActivity(intent);
+        });
+
+        // Sự kiện xuất hóa đơn ra PDF (Item 5.5 trong NHIEM_VU)
+        btnExportPdf.setOnClickListener(v -> {
+            if (currentHoaDon != null && currentChiTiet != null) {
+                // Chúng ta cần một đối tượng HoaDonVm có đầy đủ tên phòng/khách để in PDF đẹp hơn
+                com.example.quanlynhatro.data.model.HoaDonVm vm = new com.example.quanlynhatro.data.model.HoaDonVm();
+                vm.setMaHoaDon(currentHoaDon.getMaHoaDon());
+                vm.setTenPhong(tvTenPhong.getText().toString());
+                vm.setTenKhach("Khách thuê"); // Có thể lấy từ repository nếu muốn chi tiết hơn
+                vm.setThang(currentHoaDon.getThang());
+                vm.setNam(currentHoaDon.getNam());
+                vm.setTongTien(currentHoaDon.getTongTien());
+                
+                com.example.quanlynhatro.utils.InvoiceExportUtils.exportToPdf(this, vm, currentChiTiet);
+            }
         });
 
         btnShare.setOnClickListener(v -> {

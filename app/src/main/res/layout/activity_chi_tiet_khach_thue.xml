@@ -105,11 +105,22 @@
                             app:strokeWidth="2dp">
 
                             <ImageView
-                                android:id="@+id/ivAvatar"
+                                 android:id="@+id/ivAvatar"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="match_parent"
+                                 android:scaleType="centerCrop"
+                                 android:src="@android:drawable/ic_menu_gallery" />
+
+                            <TextView
+                                android:id="@+id/tvAvatarInitials"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                android:src="@android:drawable/ic_menu_gallery" />
+                                android:gravity="center"
+                                android:textColor="#FFFFFF"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:background="#007AFF"
+                                android:visibility="visible" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
@@ -442,6 +453,62 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="079123456789"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#272A32"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- Address -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Địa chỉ"
+                            android:textColor="#8B90A0"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="---"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#272A32"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- Email -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Email"
+                            android:textColor="#8B90A0"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="---"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp" />
                     </LinearLayout>

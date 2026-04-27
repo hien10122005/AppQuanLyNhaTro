@@ -88,7 +88,7 @@ public class DanhSachKhachThueActivity extends AppCompatActivity {
             
             // Active chip
             v.setBackgroundResource(R.drawable.bg_primary_button);
-            ((android.widget.TextView)v).setTextColor(getResources().getColor(R.color.white));
+            ((android.widget.TextView)v).setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.white));
             
             currentFilter = ((android.widget.TextView)v).getText().toString();
             applyFilter();
@@ -112,13 +112,23 @@ public class DanhSachKhachThueActivity extends AppCompatActivity {
 
     private void applyFilter() {
         java.util.List<com.example.quanlynhatro.data.model.KhachThueVm> filtered = new java.util.ArrayList<>();
+        String filterRented = getString(R.string.filter_rented); // "Đã thuê"
+        String filterAvailable = getString(R.string.filter_available); // "Chưa thuê"
+
         for (com.example.quanlynhatro.data.model.KhachThueVm kt : listFull) {
-            boolean matchSearch = kt.getHoTen().toLowerCase().contains(currentSearch) || 
-                                 kt.getSoDienThoai().contains(currentSearch);
+            if (kt == null) continue;
             
-            boolean matchStatus = currentFilter.equals("Tất cả");
-            if (currentFilter.equals("Đang thuê")) matchStatus = kt.isDangThue();
-            else if (currentFilter.equals("Chưa thuê")) matchStatus = !kt.isDangThue();
+            String hoTen = kt.getHoTen() != null ? kt.getHoTen().toLowerCase() : "";
+            String sdt = kt.getSoDienThoai() != null ? kt.getSoDienThoai() : "";
+            
+            boolean matchSearch = hoTen.contains(currentSearch) || sdt.contains(currentSearch);
+            
+            boolean matchStatus = currentFilter.equals("Tất cả") || currentFilter.equals(getString(R.string.filter_all));
+            if (currentFilter.equals(filterRented)) {
+                matchStatus = kt.isDangThue();
+            } else if (currentFilter.equals(filterAvailable)) {
+                matchStatus = !kt.isDangThue();
+            }
             
             if (matchSearch && matchStatus) filtered.add(kt);
         }

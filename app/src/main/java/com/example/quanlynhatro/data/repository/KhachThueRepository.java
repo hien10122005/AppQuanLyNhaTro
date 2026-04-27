@@ -67,6 +67,10 @@ public class KhachThueRepository {
         );
     }
 
+    public boolean xoaKhachThue(int khachThueId) {
+        return deleteKhachThue(khachThueId) > 0;
+    }
+
     public KhachThue getKhachThueById(int khachThueId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         try (Cursor cursor = db.query(

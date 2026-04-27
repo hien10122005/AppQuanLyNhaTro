@@ -335,6 +335,46 @@ public class HoaDonRepository {
         return hoaDon;
     }
 
+    /**
+     * Lấy danh sách các hóa đơn đã quá hạn thanh toán nhưng chưa trả đủ tiền.
+     * Logic: han_thanh_toan < ngày_hiện_tại AND trang_thai != 'DA_THANH_TOAN'
+     */
+    public List<HoaDonVm> getDanhSachHoaDonQuaHan() {
+        List<HoaDonVm> danhSach = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Câu SQL tương tự getDanhSachHoaDonVm nhưng thêm điều kiện quá hạn
+        String sql = "SELECT hd.id, hd.ma_hoa_don, hd.thang, hd.nam, "
+                + "hd.han_thanh_toan, hd.tong_tien, hd.da_thanh_toan, hd.con_no, hd.trang_thai, "
+                + "p.ten_phong, kh.ho_ten AS ten_khach "
+                + "FROM " + DatabaseHelper.TABLE_HOA_DON + " hd "
+                + "JOIN " + DatabaseHelper.TABLE_PHONG + " p ON hd.phong_id = p.id "
+                + "JOIN " + DatabaseHelper.TABLE_HOP_DONG + " hd2 ON hd.hop_dong_id = hd2.id "
+                + "JOIN " + DatabaseHelper.TABLE_KHACH_THUE + " kh ON hd2.khach_thue_dai_dien_id = kh.id "
+                + "WHERE hd.han_thanh_toan < ? AND hd.trang_thai != ? "
+                + "ORDER BY hd.han_thanh_toan ASC";
+
+        try (Cursor cursor = db.rawQuery(sql, new String[]{today, DatabaseHelper.TRANG_THAI_HOA_DON_DA_THANH_TOAN})) {
+            while (cursor.moveToNext()) {
+                HoaDonVm vm = new HoaDonVm();
+                vm.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                vm.setMaHoaDon(cursor.getString(cursor.getColumnIndexOrThrow("ma_hoa_don")));
+                vm.setThang(cursor.getInt(cursor.getColumnIndexOrThrow("thang")));
+                vm.setNam(cursor.getInt(cursor.getColumnIndexOrThrow("nam")));
+                vm.setHanThanhToan(cursor.getString(cursor.getColumnIndexOrThrow("han_thanh_toan")));
+                vm.setTongTien(cursor.getDouble(cursor.getColumnIndexOrThrow("tong_tien")));
+                vm.setDaThanhToan(cursor.getDouble(cursor.getColumnIndexOrThrow("da_thanh_toan")));
+                vm.setConNo(cursor.getDouble(cursor.getColumnIndexOrThrow("con_no")));
+                vm.setTrangThai(cursor.getString(cursor.getColumnIndexOrThrow("trang_thai")));
+                vm.setTenPhong(cursor.getString(cursor.getColumnIndexOrThrow("ten_phong")));
+                vm.setTenKhach(cursor.getString(cursor.getColumnIndexOrThrow("ten_khach")));
+                danhSach.add(vm);
+            }
+        }
+        return danhSach;
+    }
+
     private String now() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
     }
