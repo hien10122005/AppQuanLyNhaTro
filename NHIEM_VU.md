@@ -42,7 +42,7 @@ Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu 
 - [x] Thiết kế giao diện danh sách hợp đồng (`activity_danh_sach_hop_dong.xml`).
 - [x] Thiết kế giao diện chi tiết hợp đồng (`activity_chi_tiet_hop_dong.xml`).
 - [x] **Thiết kế lại giao diện thêm/sửa hợp đồng** (`activity_them_sua_hop_dong.xml`).
-- [ ] **Tạo `HopDongAdapter.java`**: Hiển thị tên phòng + tên khách + ngày hết hạn.
+- [x] **Tạo `HopDongAdapter.java`**: Hiển thị tên phòng + tên khách + ngày hết hạn.
 - [ ] **Xử lý `ThemSuaHopDongActivity.java`**:
     - [ ] Load danh sách Phòng vào Spinner (chỉ hiện phòng "Trống").
     - [ ] Load danh sách Khách thuê vào Spinner.
