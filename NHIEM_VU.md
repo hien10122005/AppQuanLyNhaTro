@@ -113,4 +113,63 @@ Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu 
 - [ ] Tối ưu tốc độ tải danh sách (Sử dụng DiffUtil nếu cần).
 
 ---
+
+## 🚀 9. Chức Năng Nên Thêm Sớm
+- [ ] **Cảnh báo hợp đồng sắp hết hạn**:
+    - [ ] Viết query lấy các hợp đồng còn hiệu lực và sắp hết hạn trong 7/15/30 ngày.
+    - [ ] Hiển thị danh sách/cảnh báo trên `TongQuanActivity.java` hoặc `DanhSachHopDongActivity.java`.
+    - [ ] Tô màu hoặc gắn nhãn "Sắp hết hạn" để người dùng dễ nhận biết.
+- [ ] **Cảnh báo hóa đơn quá hạn, còn nợ**:
+    - [ ] Viết query lấy hóa đơn có `con_no > 0` và `han_thanh_toan < ngày hiện tại`.
+    - [ ] Hiển thị số lượng hóa đơn quá hạn trên dashboard.
+    - [ ] Thêm filter "Quá hạn" trong `DanhSachHoaDonActivity.java`.
+- [ ] **Tìm kiếm và lọc phòng, khách thuê, hóa đơn**:
+    - [ ] Thêm ô Search trên các màn hình danh sách.
+    - [ ] Lọc phòng theo trạng thái, loại phòng.
+    - [ ] Lọc khách theo tên, SĐT, CCCD.
+    - [ ] Lọc hóa đơn theo tháng, năm, trạng thái thanh toán.
+- [ ] **Xóa dữ liệu có hộp thoại xác nhận**:
+    - [ ] Bổ sung nút xóa trong màn hình chi tiết.
+    - [ ] Hiển thị `AlertDialog` xác nhận trước khi xóa.
+    - [ ] Kiểm tra ràng buộc khóa ngoại trước khi xóa dữ liệu.
+- [ ] **Lịch sử thanh toán của từng hóa đơn**:
+    - [ ] Viết query lấy danh sách bản ghi từ bảng `thanh_toan` theo `hoa_don_id`.
+    - [ ] Tạo UI hiển thị các lần thu tiền: ngày thu, số tiền, phương thức.
+    - [ ] Hiển thị tổng đã thu và số còn nợ ngay trong màn hình chi tiết hóa đơn.
+
+---
+
+## 🏢 10. Chức Năng Rất Thực Tế Cho Quản Lý Nhà Trọ
+- [ ] **Sao lưu và khôi phục dữ liệu SQLite**:
+    - [ ] Tạo chức năng export file database ra bộ nhớ máy.
+    - [ ] Tạo chức năng import/khôi phục từ file database đã sao lưu.
+    - [ ] Kiểm tra an toàn dữ liệu trước khi ghi đè database hiện tại.
+- [ ] **Xuất PDF hóa đơn hoặc phiếu thu**:
+    - [ ] Thiết kế mẫu PDF cho hóa đơn/phiếu thu.
+    - [ ] Tạo file PDF từ dữ liệu hóa đơn và thanh toán.
+    - [ ] Chức năng lưu/chia sẻ PDF.
+- [ ] **Quản lý nhiều người ở trong một phòng**:
+    - [ ] Tận dụng bảng `hop_dong_thanh_vien`.
+    - [ ] Thêm giao diện chọn nhiều khách cho 1 hợp đồng.
+    - [ ] Hiển thị danh sách thành viên đang ở trong phòng.
+- [ ] **Lịch sử thuê của một khách**:
+    - [ ] Query danh sách hợp đồng theo `khach_thue_dai_dien_id`.
+    - [ ] Hiển thị các phòng đã từng thuê, thời gian ở, trạng thái hợp đồng.
+- [ ] **Lịch sử ở của một phòng**:
+    - [ ] Query các hợp đồng theo `phong_id`.
+    - [ ] Hiển thị danh sách khách đã từng ở, thời gian thuê, tiền thuê theo gốc từng kỳ.
+- [ ] **Ghi nhận chi phí phát sinh ngoài điện nước**:
+    - [ ] Hoàn thiện cấu hình giá cho internet, rác, giữ xe, dịch vụ khác.
+    - [ ] Cho phép gán dịch vụ phát sinh theo phòng.
+    - [ ] Đưa các khoản phí này vào luồng lập hóa đơn hàng tháng.
+
+---
+
+## 🎨 11. Tối Ưu & Hoàn Thiện Giao Diện (UI/UX)
+- [ ] Thiết kế giao diện danh sách các phòng trống (`activity_danh_sach_phong_trong.xml`) - *CHƯA CÓ*.
+- [ ] Thêm mục "Phòng trống" vào Dashboard (bên cạnh mục "Phòng đang ở").
+- [ ] Bổ sung hiệu ứng Ripple cho CardView, Button và các thành phần tương tác để tăng tính thẩm mỹ.
+- [ ] Thống nhất icon trên BottomNavigationView: đảm bảo tất cả các tab đều có icon hiển thị đồng bộ (`ic_home`, `ic_contract`, `ic_bell`, `ic_settings`).
+
+---
 *Cập nhật: 26/04/2026 - Antigravity AI*
