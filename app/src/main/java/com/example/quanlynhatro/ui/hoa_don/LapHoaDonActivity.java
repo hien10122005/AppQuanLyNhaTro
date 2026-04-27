@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quanlynhatro.R;
@@ -68,7 +69,8 @@ public class LapHoaDonActivity extends AppCompatActivity {
     private DecimalFormat formatter = new DecimalFormat("#,###");
 
     private EditText etGiamTru, etGhiChu;
-    private View btnGoToNhapChiSo, layoutExtras;
+    private Button btnGoToNhapChiSo;
+    private View layoutExtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,14 +201,12 @@ public class LapHoaDonActivity extends AppCompatActivity {
         if (existingHd != null) {
             showError("Hóa đơn tháng " + thang + " của phòng này đã được lập.");
             btnGoToNhapChiSo.setVisibility(View.VISIBLE);
-            if (btnGoToNhapChiSo instanceof Button) {
-                ((Button) btnGoToNhapChiSo).setText("Xem hóa đơn đã lập ➔");
-                btnGoToNhapChiSo.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, ChiTietHoaDonActivity.class);
-                    intent.putExtra("HOA_DON_ID", existingHd.getId());
-                    startActivity(intent);
-                });
-            }
+            btnGoToNhapChiSo.setText("Xem hóa đơn đã lập ➔");
+            btnGoToNhapChiSo.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ChiTietHoaDonActivity.class);
+                intent.putExtra("hoa_don_id", existingHd.getId());
+                startActivity(intent);
+            });
             return;
         }
 
@@ -220,12 +220,10 @@ public class LapHoaDonActivity extends AppCompatActivity {
         tvError.setVisibility(View.GONE);
         btnGoToNhapChiSo.setVisibility(View.GONE);
         // Reset text và listener mặc định cho trường hợp không có hóa đơn nhưng thiếu chỉ số
-        if (btnGoToNhapChiSo instanceof Button) {
-            ((Button) btnGoToNhapChiSo).setText("Chốt số điện nước ngay ➔");
-            btnGoToNhapChiSo.setOnClickListener(v -> {
-                startActivity(new Intent(this, com.example.quanlynhatro.ui.chi_so.NhapChiSoActivity.class));
-            });
-        }
+        btnGoToNhapChiSo.setText("Chốt số điện nước ngay ➔");
+        btnGoToNhapChiSo.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.chi_so.NhapChiSoActivity.class));
+        });
 
         // --- BƯỚC A: Tiền phòng ---
         // Lấy giá từ hợp đồng đã chốt
