@@ -13,6 +13,8 @@
         android:theme="@style/Theme.QuanLyNhaTro">
         <activity android:name=".ui.bao_tri.ThemSuaBaoTriActivity" />
         <activity android:name=".ui.bao_tri.DanhSachBaoTriActivity" />
+        <activity android:name=".ui.khach_thue.ChiTietKhachThueActivity" />
+        <activity android:name=".ui.hop_dong.ChiTietHopDongActivity" />
         <activity android:name=".ui.hoa_don.ThuTienActivity" />
         <activity android:name=".ui.hoa_don.ChiTietHoaDonActivity" />
         <activity android:name=".ui.hoa_don.LapHoaDonActivity" />

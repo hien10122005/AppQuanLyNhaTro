@@ -215,6 +215,80 @@
                 android:layout_marginTop="20dp"
                 android:visibility="gone"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoToNhapChiSo"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Chốt số điện nước ngay ➔"
+                android:textColor="@color/primary_blue"
+                android:visibility="gone"
+                app:icon="@drawable/ic_event"
+                app:iconTint="@color/primary_blue" />
+
+            <!-- Card 3: Chiết khấu & Ghi chú -->
+            <LinearLayout
+                android:id="@+id/layoutExtras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_glass_card"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3. CHIẾT KHẤU &amp; GHI CHÚ"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giảm trừ (đ):"
+                        android:textColor="#808BAA"
+                        android:textSize="14sp"/>
+                        
+                    <EditText
+                        android:id="@+id/etGiamTru"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_glass_card"
+                        android:padding="12dp"
+                        android:hint="0"
+                        android:textColor="@color/white"
+                        android:inputType="number"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etGhiChu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_glass_card"
+                    android:padding="12dp"
+                    android:hint="Ghi chú thêm (vd: Hỗ trợ tiền dịch vụ...)"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:minLines="2"
+                    android:gravity="top"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

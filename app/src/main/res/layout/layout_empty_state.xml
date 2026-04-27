@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutEmpty"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="60dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <TextView
+        android:id="@+id/tvEmptyIcon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_glass_circle"
+        android:backgroundTint="#08FFFFFF"
+        android:gravity="center"
+        android:text="📭"
+        android:textSize="64sp" />
+
+    <TextView
+        android:id="@+id/tvEmptyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Chưa có dữ liệu"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvEmptyDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="40dp"
+        android:gravity="center"
+        android:text="Danh sách hiện đang trống. Hãy nhấn nút '+' để thêm mới ngay nhé!"
+        android:textColor="#80FFFFFF"
+        android:textSize="14sp" />
+
+</LinearLayout>

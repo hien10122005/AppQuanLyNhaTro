@@ -165,16 +165,26 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- ===== MIDDLE: RecyclerView (scrollable list) ===== -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDanhSachKhachThue"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_khach_thue" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDanhSachKhachThue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp"
+            tools:listitem="@layout/item_khach_thue" />
+
+        <include
+            android:id="@+id/layoutEmpty"
+            layout="@layout/layout_empty_state"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <!-- ===== FAB: Floating above bottom nav ===== -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

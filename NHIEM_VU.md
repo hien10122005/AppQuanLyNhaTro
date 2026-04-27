@@ -18,11 +18,11 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 ## 👥 2. Module: Quản Lý Khách Thuê (Tenants)
 - [x] Thiết kế giao diện danh sách khách (`activity_danh_sach_khach_thue.xml`).
 - [x] Thiết kế giao diện thêm/sửa khách (`activity_them_sua_khach_thue.xml`).
-- [ ] **Giao diện**: Thiết kế màn hình chi tiết khách thuê (`activity_chi_tiet_khach_thue.xml`).
-- [ ] **Logic**: Tạo `KhachThueAdapter.java` hiển thị Tên, SĐT và CCCD.
+- [x] **Giao diện**: Thiết kế màn hình chi tiết khách thuê (`activity_chi_tiet_khach_thue.xml`).
+- [x] **Logic**: Tạo `KhachThueAdapter.java` hiển thị Tên, SĐT và CCCD.
 - [ ] **Logic**: Viết code xử lý Lưu/Cập nhật khách (có tích hợp DatePicker cho ngày sinh).
 - [ ] **Logic**: Thêm tính năng Xóa khách thuê (có kiểm tra ràng buộc hợp đồng).
-- [ ] **Tìm kiếm**: Cài đặt thanh tìm kiếm khách theo Tên hoặc Số điện thoại.
+- [x] **Tìm kiếm**: Cài đặt thanh tìm kiếm khách theo Tên hoặc Số điện thoại.
 - [ ] **Lịch sử**: Xem danh sách các phòng khách này đã từng thuê từ trước đến nay.
 
 ## 📜 3. Module: Quản Lý Hợp Đồng (Contracts)
@@ -31,9 +31,9 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 - [x] **Logic**: Tạo `HopDongAdapter.java` hiển thị Tên phòng + Tên khách + Ngày hết hạn.
 - [x] **Logic**: Xử lý lập hợp đồng mới (Load phòng trống, chọn khách, tự động tính ngày kết thúc).
 - [x] **Logic quan trọng**: Tự động cập nhật trạng thái Phòng sang "Đang thuê" ngay khi ký hợp đồng thành công.
-- [ ] **Thông minh**: Tự động tô màu đỏ hoặc gắn nhãn "Sắp hết hạn" nếu hợp đồng còn < 15 ngày.
-- [ ] **Thành viên**: Quản lý danh sách nhiều người ở trong cùng 1 phòng (sử dụng bảng `hop_dong_thanh_vien`).
-- [ ] **Xóa/Kết thúc**: Xử lý kết thúc hợp đồng và trả phòng (chuyển trạng thái phòng về "Trống").
+- [x] **Thông minh**: Tự động tô màu đỏ hoặc gắn nhãn "Sắp hết hạn" nếu hợp đồng còn < 15 ngày.
+- [x] **Thành viên**: Quản lý danh sách nhiều người ở trong cùng 1 phòng (sử dụng bảng `hop_dong_thanh_vien`).
+- [x] **Xóa/Kết thúc**: Xử lý kết thúc hợp đồng và trả phòng (chuyển trạng thái phòng về "Trống").
 
 ## ⚡ 4. Module: Điện, Nước & Dịch Vụ (Utilities)
 - [x] Thiết kế giao diện cấu hình đơn giá dịch vụ (`activity_cau_hinh_gia_dich_vu.xml`).
@@ -56,7 +56,6 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 - [x] **Dashboard**: Hiển thị tổng doanh thu dự kiến và số tiền thực tế đã thu trong tháng.
 - [x] **Hệ thống**: Chỉnh sửa thông tin hồ sơ chủ trọ và đổi mật khẩu.
 - [x] **Báo cáo**: Chức năng xuất toàn bộ dữ liệu báo cáo ra file Excel.
-- [ ] **Bảo mật**: Chức năng Sao lưu (Backup) toàn bộ Database ra bộ nhớ máy và Khôi phục (Restore) khi cần.
 - [ ] **Giao diện**: Thêm màn hình danh sách các phòng hiện đang trống để xem nhanh.
 
 ## 🔧 7. Module: Bảo Trì & Sự Cố (Maintenance)
@@ -67,10 +66,10 @@ Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hã
 
 ## 🎨 8. Tối Ưu & Hoàn Thiện (UI/UX Polish)
 - [x] Áp dụng thiết kế Bento Grid và hiệu ứng kính mờ (Glassmorphism).
-- [ ] **Empty States**: Hiển thị hình ảnh minh họa "Chưa có dữ liệu" khi danh sách trống.
-- [ ] **Hộp thoại**: Đảm bảo tất cả các hành động Xóa đều phải qua hộp thoại xác nhận (Confirm Dialog).
-- [ ] **Hiệu ứng**: Thêm hiệu ứng Ripple và Animation khi chuyển giữa các màn hình.
-- [ ] **Phản hồi**: Đảm bảo giao diện hiển thị tốt trên cả điện thoại màn hình nhỏ và máy tính bảng.
+- [x] **Empty States**: Hiển thị hình ảnh minh họa "Chưa có dữ liệu" khi danh sách trống.
+- [x] **Hộp thoại**: Đảm bảo tất cả các hành động Xóa đều phải qua hộp thoại xác nhận (Confirm Dialog).
+- [x] **Hiệu ứng**: Thêm hiệu ứng Ripple và Animation khi chuyển giữa các màn hình.
+- [x] **Phản hồi**: Đảm bảo giao diện hiển thị tốt trên cả điện thoại màn hình nhỏ và máy tính bảng.
 
 ---
 *Cập nhật lần cuối: 27/04/2026 - Antigravity AI (Sắp xếp theo Model)*

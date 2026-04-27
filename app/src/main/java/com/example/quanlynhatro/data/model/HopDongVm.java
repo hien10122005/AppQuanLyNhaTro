@@ -8,6 +8,8 @@ package com.example.quanlynhatro.data.model;
 public class HopDongVm extends HopDong {
     private String tenPhong;
     private String tenKhachThue;
+    private String sdtKhachThue;
+    private String cccdKhachThue;
 
     public HopDongVm() {
         super();
@@ -27,5 +29,21 @@ public class HopDongVm extends HopDong {
 
     public void setTenKhachThue(String tenKhachThue) {
         this.tenKhachThue = tenKhachThue;
+    }
+
+    public String getSdtKhachThue() {
+        return sdtKhachThue;
+    }
+
+    public void setSdtKhachThue(String sdtKhachThue) {
+        this.sdtKhachThue = sdtKhachThue;
+    }
+
+    public String getCccdKhachThue() {
+        return cccdKhachThue;
+    }
+
+    public void setCccdKhachThue(String cccdKhachThue) {
+        this.cccdKhachThue = cccdKhachThue;
     }
 }

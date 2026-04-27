@@ -253,6 +253,11 @@
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_hop_dong" />
 
+            <include
+                android:id="@+id/layoutEmpty"
+                layout="@layout/layout_empty_state"
+                android:visibility="gone" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

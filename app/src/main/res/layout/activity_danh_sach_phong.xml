@@ -178,16 +178,26 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main List Container -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDanhSachPhong"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_phong" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDanhSachPhong"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="100dp"
+            tools:listitem="@layout/item_phong" />
+
+        <include
+            android:id="@+id/layoutEmpty"
+            layout="@layout/layout_empty_state"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <!-- Action: FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

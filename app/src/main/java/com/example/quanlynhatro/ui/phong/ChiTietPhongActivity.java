@@ -93,11 +93,11 @@ public class ChiTietPhongActivity extends AppCompatActivity {
         });
 
         btnDelete.setOnClickListener(v -> {
-            new androidx.appcompat.app.AlertDialog.Builder(this)
-                    .setTitle("Xác nhận xóa")
-                    .setMessage("Bạn có chắc chắn muốn xóa phòng này không? Hành động này không thể hoàn tác.")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("Xóa", (dialog, which) -> {
+            com.example.quanlynhatro.utils.UIUtils.showConfirmDialog(
+                    this,
+                    "Xác nhận xóa phòng",
+                    "Bạn có chắc chắn muốn xóa phòng này không? Mọi dữ liệu liên quan sẽ bị mất.",
+                    () -> {
                         int result = repository.deletePhong(phongId);
                         if (result > 0) {
                             Toast.makeText(this, "Xóa phòng thành công!", Toast.LENGTH_SHORT).show();
@@ -105,17 +105,15 @@ public class ChiTietPhongActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(this, "Lỗi khi xóa phòng!", Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .setNegativeButton("Hủy", null)
-                    .show();
+                    }
+            );
         });
 
         btnRoomHistory.setOnClickListener(v -> {
-            // Xem lịch sử thuê phòng
-            // Intent intent = new Intent(this, LichSuThuePhongActivity.class);
-            // intent.putExtra("PHONG_ID", phongId);
-            // startActivity(intent);
-            Toast.makeText(this, "Tính năng xem lịch sử đang được cập nhật!", Toast.LENGTH_SHORT).show();
+            // Xem lịch sử thuê phòng bằng cách lọc danh sách hợp đồng theo phòng này
+            Intent intent = new Intent(this, com.example.quanlynhatro.ui.hop_dong.DanhSachHopDongActivity.class);
+            intent.putExtra("FILTER_PHONG_ID", phongId);
+            startActivity(intent);
         });
     }
 

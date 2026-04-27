@@ -85,6 +85,34 @@ public class KhachThueRepository {
         return null;
     }
 
+    public List<com.example.quanlynhatro.data.model.KhachThueVm> getAllKhachThueVm() {
+        List<com.example.quanlynhatro.data.model.KhachThueVm> danhSach = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        
+        // Query JOIN với bảng HOP_DONG để lấy tên phòng
+        String sql = "SELECT kt.*, p." + DatabaseHelper.COL_PHONG_TEN_PHONG 
+                   + " FROM " + DatabaseHelper.TABLE_KHACH_THUE + " kt "
+                   + " LEFT JOIN " + DatabaseHelper.TABLE_HOP_DONG + " hd ON kt." + DatabaseHelper.COL_ID + " = hd." + DatabaseHelper.COL_HOP_DONG_KHACH_THUE_DAI_DIEN_ID 
+                   + " AND hd." + DatabaseHelper.COL_HOP_DONG_TRANG_THAI + " = '" + DatabaseHelper.TRANG_THAI_HOP_DONG_HIEU_LUC + "'"
+                   + " LEFT JOIN " + DatabaseHelper.TABLE_PHONG + " p ON hd." + DatabaseHelper.COL_HOP_DONG_PHONG_ID + " = p." + DatabaseHelper.COL_ID
+                   + " ORDER BY kt." + DatabaseHelper.COL_KHACH_THUE_HO_TEN + " ASC";
+
+        try (Cursor cursor = db.rawQuery(sql, null)) {
+            while (cursor.moveToNext()) {
+                com.example.quanlynhatro.data.model.KhachThueVm vm = new com.example.quanlynhatro.data.model.KhachThueVm();
+                // Map thông tin cơ bản
+                KhachThue base = mapKhachThue(cursor);
+                vm.setId(base.getId());
+                vm.setHoTen(base.getHoTen());
+                vm.setSoDienThoai(base.getSoDienThoai());
+                vm.setTenPhong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PHONG_TEN_PHONG)));
+                vm.setDangThue(vm.getTenPhong() != null && !vm.getTenPhong().isEmpty());
+                danhSach.add(vm);
+            }
+        }
+        return danhSach;
+    }
+
     public List<KhachThue> getAllKhachThue() {
         List<KhachThue> danhSach = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -66,6 +67,9 @@ public class LapHoaDonActivity extends AppCompatActivity {
 
     private DecimalFormat formatter = new DecimalFormat("#,###");
 
+    private EditText etGiamTru, etGhiChu;
+    private View btnGoToNhapChiSo, layoutExtras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +100,11 @@ public class LapHoaDonActivity extends AppCompatActivity {
         tvTongTien = findViewById(R.id.tvTongTien);
         tvError = findViewById(R.id.tvError);
         btnLuuHoaDon = findViewById(R.id.btnLuuHoaDon);
+        
+        etGiamTru = findViewById(R.id.etGiamTru);
+        etGhiChu = findViewById(R.id.etGhiChu);
+        btnGoToNhapChiSo = findViewById(R.id.btnGoToNhapChiSo);
+        layoutExtras = findViewById(R.id.layoutExtras);
     }
 
     private void setupSpinners() {
@@ -140,6 +149,31 @@ public class LapHoaDonActivity extends AppCompatActivity {
         spinnerNam.setOnItemSelectedListener(listener);
 
         btnLuuHoaDon.setOnClickListener(v -> saveInvoice());
+
+        btnGoToNhapChiSo.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.quanlynhatro.ui.chi_so.NhapChiSoActivity.class));
+        });
+
+        // Lắng nghe thay đổi giảm trừ để cập nhật tổng tiền
+        etGiamTru.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                updateTotalDisplay();
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+    }
+
+    private void updateTotalDisplay() {
+        double giamTru = 0;
+        try {
+            String s = etGiamTru.getText().toString();
+            if (!s.isEmpty()) giamTru = Double.parseDouble(s);
+        } catch (Exception ignored) {}
+
+        double finalTotal = Math.max(0, tongTienCalculated - giamTru);
+        tvTongTien.setText(formatter.format(finalTotal) + "đ");
     }
 
     /**
@@ -153,16 +187,26 @@ public class LapHoaDonActivity extends AppCompatActivity {
         int thang = Integer.parseInt(spinnerThang.getSelectedItem().toString());
         int nam = Integer.parseInt(spinnerNam.getSelectedItem().toString());
 
-        // 1. Kiểm tra xem tháng này đã lập hóa đơn chưa (Tránh trùng)
-        if (hoaDonRepository.existsHoaDon(phong.getId(), thang, nam)) {
-            showError("Lỗi: Hóa đơn tháng " + thang + " của phòng này đã tồn tại!");
-            return;
-        }
-
         // 2. Tìm hợp đồng còn hiệu lực để lấy giá thuê
         currentHopDong = hopDongRepository.getHopDongHieuLucTheoPhong(phong.getId());
         if (currentHopDong == null) {
             showError("Lỗi: Phòng này hiện không có hợp đồng thuê nào còn hiệu lực!");
+            return;
+        }
+
+        // 1. Kiểm tra xem tháng này đã lập hóa đơn chưa (Tránh trùng)
+        HoaDon existingHd = hoaDonRepository.getHoaDonTheoKy(currentHopDong.getId(), thang, nam);
+        if (existingHd != null) {
+            showError("Hóa đơn tháng " + thang + " của phòng này đã được lập.");
+            btnGoToNhapChiSo.setVisibility(View.VISIBLE);
+            if (btnGoToNhapChiSo instanceof Button) {
+                ((Button) btnGoToNhapChiSo).setText("Xem hóa đơn đã lập ➔");
+                btnGoToNhapChiSo.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ChiTietHoaDonActivity.class);
+                    intent.putExtra("HOA_DON_ID", existingHd.getId());
+                    startActivity(intent);
+                });
+            }
             return;
         }
 
@@ -173,6 +217,15 @@ public class LapHoaDonActivity extends AppCompatActivity {
         tongTienCalculated = 0;
         hasMissingReadings = false;
         layoutChiTiet.removeAllViews();
+        tvError.setVisibility(View.GONE);
+        btnGoToNhapChiSo.setVisibility(View.GONE);
+        // Reset text và listener mặc định cho trường hợp không có hóa đơn nhưng thiếu chỉ số
+        if (btnGoToNhapChiSo instanceof Button) {
+            ((Button) btnGoToNhapChiSo).setText("Chốt số điện nước ngay ➔");
+            btnGoToNhapChiSo.setOnClickListener(v -> {
+                startActivity(new Intent(this, com.example.quanlynhatro.ui.chi_so.NhapChiSoActivity.class));
+            });
+        }
 
         // --- BƯỚC A: Tiền phòng ---
         // Lấy giá từ hợp đồng đã chốt
@@ -186,15 +239,16 @@ public class LapHoaDonActivity extends AppCompatActivity {
         // --- BƯỚC C: Các phí dịch vụ khác (Wifi, Rác...) ---
         processFixedServices(phong.getId());
 
-        // Hiển thị tổng cộng
-        tvTongTien.setText(formatter.format(tongTienCalculated) + "đ");
+        // Hiển thị tổng cộng ban đầu
+        updateTotalDisplay();
         layoutPreview.setVisibility(View.VISIBLE);
-        tvError.setVisibility(View.GONE);
+        layoutExtras.setVisibility(View.VISIBLE);
         
         // Nếu thiếu chỉ số điện/nước thì cảnh báo và không cho lưu
         if (hasMissingReadings) {
             tvError.setText("Cảnh báo: Chưa nhập chỉ số Điện hoặc Nước cho tháng này. Hãy chốt số trước khi lập hóa đơn!");
             tvError.setVisibility(View.VISIBLE);
+            btnGoToNhapChiSo.setVisibility(View.VISIBLE);
             btnLuuHoaDon.setEnabled(false);
             btnLuuHoaDon.setAlpha(0.5f);
         } else {
@@ -305,12 +359,19 @@ public class LapHoaDonActivity extends AppCompatActivity {
         cal.add(Calendar.DAY_OF_MONTH, 5);
         hd.setHanThanhToan(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime()));
         
+        double giamTru = 0;
+        try {
+            String s = etGiamTru.getText().toString();
+            if (!s.isEmpty()) giamTru = Double.parseDouble(s);
+        } catch (Exception ignored) {}
+
         hd.setTongTienTruocGiam(tongTienCalculated);
-        hd.setGiamTru(0);
-        hd.setTongTien(tongTienCalculated);
+        hd.setGiamTru(giamTru);
+        hd.setTongTien(Math.max(0, tongTienCalculated - giamTru));
         hd.setDaThanhToan(0);
-        hd.setConNo(tongTienCalculated);
+        hd.setConNo(hd.getTongTien());
         hd.setTrangThai(DatabaseHelper.TRANG_THAI_HOA_DON_CHUA_THANH_TOAN);
+        hd.setGhiChu(etGhiChu.getText().toString());
 
         // 1. Lưu bảng chính (HoaDon)
         long hdId = hoaDonRepository.addHoaDon(hd);

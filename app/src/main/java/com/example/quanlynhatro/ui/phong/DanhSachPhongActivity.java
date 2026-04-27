@@ -43,9 +43,19 @@ public class DanhSachPhongActivity extends AppCompatActivity {
 
         phongRepository = new com.example.quanlynhatro.data.repository.PhongRepository(this);
         
+        // Kiểm tra xem có yêu cầu lọc sẵn trạng thái không (Dùng từ Dashboard chuyển qua)
+        if (getIntent().hasExtra("FILTER_STATUS")) {
+            currentStatusFilter = getIntent().getStringExtra("FILTER_STATUS");
+        }
+
         initViews();
         setupRecyclerView();
         setupBottomNavigation();
+        
+        // Nếu có lọc sẵn, cập nhật giao diện chip
+        if (!currentStatusFilter.equals("Tất cả")) {
+            updateChipHighlight();
+        }
     }
 
     @Override
@@ -118,6 +128,19 @@ public class DanhSachPhongActivity extends AppCompatActivity {
         chipBaoTri.setOnClickListener(filterListener);
     }
 
+    private void updateChipHighlight() {
+        resetChips();
+        TextView chipToSelect = chipAll;
+        
+        if (currentStatusFilter.equals("Trống")) chipToSelect = chipTrong;
+        else if (currentStatusFilter.equals("Đang thuê")) chipToSelect = chipDangThue;
+        else if (currentStatusFilter.equals("Bảo trì")) chipToSelect = chipBaoTri;
+        
+        chipToSelect.setBackgroundResource(R.drawable.bg_primary_button);
+        chipToSelect.setTextColor(getResources().getColor(R.color.white));
+        chipToSelect.setTypeface(null, android.graphics.Typeface.BOLD);
+    }
+
     private void resetChips() {
         TextView[] chips = {chipAll, chipTrong, chipDangThue, chipBaoTri};
         for (TextView chip : chips) {
@@ -144,9 +167,16 @@ public class DanhSachPhongActivity extends AppCompatActivity {
                 matchStatus = p.getTrangThai().equals(com.example.quanlynhatro.data.database.DatabaseHelper.TRANG_THAI_PHONG_BAO_TRI);
             }
             
-            if (matchSearch && matchStatus) {
+        if (matchSearch && matchStatus) {
                 filteredList.add(p);
             }
+        }
+        
+        // Cập nhật giao diện Empty State
+        android.view.View layoutEmpty = findViewById(R.id.layoutEmpty);
+        if (layoutEmpty != null) {
+            layoutEmpty.setVisibility(filteredList.isEmpty() ? android.view.View.VISIBLE : android.view.View.GONE);
+            recyclerPhong.setVisibility(filteredList.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE);
         }
         
         adapter.setDanhSachPhong(filteredList);

@@ -145,9 +145,20 @@ public class NhapChiSoActivity extends AppCompatActivity {
         String[] tenPhong = new String[danhSachPhong.size()];
         for (int i = 0; i < danhSachPhong.size(); i++) {
             Phong p = danhSachPhong.get(i);
-            // Ghép tên phòng có ý nghĩa hơn
-            tenPhong[i] = "Phòng " + p.getSoPhong()
-                    + (p.getTenPhong() != null ? " - " + p.getTenPhong() : "");
+            String so = p.getSoPhong();
+            String ten = p.getTenPhong();
+            
+            // Nếu tên phòng đã chứa số phòng (vd: "Phòng 101" đã có "101"), chỉ hiện tên
+            // Nếu tên khác số hoàn toàn (vd: "101" - "Phòng đơn"), hiện cả hai
+            if (ten != null && !ten.isEmpty()) {
+                if (ten.contains(so)) {
+                    tenPhong[i] = ten;
+                } else {
+                    tenPhong[i] = "Phòng " + so + " - " + ten;
+                }
+            } else {
+                tenPhong[i] = "Phòng " + so;
+            }
         }
 
         // ArrayAdapter.createFromResource không dùng được vì data động,

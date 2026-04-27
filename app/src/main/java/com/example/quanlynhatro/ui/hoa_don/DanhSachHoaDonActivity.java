@@ -258,6 +258,13 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
         // Đưa dữ liệu mới vào Adapter → RecyclerView tự cập nhật hiển thị
         adapter.capNhatDanhSach(danhSach);
 
+        // --- Cập nhật Empty State ---
+        android.view.View layoutEmpty = findViewById(R.id.layoutEmpty);
+        if (layoutEmpty != null) {
+            layoutEmpty.setVisibility(danhSach.isEmpty() ? android.view.View.VISIBLE : android.view.View.GONE);
+            recyclerHoaDon.setVisibility(danhSach.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE);
+        }
+
         // --- Tính và hiển thị tổng tiền ---
         double[] tong = repository.tinhTongTheoThang(thangHienTai, namHienTai);
         // tong[0] = phải thu, tong[1] = đã thu, tong[2] = còn nợ

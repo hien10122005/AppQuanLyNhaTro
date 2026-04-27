@@ -404,14 +404,18 @@ public class TongQuanActivity extends AppCompatActivity {
             startActivity(new Intent(this, DanhSachPhongActivity.class));
         });
 
-        // Nhấn vào thẻ Đang Ở -> Danh sách phòng
+        // Nhấn vào thẻ Đang Ở -> Danh sách phòng (lọc Đang thuê)
         layoutPhongDangO.setOnClickListener(v -> {
-            startActivity(new Intent(this, DanhSachPhongActivity.class));
+            Intent intent = new Intent(this, DanhSachPhongActivity.class);
+            intent.putExtra("FILTER_STATUS", "Đang thuê");
+            startActivity(intent);
         });
 
-        // Nhấn vào thẻ Phòng Trống -> Danh sách phòng
+        // Nhấn vào thẻ Phòng Trống -> Danh sách phòng (lọc Trống)
         layoutPhongTrong.setOnClickListener(v -> {
-            startActivity(new Intent(this, DanhSachPhongActivity.class));
+            Intent intent = new Intent(this, DanhSachPhongActivity.class);
+            intent.putExtra("FILTER_STATUS", "Trống");
+            startActivity(intent);
         });
 
         // Nhấn vào thẻ Quá Hạn -> Danh sách hóa đơn

@@ -78,23 +78,69 @@ public class HopDongAdapter extends RecyclerView.Adapter<HopDongAdapter.HopDongV
         // 4. Hiển thị thời hạn hợp đồng (Ngày bắt đầu - Ngày kết thúc)
         holder.tvDateRange.setText(item.getNgayBatDau() + " - " + item.getNgayKetThuc());
 
-        // 5. Trạng thái hợp đồng (Mặc định là Đang thực hiện)
-        holder.tvProgressText.setText(item.getTrangThai() != null ? item.getTrangThai() : "Đang hiệu lực");
+        // 5. Trạng thái hợp đồng
+        String trangThai = item.getTrangThai() != null ? item.getTrangThai() : "HIEU_LUC";
+        holder.tvProgressText.setText(trangThai);
         
-        // 6. Xử lý thanh tiến độ ProgressBar (Demo 100% nếu đã xong, 50% nếu đang chờ)
-        if ("Hoàn thành".equals(item.getTrangThai())) {
+        // 6. Xử lý thanh tiến độ và Cảnh báo hết hạn (Thông minh)
+        long daysLeft = calculateDaysRemaining(item.getNgayKetThuc());
+        
+        if ("DA_THANH_LY".equals(trangThai) || "HUY".equals(trangThai)) {
             holder.pbContract.setProgress(100);
             holder.tvBadgeWarning.setVisibility(View.GONE);
+            holder.tvProgressText.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.darker_gray));
         } else {
-            holder.pbContract.setProgress(60); // Giá trị demo
-            holder.tvBadgeWarning.setVisibility(View.VISIBLE);
-            holder.tvBadgeWarning.setText("Đang hiệu lực");
+            holder.pbContract.setProgress(60); // Demo giá trị thực tế nên tính theo thời gian đã qua
+            
+            // Nếu còn < 15 ngày thì hiện cảnh báo Đỏ (Smart Warning)
+            if (daysLeft >= 0 && daysLeft < 15) {
+                holder.tvBadgeWarning.setVisibility(View.VISIBLE);
+                holder.tvBadgeWarning.setText("Sắp hết hạn (" + daysLeft + " ngày)");
+                holder.tvBadgeWarning.getBackground().setTint(0xFFFF5545); // Màu đỏ cảnh báo
+                holder.tvBadgeWarning.setTextColor(0xFFFFFFFF);
+            } else if (daysLeft < 0) {
+                holder.tvBadgeWarning.setVisibility(View.VISIBLE);
+                holder.tvBadgeWarning.setText("Đã quá hạn");
+                holder.tvBadgeWarning.getBackground().setTint(0xFF000000); // Màu đen
+                holder.tvBadgeWarning.setTextColor(0xFFFFFFFF);
+            } else {
+                holder.tvBadgeWarning.setVisibility(View.VISIBLE);
+                holder.tvBadgeWarning.setText("Đang hiệu lực");
+                holder.tvBadgeWarning.getBackground().setTint(0xFF34C759); // Màu xanh lá
+                holder.tvBadgeWarning.setTextColor(0xFFFFFFFF);
+            }
         }
 
         // Sự kiện Click vào dòng này
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(item);
         });
+    }
+
+    /**
+     * Tính số ngày còn lại dựa trên ngày kết thúc.
+     */
+    private long calculateDaysRemaining(String endDateStr) {
+        if (endDateStr == null || endDateStr.isEmpty()) return 999;
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            java.util.Date endDate = sdf.parse(endDateStr);
+            java.util.Date today = new java.util.Date();
+            
+            // Chỉ lấy phần ngày để tính toán chính xác
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(today);
+            cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            cal.set(java.util.Calendar.MINUTE, 0);
+            cal.set(java.util.Calendar.SECOND, 0);
+            cal.set(java.util.Calendar.MILLISECOND, 0);
+            long todayMs = cal.getTimeInMillis();
+            
+            long diff = endDate.getTime() - todayMs;
+            return diff / (24 * 60 * 60 * 1000);
+        } catch (Exception e) {
+            return 999;
+        }
     }
 
     @Override
