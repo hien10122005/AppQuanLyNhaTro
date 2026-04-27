@@ -24,7 +24,7 @@ import java.util.Locale;
 public class ChiTietPhongActivity extends AppCompatActivity {
 
     private TextView tvTitle, tvPriceHeader, tvTenantName, tvTenantPhone;
-    private ImageButton btnBack, btnEdit;
+    private ImageButton btnBack, btnEdit, btnDelete;
     private LinearLayout llMeterAction, llCollectAction, llReportAction;
     
     private PhongRepository repository;
@@ -61,6 +61,7 @@ public class ChiTietPhongActivity extends AppCompatActivity {
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
         btnBack = findViewById(R.id.btnBack);
         btnEdit = findViewById(R.id.btnEdit);
+        btnDelete = findViewById(R.id.btnDelete);
         llMeterAction = findViewById(R.id.llMeterAction);
         llCollectAction = findViewById(R.id.llCollectAction);
         llReportAction = findViewById(R.id.llReportAction);
@@ -87,6 +88,24 @@ public class ChiTietPhongActivity extends AppCompatActivity {
             Intent intent = new Intent(this, com.example.quanlynhatro.ui.hoa_don.ThuTienActivity.class);
             intent.putExtra("PHONG_ID", phongId);
             startActivity(intent);
+        });
+
+        btnDelete.setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có chắc chắn muốn xóa phòng này không? Hành động này không thể hoàn tác.")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        int result = repository.deletePhong(phongId);
+                        if (result > 0) {
+                            Toast.makeText(this, "Xóa phòng thành công!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Lỗi khi xóa phòng!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
         });
     }
 

@@ -20,7 +20,7 @@ Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu 
     - [x] Gọi `PhongRepository.updatePhong()` khi chỉnh sửa.
 - [x] **Xử lý `ChiTietPhongActivity.java`**:
     - [x] Hiển thị đầy đủ thông tin phòng.
-    - [ ] Thêm nút Xóa phòng (có hộp thoại xác nhận).
+    - [x] Thêm nút Xóa phòng (có hộp thoại xác nhận).
 
 ---
 
