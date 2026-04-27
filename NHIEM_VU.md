@@ -1,175 +1,76 @@
-# 📋 Danh Sách Nhiệm Vụ Chi Tiết - Dự Án QLNhaTro
+# 📋 Lộ Trình Phát Triển Ứng Dụng QLNhaTro (Sắp xếp theo Module)
 
-Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu `[x]` khi bạn hoàn thành một mục.
+Tài liệu này liệt kê mọi đầu việc chi tiết cho từng Model. Hãy đánh dấu `[x]` khi bạn hoàn thành một mục.
 
 ---
 
-## 🏠 1. Quản Lý Phòng (Rooms)
+## 🏠 1. Module: Quản Lý Phòng (Rooms)
 - [x] Thiết kế giao diện danh sách phòng (`activity_danh_sach_phong.xml`).
 - [x] Thiết kế giao diện chi tiết phòng (`activity_chi_tiet_phong.xml`).
 - [x] Thiết kế giao diện thêm/sửa phòng (`activity_them_sua_phong.xml`).
-- [x] **Tạo `PhongAdapter.java`**: Xử lý hiển thị từng dòng phòng (Số phòng, Giá, Trạng thái).
-- [x] **Xử lý `DanhSachPhongActivity.java`**:
-    - [x] Lấy danh sách từ `PhongRepository`.
-    - [x] Gán Adapter vào RecyclerView.
-    - [x] Xử lý sự kiện Click vào phòng để xem chi tiết.
-- [x] **Xử lý `ThemSuaPhongActivity.java`**:
-    - [x] Ánh xạ các trường: Tên phòng, Loại phòng, Giá, Diện tích.
-    - [x] Viết hàm Validate (không để trống tên và giá).
-    - [x] Gọi `PhongRepository.insertPhong()` khi thêm mới.
-    - [x] Gọi `PhongRepository.updatePhong()` khi chỉnh sửa.
-- [x] **Xử lý `ChiTietPhongActivity.java`**:
-    - [x] Hiển thị đầy đủ thông tin phòng.
-    - [x] Thêm nút Xóa phòng (có hộp thoại xác nhận).
+- [x] **Logic**: Tạo `PhongAdapter.java` xử lý hiển thị danh sách phòng.
+- [x] **Logic**: Xử lý thêm/sửa phòng trong `ThemSuaPhongActivity.java`.
+- [x] **Logic**: Xử lý hiển thị thông tin và Xóa phòng (có xác nhận) trong `ChiTietPhongActivity.java`.
+- [ ] **Tìm kiếm**: Thêm ô tìm kiếm phòng theo số phòng hoặc tên phòng.
+- [ ] **Bộ lọc**: Lọc danh sách phòng theo trạng thái (Trống, Đang thuê, Bảo trì).
+- [ ] **Lịch sử**: Xem danh sách các khách thuê đã từng ở trong phòng này (truy vấn từ bảng hợp đồng cũ).
 
----
-
-## 👥 2. Quản Lý Khách Thuê (Tenants)
+## 👥 2. Module: Quản Lý Khách Thuê (Tenants)
 - [x] Thiết kế giao diện danh sách khách (`activity_danh_sach_khach_thue.xml`).
-- [ ] **Thiết kế giao diện chi tiết khách thuê** (`activity_chi_tiet_khach_thue.xml`) - *CHƯA CÓ*.
 - [x] Thiết kế giao diện thêm/sửa khách (`activity_them_sua_khach_thue.xml`).
-- [ ] **Tạo `KhachThueAdapter.java`**: Hiển thị tên, SĐT và CCCD khách.
-- [ ] **Xử lý `DanhSachKhachThueActivity.java`**:
-    - [ ] Load dữ liệu từ `KhachThueRepository`.
-    - [ ] Cài đặt thanh tìm kiếm khách theo tên hoặc SĐT.
-- [ ] **Xử lý `ThemSuaKhachThueActivity.java`**:
-    - [ ] Xử lý chọn ngày sinh (DatePicker).
-    - [ ] Lưu thông tin khách vào Database.
+- [ ] **Giao diện**: Thiết kế màn hình chi tiết khách thuê (`activity_chi_tiet_khach_thue.xml`).
+- [ ] **Logic**: Tạo `KhachThueAdapter.java` hiển thị Tên, SĐT và CCCD.
+- [ ] **Logic**: Viết code xử lý Lưu/Cập nhật khách (có tích hợp DatePicker cho ngày sinh).
+- [ ] **Logic**: Thêm tính năng Xóa khách thuê (có kiểm tra ràng buộc hợp đồng).
+- [ ] **Tìm kiếm**: Cài đặt thanh tìm kiếm khách theo Tên hoặc Số điện thoại.
+- [ ] **Lịch sử**: Xem danh sách các phòng khách này đã từng thuê từ trước đến nay.
+
+## 📜 3. Module: Quản Lý Hợp Đồng (Contracts)
+- [x] Thiết kế giao diện danh sách và chi tiết hợp đồng.
+- [x] Thiết kế lại giao diện lập hợp đồng mới (`activity_them_sua_hop_dong.xml`) theo phong cách Glassmorphism.
+- [x] **Logic**: Tạo `HopDongAdapter.java` hiển thị Tên phòng + Tên khách + Ngày hết hạn.
+- [x] **Logic**: Xử lý lập hợp đồng mới (Load phòng trống, chọn khách, tự động tính ngày kết thúc).
+- [x] **Logic quan trọng**: Tự động cập nhật trạng thái Phòng sang "Đang thuê" ngay khi ký hợp đồng thành công.
+- [ ] **Thông minh**: Tự động tô màu đỏ hoặc gắn nhãn "Sắp hết hạn" nếu hợp đồng còn < 15 ngày.
+- [ ] **Thành viên**: Quản lý danh sách nhiều người ở trong cùng 1 phòng (sử dụng bảng `hop_dong_thanh_vien`).
+- [ ] **Xóa/Kết thúc**: Xử lý kết thúc hợp đồng và trả phòng (chuyển trạng thái phòng về "Trống").
+
+## ⚡ 4. Module: Điện, Nước & Dịch Vụ (Utilities)
+- [x] Thiết kế giao diện cấu hình đơn giá dịch vụ (`activity_cau_hinh_gia_dich_vu.xml`).
+- [x] Thiết kế giao diện nhập chỉ số điện nước (`activity_nhap_chi_so.xml`).
+- [x] **Logic**: Lưu và cập nhật đơn giá dịch vụ vào Database.
+- [x] **Logic**: Tự động lấy chỉ số cũ từ tháng trước và tính toán tiêu thụ thực tế.
+- [ ] **Dịch vụ khác**: Ghi nhận các chi phí phát sinh đột xuất (phí vệ sinh thêm, tiền phạt, tiền thưởng).
+- [ ] **Thống kê**: Biểu đồ theo dõi xu hướng sử dụng điện/nước của từng phòng.
+
+## 💰 5. Module: Hóa Đơn & Thanh Toán (Billing)
+- [x] **Logic**: Lập hóa đơn hàng tháng (Tổng tiền = Phòng + Điện + Nước + Dịch vụ).
+- [x] **Logic**: Danh sách hóa đơn phân loại theo tháng/năm.
+- [x] **Logic**: Ghi nhận thu tiền (Cho phép thu một phần, tự động tính toán số tiền còn nợ).
+- [ ] **Lịch sử**: Xem danh sách các đợt trả tiền của một hóa đơn (ai thu, ngày nào, bao nhiêu).
+- [ ] **Xuất bản**: Chức năng xuất hóa đơn ra file PDF hoặc ảnh để gửi cho khách qua mạng xã hội.
+- [ ] **Thông minh**: Cảnh báo danh sách các hóa đơn đã quá hạn thanh toán.
+
+## 📊 6. Module: Dashboard & Hệ Thống (System)
+- [x] **Dashboard**: Thống kê số lượng phòng trống và phòng đang ở.
+- [x] **Dashboard**: Hiển thị tổng doanh thu dự kiến và số tiền thực tế đã thu trong tháng.
+- [x] **Hệ thống**: Chỉnh sửa thông tin hồ sơ chủ trọ và đổi mật khẩu.
+- [x] **Báo cáo**: Chức năng xuất toàn bộ dữ liệu báo cáo ra file Excel.
+- [ ] **Bảo mật**: Chức năng Sao lưu (Backup) toàn bộ Database ra bộ nhớ máy và Khôi phục (Restore) khi cần.
+- [ ] **Giao diện**: Thêm màn hình danh sách các phòng hiện đang trống để xem nhanh.
+
+## 🔧 7. Module: Bảo Trì & Sự Cố (Maintenance)
+- [x] Thiết kế giao diện danh sách và form báo cáo sự cố.
+- [ ] **Logic**: Tạo `BaoTriAdapter.java` hiển thị thẻ sự cố (Phòng nào, bị gì, ngày báo).
+- [ ] **Phân loại**: Logic lọc sự cố theo trạng thái: Chờ xử lý, Đang sửa, Đã hoàn thành.
+- [ ] **Chi phí**: Ghi nhận chi phí sửa chữa sự cố để trừ vào doanh thu thực tế.
+
+## 🎨 8. Tối Ưu & Hoàn Thiện (UI/UX Polish)
+- [x] Áp dụng thiết kế Bento Grid và hiệu ứng kính mờ (Glassmorphism).
+- [ ] **Empty States**: Hiển thị hình ảnh minh họa "Chưa có dữ liệu" khi danh sách trống.
+- [ ] **Hộp thoại**: Đảm bảo tất cả các hành động Xóa đều phải qua hộp thoại xác nhận (Confirm Dialog).
+- [ ] **Hiệu ứng**: Thêm hiệu ứng Ripple và Animation khi chuyển giữa các màn hình.
+- [ ] **Phản hồi**: Đảm bảo giao diện hiển thị tốt trên cả điện thoại màn hình nhỏ và máy tính bảng.
 
 ---
-
-## 📜 3. Quản Lý Hợp Đồng (Contracts)
-- [x] Thiết kế giao diện danh sách hợp đồng (`activity_danh_sach_hop_dong.xml`).
-- [x] Thiết kế giao diện chi tiết hợp đồng (`activity_chi_tiet_hop_dong.xml`).
-- [x] **Thiết kế lại giao diện thêm/sửa hợp đồng** (`activity_them_sua_hop_dong.xml`).
-- [x] **Tạo `HopDongAdapter.java`**: Hiển thị tên phòng + tên khách + ngày hết hạn.
-- [x] **Xử lý `ThemSuaHopDongActivity.java`**:
-    - [x] Load danh sách Phòng vào Spinner (chỉ hiện phòng "Trống").
-    - [x] Load danh sách Khách thuê vào Spinner.
-    - [x] Tính toán ngày kết thúc dựa trên thời hạn hợp đồng.
-    - [x] **Logic quan trọng**: Khi ký hợp đồng xong, phải tự động cập nhật trạng thái Phòng sang "Đang thuê".
-
----
-
-## ⚡ 4. Điện Nước & Dịch Vụ (Operations)
-- [x] Thiết kế giao diện cấu hình giá dịch vụ (`activity_cau_hinh_gia_dich_vu.xml`).
-- [x] Viết logic lưu đơn giá vào Database (`CauHinhGiaDichVuActivity.java`).
-- [x] Thiết kế giao diện nhập chỉ số (`activity_nhap_chi_so.xml`).
-- [x] **Xử lý `NhapChiSoActivity.java`**:
-    - [x] Load danh sách hợp đồng đang hiệu lực.
-    - [x] Tự động lấy chỉ số cũ từ tháng trước.
-    - [x] Tính toán số tiêu thu (Số mới - Số cũ).
-    - [x] Lưu vào bảng `chi_so_dich_vu_thang`.
-
----
-
-## 💰 5. Hóa Đơn & Thu Tiền (Billing)
-- [x] **Lập hóa đơn (`LapHoaDonActivity.java`)**:
-    - [x] Logic tính tổng tiền: Phòng + Điện + Nước + Dịch vụ khác.
-    - [x] Tự động tạo mã hóa đơn duy nhất.
-- [x] **Danh sách hóa đơn**:
-    - [x] Hiển thị danh sách hóa đơn theo tháng/năm.
-    - [x] Phân biệt màu sắc: Đã thu (Xanh), Chưa thu (Đỏ).
-- [x] **Ghi nhận thu tiền (`ThuTienActivity.java`)**:
-    - [x] Nhập số tiền khách trả (hỗ trợ trả một phần).
-    - [x] Cập nhật số tiền "Còn nợ" trong hóa đơn.
-    - [x] Lưu lịch sử vào bảng `thanh_toan`.
-
----
-
-## 📊 6. Thống Kê & Hệ Thống
-- [x] **Dashboard (`TongQuanActivity.java`)**:
-    - [x] Hiển thị tổng số phòng, phòng trống.
-    - [x] Hiển thị doanh thu dự kiến và thực thu tháng hiện tại.
-- [x] **Báo cáo (`BaoCaoActivity.java`)**:
-    - [x] Biểu đồ tỉ lệ thu tiền.
-    - [x] Thống kê nguồn thu chi tiết theo từng loại dịch vụ.
-- [x] **Cài đặt & Tiện ích**:
-    - [x] Chỉnh sửa hồ sơ chủ trọ.
-    - [x] Đổi mật khẩu.
-    - [x] Xuất báo cáo ra file Excel/CSV.
-
----
-
-## 🔧 7. Bảo Trì & Sự Cố (Maintenance)
-- [x] Thiết kế giao diện danh sách bảo trì (`activity_danh_sach_bao_tri.xml`).
-- [x] Thiết kế form báo cáo sự cố mới (`activity_them_sua_bao_tri.xml`).
-- [ ] **Tạo `BaoTriAdapter.java`**: Hiển thị thẻ sự cố (Tên phòng, Loại hư hỏng, Ngày báo).
-- [ ] **Xử lý `DanhSachBaoTriActivity.java`**:
-    - [ ] Viết logic lọc theo tab: "Đang chờ", "Đang sửa", "Hoàn thành".
-    - [ ] Xử lý tìm kiếm sự cố theo phòng.
-- [ ] **Xử lý `ThemSuaBaoTriActivity.java`**:
-    - [ ] Chọn phòng bị sự cố từ danh sách.
-    - [ ] Chụp ảnh/Chọn ảnh minh họa (nếu có thể - tùy chọn).
-    - [ ] Cập nhật trạng thái và chi phí sửa chữa khi hoàn thành.
-
----
-
-## 🎨 8. Tối Ưu & Đánh Bóng (Final Polish)
-- [ ] Kiểm tra lỗi khi Database trống (Empty States - Hiển thị hình ảnh "Không có dữ liệu").
-- [ ] **Bổ sung nút Xóa (Delete)** vào các màn hình Chi tiết (Phòng, Khách, Hợp đồng, Bảo trì).
-- [ ] Thêm hộp thoại xác nhận (Confirm Dialog) trước khi Xóa bất kỳ dữ liệu nào.
-- [ ] Kiểm tra tính phản hồi của giao diện trên các kích thước màn hình khác nhau.
-- [ ] Tối ưu tốc độ tải danh sách (Sử dụng DiffUtil nếu cần).
-
----
-
-## 🚀 9. Chức Năng Nên Thêm Sớm
-- [ ] **Cảnh báo hợp đồng sắp hết hạn**:
-    - [ ] Viết query lấy các hợp đồng còn hiệu lực và sắp hết hạn trong 7/15/30 ngày.
-    - [ ] Hiển thị danh sách/cảnh báo trên `TongQuanActivity.java` hoặc `DanhSachHopDongActivity.java`.
-    - [ ] Tô màu hoặc gắn nhãn "Sắp hết hạn" để người dùng dễ nhận biết.
-- [ ] **Cảnh báo hóa đơn quá hạn, còn nợ**:
-    - [ ] Viết query lấy hóa đơn có `con_no > 0` và `han_thanh_toan < ngày hiện tại`.
-    - [ ] Hiển thị số lượng hóa đơn quá hạn trên dashboard.
-    - [ ] Thêm filter "Quá hạn" trong `DanhSachHoaDonActivity.java`.
-- [ ] **Tìm kiếm và lọc phòng, khách thuê, hóa đơn**:
-    - [ ] Thêm ô Search trên các màn hình danh sách.
-    - [ ] Lọc phòng theo trạng thái, loại phòng.
-    - [ ] Lọc khách theo tên, SĐT, CCCD.
-    - [ ] Lọc hóa đơn theo tháng, năm, trạng thái thanh toán.
-- [ ] **Xóa dữ liệu có hộp thoại xác nhận**:
-    - [ ] Bổ sung nút xóa trong màn hình chi tiết.
-    - [ ] Hiển thị `AlertDialog` xác nhận trước khi xóa.
-    - [ ] Kiểm tra ràng buộc khóa ngoại trước khi xóa dữ liệu.
-- [ ] **Lịch sử thanh toán của từng hóa đơn**:
-    - [ ] Viết query lấy danh sách bản ghi từ bảng `thanh_toan` theo `hoa_don_id`.
-    - [ ] Tạo UI hiển thị các lần thu tiền: ngày thu, số tiền, phương thức.
-    - [ ] Hiển thị tổng đã thu và số còn nợ ngay trong màn hình chi tiết hóa đơn.
-
----
-
-## 🏢 10. Chức Năng Rất Thực Tế Cho Quản Lý Nhà Trọ
-- [ ] **Sao lưu và khôi phục dữ liệu SQLite**:
-    - [ ] Tạo chức năng export file database ra bộ nhớ máy.
-    - [ ] Tạo chức năng import/khôi phục từ file database đã sao lưu.
-    - [ ] Kiểm tra an toàn dữ liệu trước khi ghi đè database hiện tại.
-- [ ] **Xuất PDF hóa đơn hoặc phiếu thu**:
-    - [ ] Thiết kế mẫu PDF cho hóa đơn/phiếu thu.
-    - [ ] Tạo file PDF từ dữ liệu hóa đơn và thanh toán.
-    - [ ] Chức năng lưu/chia sẻ PDF.
-- [ ] **Quản lý nhiều người ở trong một phòng**:
-    - [ ] Tận dụng bảng `hop_dong_thanh_vien`.
-    - [ ] Thêm giao diện chọn nhiều khách cho 1 hợp đồng.
-    - [ ] Hiển thị danh sách thành viên đang ở trong phòng.
-- [ ] **Lịch sử thuê của một khách**:
-    - [ ] Query danh sách hợp đồng theo `khach_thue_dai_dien_id`.
-    - [ ] Hiển thị các phòng đã từng thuê, thời gian ở, trạng thái hợp đồng.
-- [ ] **Lịch sử ở của một phòng**:
-    - [ ] Query các hợp đồng theo `phong_id`.
-    - [ ] Hiển thị danh sách khách đã từng ở, thời gian thuê, tiền thuê theo gốc từng kỳ.
-- [ ] **Ghi nhận chi phí phát sinh ngoài điện nước**:
-    - [ ] Hoàn thiện cấu hình giá cho internet, rác, giữ xe, dịch vụ khác.
-    - [ ] Cho phép gán dịch vụ phát sinh theo phòng.
-    - [ ] Đưa các khoản phí này vào luồng lập hóa đơn hàng tháng.
-
----
-
-## 🎨 11. Tối Ưu & Hoàn Thiện Giao Diện (UI/UX)
-- [ ] Thiết kế giao diện danh sách các phòng trống (`activity_danh_sach_phong_trong.xml`) - *CHƯA CÓ*.
-- [ ] Thêm mục "Phòng trống" vào Dashboard (bên cạnh mục "Phòng đang ở").
-- [ ] Bổ sung hiệu ứng Ripple cho CardView, Button và các thành phần tương tác để tăng tính thẩm mỹ.
-- [ ] Thống nhất icon trên BottomNavigationView: đảm bảo tất cả các tab đều có icon hiển thị đồng bộ (`ic_home`, `ic_contract`, `ic_bell`, `ic_settings`).
-
----
-*Cập nhật: 26/04/2026 - Antigravity AI*
+*Cập nhật lần cuối: 27/04/2026 - Antigravity AI (Sắp xếp theo Model)*
