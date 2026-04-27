@@ -58,6 +58,22 @@ public class PhongRepository {
         );
     }
 
+    /**
+     * Cập nhật nhanh trạng thái phòng (Trống, Đang thuê, Bảo trì)
+     */
+    public int updateTrangThaiPhong(int phongId, String trangThai) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COL_PHONG_TRANG_THAI, trangThai);
+        values.put(DatabaseHelper.COL_UPDATED_AT, now());
+        return db.update(
+                DatabaseHelper.TABLE_PHONG,
+                values,
+                DatabaseHelper.COL_ID + "=?",
+                new String[]{String.valueOf(phongId)}
+        );
+    }
+
     public int deletePhong(int phongId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.delete(
