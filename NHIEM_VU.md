@@ -8,18 +8,18 @@ Tài liệu này liệt kê mọi đầu việc nhỏ nhất. Hãy đánh dấu 
 - [x] Thiết kế giao diện danh sách phòng (`activity_danh_sach_phong.xml`).
 - [x] Thiết kế giao diện chi tiết phòng (`activity_chi_tiet_phong.xml`).
 - [x] Thiết kế giao diện thêm/sửa phòng (`activity_them_sua_phong.xml`).
-- [ ] **Tạo `PhongAdapter.java`**: Xử lý hiển thị từng dòng phòng (Số phòng, Giá, Trạng thái).
-- [ ] **Xử lý `DanhSachPhongActivity.java`**:
-    - [ ] Lấy danh sách từ `PhongRepository`.
-    - [ ] Gán Adapter vào RecyclerView.
-    - [ ] Xử lý sự kiện Click vào phòng để xem chi tiết.
-- [ ] **Xử lý `ThemSuaPhongActivity.java`**:
-    - [ ] Ánh xạ các trường: Tên phòng, Loại phòng, Giá, Diện tích.
-    - [ ] Viết hàm Validate (không để trống tên và giá).
-    - [ ] Gọi `PhongRepository.insertPhong()` khi thêm mới.
-    - [ ] Gọi `PhongRepository.updatePhong()` khi chỉnh sửa.
-- [ ] **Xử lý `ChiTietPhongActivity.java`**:
-    - [ ] Hiển thị đầy đủ thông tin phòng.
+- [x] **Tạo `PhongAdapter.java`**: Xử lý hiển thị từng dòng phòng (Số phòng, Giá, Trạng thái).
+- [x] **Xử lý `DanhSachPhongActivity.java`**:
+    - [x] Lấy danh sách từ `PhongRepository`.
+    - [x] Gán Adapter vào RecyclerView.
+    - [x] Xử lý sự kiện Click vào phòng để xem chi tiết.
+- [x] **Xử lý `ThemSuaPhongActivity.java`**:
+    - [x] Ánh xạ các trường: Tên phòng, Loại phòng, Giá, Diện tích.
+    - [x] Viết hàm Validate (không để trống tên và giá).
+    - [x] Gọi `PhongRepository.insertPhong()` khi thêm mới.
+    - [x] Gọi `PhongRepository.updatePhong()` khi chỉnh sửa.
+- [x] **Xử lý `ChiTietPhongActivity.java`**:
+    - [x] Hiển thị đầy đủ thông tin phòng.
     - [ ] Thêm nút Xóa phòng (có hộp thoại xác nhận).
 
 ---
