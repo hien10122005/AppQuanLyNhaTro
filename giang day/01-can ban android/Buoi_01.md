@@ -1,126 +1,155 @@
-# Buoi 1 - Lam quen Android tu nen WinForms
+# Buổi 1 - Làm quen Android từ nền WinForms
 
-## Muc tieu buoi hoc
+## Mục tiêu buổi học
 
-Sau buoi nay, ban can hieu duoc:
+Sau buổi này, bạn cần hiểu được:
 
-- Android app khong qua xa la neu da hoc WinForms
-- `Activity` trong Android gan giong `Form` trong WinForms
-- `XML layout` trong Android gan giong phan giao dien thiet ke cua WinForms
-- `setContentView(...)`, `findViewById(...)`, `setOnClickListener(...)` la gi
-- cach doc mot man hinh Android co ban
-
----
-
-## 1. Vi sao nguoi da hoc WinForms se hoc Android nhanh hon
-
-Ban da co loi the rat lon neu da hoc WinForms, vi ban da quen voi:
-
-- lap trinh huong su kien
-- giao dien nguoi dung
-- nut bam, o nhap, nhanh
-- mo man hinh khac
-- lam viec voi du lieu
-- viet ung dung quan ly
-
-Dieu khac chu yeu la:
-
-- ten goi khac
-- cach to chuc project khac
-- Android co vong doi man hinh ro hon
-- Android dung XML de mo ta giao dien
-- Android co `RecyclerView`, `Adapter`, `SQLite`
-
-Noi ngan gon:
-
-WinForms va Android deu la kieu lap trinh:
-
-- co giao dien
-- co su kien
-- co du lieu
-- co xu ly nghiep vu
-- co dieu huong giua cac man hinh
+- Android app không quá xa lạ nếu đã học WinForms
+- `Activity` trong Android gần giống `Form` trong WinForms
+- `XML layout` trong Android gần giống phần giao diện thiết kế của WinForms
+- `setContentView(...)`, `findViewById(...)`, `setOnClickListener(...)` là gì
+- cách đọc một màn hình Android cơ bản
 
 ---
 
-## 2. So sanh nhanh WinForms va Android
+## 1. Vì sao người đã học WinForms sẽ học Android nhanh hơn
 
-| WinForms | Android | Giai thich |
-|---|---|---|
-| `Form` | `Activity` | Moi cai dai dien cho mot man hinh |
-| `UserControl` | `Fragment` | Thanh phan giao dien dung lai |
-| `Designer` | `XML layout` | Noi mo ta giao dien |
-| `Button` | `Button` / `ImageButton` | Nut bam |
-| `TextBox` | `EditText` | O nhap lieu |
-| `Label` | `TextView` | Hien thi chu |
-| `DataGridView` | `RecyclerView` | Hien thi danh sach du lieu |
-| `Form_Load` | `onCreate()` / `onResume()` | Giai doan khoi tao hoac lam moi man hinh |
-| `this.Close()` | `finish()` | Dong man hinh |
-| `new FormB().Show()` | `startActivity(new Intent(...))` | Mo man hinh khac |
+Bạn đã có lợi thế rất lớn nếu đã học WinForms, vì bạn đã quen với:
 
-### Cach nho quan trong
+- lập trình hướng sự kiện
+- giao diện người dùng
+- nút bấm, ô nhập, nhãn
+- mở màn hình khác
+- làm việc với dữ liệu
+- viết ứng dụng quản lý
 
-- `Form` gan giong `Activity`
-- `Designer giao dien` gan giong `XML`
-- `Control` trong WinForms gan giong `View` trong Android
+Điều khác chủ yếu là:
+
+- tên gọi khác
+- cách tổ chức project khác
+- Android có vòng đời màn hình rõ hơn
+- Android dùng XML để mô tả giao diện
+- Android có `RecyclerView`, `Adapter`, `SQLite`
+
+Nói ngắn gọn:
+
+WinForms và Android đều là kiểu lập trình:
+
+- có giao diện
+- có sự kiện
+- có dữ liệu
+- có xử lý nghiệp vụ
+- có điều hướng giữa các màn hình
 
 ---
 
-## 3. Android app gom nhung phan gi
+## 2. So sánh nhanh WinForms và Android
 
-Mot man hinh Android co ban thuong co 2 phan:
+Để dễ đọc trên nhiều editor, ta viết theo dạng danh sách thay vì bảng:
 
-### 3.1. Phan giao dien
+- WinForms: `Form`
+  Android: `Activity`
+  Giải thích: mỗi cái đại diện cho một màn hình
 
-Day la file `.xml`.
+- WinForms: `UserControl`
+  Android: `Fragment`
+  Giải thích: thành phần giao diện dùng lại
 
-Vi du:
+- WinForms: `Designer`
+  Android: `XML layout`
+  Giải thích: nơi mô tả giao diện
+
+- WinForms: `Button`
+  Android: `Button` / `ImageButton`
+  Giải thích: nút bấm
+
+- WinForms: `TextBox`
+  Android: `EditText`
+  Giải thích: ô nhập liệu
+
+- WinForms: `Label`
+  Android: `TextView`
+  Giải thích: hiển thị chữ
+
+- WinForms: `DataGridView`
+  Android: `RecyclerView`
+  Giải thích: hiển thị danh sách dữ liệu
+
+- WinForms: `Form_Load`
+  Android: `onCreate()` / `onResume()`
+  Giải thích: giai đoạn khởi tạo hoặc làm mới màn hình
+
+- WinForms: `this.Close()`
+  Android: `finish()`
+  Giải thích: đóng màn hình
+
+- WinForms: `new FormB().Show()`
+  Android: `startActivity(new Intent(...))`
+  Giải thích: mở màn hình khác
+
+### Cách nhớ quan trọng
+
+- `Form` gần giống `Activity`
+- `Designer giao diện` gần giống `XML`
+- `Control` trong WinForms gần giống `View` trong Android
+
+---
+
+## 3. Android app gồm những phần gì
+
+Một màn hình Android cơ bản thường có 2 phần:
+
+### 3.1. Phần giao diện
+
+Đây là file `.xml`.
+
+Ví dụ:
 
 - `activity_main.xml`
 - `activity_danh_sach_phong.xml`
 
-No mo ta:
+Nó mô tả:
 
-- man hinh co gi
-- nut o dau
-- o nhap nao
-- mau sac, kich thuoc, vi tri
+- màn hình có gì
+- nút ở đâu
+- ô nhập nào
+- màu sắc, kích thước, vị trí
 
-### 3.2. Phan xu ly logic
+### 3.2. Phần xử lý logic
 
-Day la file `.java`.
+Đây là file `.java`.
 
-Vi du:
+Ví dụ:
 
 - `MainActivity.java`
 - `DanhSachPhongActivity.java`
 
-No xu ly:
+Nó xử lý:
 
-- bat su kien click
-- lay du lieu nhap
-- mo man hinh khac
-- goi database
-- hien thi du lieu
+- bắt sự kiện click
+- lấy dữ liệu nhập
+- mở màn hình khác
+- gọi database
+- hiển thị dữ liệu
 
 ---
 
-## 4. `Activity` la gi
+## 4. `Activity` là gì
 
-`Activity` la mot man hinh trong Android.
+`Activity` là một màn hình trong Android.
 
-Vi du:
+Ví dụ:
 
-- man hinh danh sach phong
-- man hinh them khach thue
-- man hinh chi tiet hoa don
+- màn hình danh sách phòng
+- màn hình thêm khách thuê
+- màn hình chi tiết hóa đơn
 
-Neu so voi WinForms:
+Nếu so với WinForms:
 
-- `FrmDanhSachPhong` gan giong `DanhSachPhongActivity`
-- `FrmThemKhach` gan giong `ThemSuaKhachThueActivity`
+- `FrmDanhSachPhong` gần giống `DanhSachPhongActivity`
+- `FrmThemKhach` gần giống `ThemSuaKhachThueActivity`
 
-### Vi du WinForms
+### Ví dụ WinForms
 
 ```csharp
 public partial class FrmDanhSachPhong : Form
@@ -132,7 +161,7 @@ public partial class FrmDanhSachPhong : Form
 }
 ```
 
-### Vi du Android
+### Ví dụ Android
 
 ```java
 public class DanhSachPhongActivity extends AppCompatActivity {
@@ -144,20 +173,20 @@ public class DanhSachPhongActivity extends AppCompatActivity {
 }
 ```
 
-### Y nghia
+### Ý nghĩa
 
-- `Form` la man hinh ben WinForms
-- `Activity` la man hinh ben Android
+- `Form` là màn hình bên WinForms
+- `Activity` là màn hình bên Android
 
 ---
 
-## 5. `XML layout` la gi
+## 5. `XML layout` là gì
 
-`XML layout` la file giao dien cua Android.
+`XML layout` là file giao diện của Android.
 
-No gan giong phan thiet ke giao dien trong WinForms, chi khac la Android hay viet bang XML.
+Nó gần giống phần thiết kế giao diện trong WinForms, chỉ khác là Android hay viết bằng XML.
 
-### Vi du XML don gian
+### Ví dụ XML đơn giản
 
 ```xml
 <LinearLayout
@@ -170,66 +199,67 @@ No gan giong phan thiet ke giao dien trong WinForms, chi khac la Android hay vie
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Danh sach phong" />
+        android:text="Danh sách phòng" />
 
     <EditText
         android:id="@+id/etSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nhap tu khoa" />
+        android:hint="Nhập từ khóa" />
 
     <Button
         android:id="@+id/btnThem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Them phong" />
+        android:text="Thêm phòng" />
 </LinearLayout>
 ```
 
-### So sanh voi WinForms
+### So sánh với WinForms
 
-- `TextView` gan giong `Label`
-- `EditText` gan giong `TextBox`
-- `Button` van la `Button`
+- `TextView` gần giống `Label`
+- `EditText` gần giống `TextBox`
+- `Button` vẫn là `Button`
 
 ---
 
-## 6. `setContentView(...)` la gi
+## 6. `setContentView(...)` là gì
 
-Day la lenh gan giao dien XML vao man hinh `Activity`.
+Đây là lệnh gắn giao diện XML vào màn hình `Activity`.
 
-### Vi du
+### Ví dụ
 
 ```java
 setContentView(R.layout.activity_danh_sach_phong);
 ```
 
-### Y nghia
+### Ý nghĩa
 
-- Activity hien tai se dung file `activity_danh_sach_phong.xml`
-- neu khong co dong nay thi Activity chua biet giao dien nao se hien thi
+- Activity hiện tại sẽ dùng file `activity_danh_sach_phong.xml`
+- nếu không có dòng này thì Activity chưa biết giao diện nào sẽ hiển thị
 
-### So sanh voi WinForms
+### So sánh với WinForms
 
-Trong WinForms, giao dien duoc noi voi Form qua `InitializeComponent()`.
+Trong WinForms, giao diện được nối với Form qua `InitializeComponent()`.
 
-Ban co the tam hieu:
+Bạn có thể tạm hiểu:
 
-- `InitializeComponent()` cua WinForms
-- gan giong vai tro khoi tao giao dien nhu `setContentView(...)` trong Android
+- `InitializeComponent()` của WinForms
+- gần giống vai trò khởi tạo giao diện như `setContentView(...)` trong Android
 
-Luu y:
-- khong hoan toan giong 100%
-- nhung voi nguoi moi co the nho nhu vay de de hoc
+Lưu ý:
+
+- không hoàn toàn giống 100%
+- nhưng với người mới có thể nhớ như vậy để dễ học
 
 ---
 
-## 7. `findViewById(...)` la gi
+## 7. `findViewById(...)` là gì
 
-Trong Android, control nam o XML.
-Muon dung control do trong Java thi phai lay no ra bang `findViewById(...)`.
+Trong Android, control nằm ở XML.
+Muốn dùng control đó trong Java thì phải lấy nó ra bằng `findViewById(...)`.
 
-### Vi du
+### Ví dụ
 
 ```java
 EditText etSearch = findViewById(R.id.etSearch);
@@ -237,52 +267,52 @@ Button btnThem = findViewById(R.id.btnThem);
 TextView tvTitle = findViewById(R.id.tvTitle);
 ```
 
-### Y nghia
+### Ý nghĩa
 
-- tim control theo `id`
-- gan control do vao bien Java de xu ly
+- tìm control theo `id`
+- gán control đó vào biến Java để xử lý
 
-### So sanh voi WinForms
+### So sánh với WinForms
 
-Trong WinForms, ban thuong co san:
+Trong WinForms, bạn thường có sẵn:
 
 ```csharp
 txtSearch.Text = "";
 btnThem.Enabled = true;
-lblTitle.Text = "Danh sach phong";
+lblTitle.Text = "Danh sách phòng";
 ```
 
-Con trong Android, thuong phai lam them buoc:
+Còn trong Android, thường phải làm thêm bước:
 
 ```java
 EditText etSearch = findViewById(R.id.etSearch);
 ```
 
-### Cach nho
+### Cách nhớ
 
-- WinForms: control thuong co san trong code-behind
-- Android: phai lay tu XML ra bang `findViewById(...)`
+- WinForms: control thường có sẵn trong code-behind
+- Android: phải lấy từ XML ra bằng `findViewById(...)`
 
 ---
 
-## 8. `id` trong XML dung de lam gi
+## 8. `id` trong XML dùng để làm gì
 
-Moi control trong XML thuong co mot `id`.
+Mỗi control trong XML thường có một `id`.
 
-### Vi du
+### Ví dụ
 
 ```xml
 android:id="@+id/btnThem"
 ```
 
-### Tac dung
+### Tác dụng
 
-- giup Java biet chinh xac control nao can lay
-- tranh nham giua nhieu control tren cung man hinh
+- giúp Java biết chính xác control nào cần lấy
+- tránh nhầm giữa nhiều control trên cùng màn hình
 
-### So sanh voi WinForms
+### So sánh với WinForms
 
-Giong nhu ten control:
+Giống như tên control:
 
 - `btnThem`
 - `txtSearch`
@@ -290,35 +320,35 @@ Giong nhu ten control:
 
 ---
 
-## 9. Bat su kien trong Android
+## 9. Bắt sự kiện trong Android
 
-Trong WinForms ban hay viet:
+Trong WinForms bạn hay viết:
 
 ```csharp
 private void btnThem_Click(object sender, EventArgs e)
 {
-    MessageBox.Show("Ban vua bam nut them");
+    MessageBox.Show("Bạn vừa bấm nút thêm");
 }
 ```
 
-Trong Android thuong viet:
+Trong Android thường viết:
 
 ```java
 Button btnThem = findViewById(R.id.btnThem);
 
 btnThem.setOnClickListener(v -> {
-    Toast.makeText(this, "Ban vua bam nut them", Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, "Bạn vừa bấm nút thêm", Toast.LENGTH_SHORT).show();
 });
 ```
 
-### So sanh
+### So sánh
 
 - `btnThem_Click` trong WinForms
-- gan giong `setOnClickListener(...)` trong Android
+- gần giống `setOnClickListener(...)` trong Android
 
 ---
 
-## 10. Mo man hinh khac
+## 10. Mở màn hình khác
 
 ### WinForms
 
@@ -334,19 +364,19 @@ Intent intent = new Intent(this, ThemSuaPhongActivity.class);
 startActivity(intent);
 ```
 
-### Y nghia
+### Ý nghĩa
 
-- tao yeu cau mo man hinh khac
-- Android dung `Intent` de dieu huong
+- tạo yêu cầu mở màn hình khác
+- Android dùng `Intent` để điều hướng
 
-### Cach nho
+### Cách nhớ
 
-- WinForms: mo Form
-- Android: mo Activity bang `Intent`
+- WinForms: mở Form
+- Android: mở Activity bằng `Intent`
 
 ---
 
-## 11. Vi du hoan chinh rat nho
+## 11. Ví dụ hoàn chỉnh rất nhỏ
 
 ### XML
 
@@ -361,13 +391,13 @@ startActivity(intent);
         android:id="@+id/tvHello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xin chao" />
+        android:text="Xin chào" />
 
     <Button
         android:id="@+id/btnClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bam toi" />
+        android:text="Bấm tôi" />
 </LinearLayout>
 ```
 
@@ -384,146 +414,148 @@ public class MainActivity extends AppCompatActivity {
         Button btnClick = findViewById(R.id.btnClick);
 
         btnClick.setOnClickListener(v -> {
-            tvHello.setText("Ban vua bam nut");
+            tvHello.setText("Bạn vừa bấm nút");
         });
     }
 }
 ```
 
-### Phan tich
+### Phân tích
 
-- `setContentView(...)`: gan giao dien
-- `findViewById(...)`: lay control
-- `setOnClickListener(...)`: xu ly bam nut
-- `setText(...)`: doi noi dung hien thi
-
----
-
-## 12. Cach doc mot man hinh Android cho nguoi moi
-
-Khi gap mot man hinh Android, hay doc theo thu tu nay:
-
-### Buoc 1. Xem file XML
-
-Tu hoi:
-
-- man hinh co nhung control nao
-- co o nhap khong
-- co nut nao
-- co danh sach khong
-
-### Buoc 2. Xem `setContentView(...)`
-
-Tu hoi:
-
-- Activity nay dang dung file XML nao
-
-### Buoc 3. Xem `findViewById(...)`
-
-Tu hoi:
-
-- code Java dang lay nhung control nao ra
-
-### Buoc 4. Xem su kien
-
-Tu hoi:
-
-- bam nut thi lam gi
-- go chu thi co phan ung gi
-- co mo man hinh khac khong
-
-### Buoc 5. Xem du lieu
-
-Tu hoi:
-
-- du lieu lay tu dau
-- hien thi len cho nao
+- `setContentView(...)`: gắn giao diện
+- `findViewById(...)`: lấy control
+- `setOnClickListener(...)`: xử lý bấm nút
+- `setText(...)`: đổi nội dung hiển thị
 
 ---
 
-## 13. Nhung loi nguoi moi hay nham
+## 12. Cách đọc một màn hình Android cho người mới
 
-### Nham 1: `Form` giong `XML`
+Khi gặp một màn hình Android, hãy đọc theo thứ tự này:
+
+### Bước 1. Xem file XML
+
+Tự hỏi:
+
+- màn hình có những control nào
+- có ô nhập không
+- có nút nào
+- có danh sách không
+
+### Bước 2. Xem `setContentView(...)`
+
+Tự hỏi:
+
+- Activity này đang dùng file XML nào
+
+### Bước 3. Xem `findViewById(...)`
+
+Tự hỏi:
+
+- code Java đang lấy những control nào ra
+
+### Bước 4. Xem sự kiện
+
+Tự hỏi:
+
+- bấm nút thì làm gì
+- gõ chữ thì có phản ứng gì
+- có mở màn hình khác không
+
+### Bước 5. Xem dữ liệu
+
+Tự hỏi:
+
+- dữ liệu lấy từ đâu
+- hiển thị lên chỗ nào
+
+---
+
+## 13. Những lỗi người mới hay nhầm
+
+### Nhầm 1: `Form` giống `XML`
 
 Sai.
 
-Dung la:
+Đúng là:
 
-- `Form` gan giong `Activity`
-- `XML` chi la giao dien cua `Activity`
+- `Form` gần giống `Activity`
+- `XML` chỉ là giao diện của `Activity`
 
-### Nham 2: `findViewById(...)` la khai bao control moi
+### Nhầm 2: `findViewById(...)` là khai báo control mới
 
-Khong dung hoan toan.
+Không đúng hoàn toàn.
 
-No khong tao control moi.
-No chi lay control da co trong XML ra de Java dung.
+Nó không tạo control mới.
+Nó chỉ lấy control đã có trong XML ra để Java dùng.
 
-### Nham 3: `setContentView(...)` la mo man hinh khac
+### Nhầm 3: `setContentView(...)` là mở màn hình khác
 
 Sai.
 
-- `setContentView(...)` chi gan giao dien cho Activity hien tai
-- mo man hinh khac phai dung `Intent`
+- `setContentView(...)` chỉ gắn giao diện cho Activity hiện tại
+- mở màn hình khác phải dùng `Intent`
 
 ---
 
-## 14. Ghi nho cuoi buoi
+## 14. Ghi nhớ cuối buổi
 
-Ban chi can thuoc 6 y sau:
+Bạn chỉ cần thuộc 6 ý sau:
 
-- `Activity` la man hinh Android
-- `XML` la giao dien cua man hinh
-- `setContentView(...)` la gan XML vao Activity
-- `findViewById(...)` la lay control tu XML ra Java
-- `setOnClickListener(...)` la bat su kien bam
-- `Intent` dung de mo man hinh khac
+- `Activity` là màn hình Android
+- `XML` là giao diện của màn hình
+- `setContentView(...)` là gắn XML vào Activity
+- `findViewById(...)` là lấy control từ XML ra Java
+- `setOnClickListener(...)` là bắt sự kiện bấm
+- `Intent` dùng để mở màn hình khác
 
 ---
 
-## 15. Tom tat bang 1 so do
+## 15. Tóm tắt bằng 1 sơ đồ
 
 ```text
 XML layout
    |
    v
-Activity dung setContentView(...)
+Activity dùng setContentView(...)
    |
    v
 findViewById(...)
    |
    v
-lay control ra de xu ly
+lấy control ra để xử lý
    |
    v
-setOnClickListener(...) / setText(...) / mo man hinh khac
+setOnClickListener(...) / setText(...) / mở màn hình khác
 ```
 
 ---
 
-## 16. Cau hoi tu kiem tra
+## 16. Câu hỏi tự kiểm tra
 
-1. `Form` trong WinForms gan giong thanh phan nao trong Android?
-2. `XML layout` dung de lam gi?
-3. `setContentView(...)` co vai tro gi?
-4. `findViewById(...)` dung de lam gi?
-5. `EditText` gan giong control nao trong WinForms?
-6. `TextView` gan giong control nao trong WinForms?
-7. `startActivity(new Intent(...))` dung de lam gi?
+1. `Form` trong WinForms gần giống thành phần nào trong Android?
+2. `XML layout` dùng để làm gì?
+3. `setContentView(...)` có vai trò gì?
+4. `findViewById(...)` dùng để làm gì?
+5. `EditText` gần giống control nào trong WinForms?
+6. `TextView` gần giống control nào trong WinForms?
+7. `startActivity(new Intent(...))` dùng để làm gì?
 
 ---
 
-## 17. Bai tap nho
+## 17. Bài tập nhỏ
 
-### Bai 1
-Hay tu giai thich bang loi cua ban:
+### Bài 1
 
-- `Activity` la gi
-- `XML` la gi
-- `findViewById(...)` la gi
+Hãy tự giải thích bằng lời của bạn:
 
-### Bai 2
-Viet lai bang so sanh:
+- `Activity` là gì
+- `XML` là gì
+- `findViewById(...)` là gì
+
+### Bài 2
+
+Viết lại bảng so sánh:
 
 - `Form`
 - `Button`
@@ -531,23 +563,24 @@ Viet lai bang so sanh:
 - `Label`
 - `DataGridView`
 
-voi Android tuong ung.
+với Android tương ứng.
 
-### Bai 3
-Nhin vao mot file XML bat ky trong project, hay thu chi ra:
+### Bài 3
 
-- dau la `Button`
-- dau la `EditText`
-- dau la `TextView`
-- control nao co `id`
+Nhìn vào một file XML bất kỳ trong project, hãy thử chỉ ra:
+
+- đâu là `Button`
+- đâu là `EditText`
+- đâu là `TextView`
+- control nào có `id`
 
 ---
 
-## 18. Chuan bi cho buoi sau
+## 18. Chuẩn bị cho buổi sau
 
-Sau khi hieu bai nay, ban se hoc tiep:
+Sau khi hiểu bài này, bạn sẽ học tiếp:
 
-- vong doi `Activity`
+- vòng đời `Activity`
 - `onCreate()`
 - `onResume()`
-- vi sao Android phai lam moi du lieu khi quay lai man hinh
+- vì sao Android phải làm mới dữ liệu khi quay lại màn hình
