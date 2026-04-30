@@ -27,6 +27,7 @@ public class ChiSoRepository {
      * Context là "bối cảnh ứng dụng" để Android biết App nào đang chạy.
      */
     public ChiSoRepository(Context context) {
+        // DatabaseHelper: Công cụ quản lý việc tạo bảng, nâng cấp và kết nối DB SQLite
         this.dbHelper = new DatabaseHelper(context);
     }
 
@@ -42,11 +43,15 @@ public class ChiSoRepository {
      * @param loaiDichVuId ID loại dịch vụ (1=Điện, 2=Nước...) — lấy từ bảng loai_dich_vu
      * @return            Số chỉ số mới nhất, hoặc 0.0 nếu chưa có lịch sử
      */
+    /**
+     * Lấy chỉ số mới nhất của một loại dịch vụ (Điện/Nước) cho một phòng.
+     * Dùng để hiển thị làm 'Chỉ số cũ' khi người dùng bắt đầu chốt điện nước tháng mới.
+     * @return Chỉ số mới nhất tìm thấy, hoặc 0.0 nếu đây là lần đầu tiên chốt cho phòng này
+     */
     public double getChiSoCuMoiNhat(int phongId, int loaiDichVuId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // Câu SQL: lấy giá trị chi_so_moi từ bản ghi mới nhất (ORDER BY nam DESC, thang DESC)
-        // LIMIT 1 = chỉ lấy 1 dòng đầu tiên (dòng mới nhất)
+        // Câu lệnh lấy chỉ số mới của bản ghi có thời gian gần nhất
         String sql = "SELECT " + DatabaseHelper.COL_CHI_SO_MOI
                 + " FROM " + DatabaseHelper.TABLE_CHI_SO_DICH_VU_THANG
                 + " WHERE " + DatabaseHelper.COL_CHI_SO_PHONG_ID + " = ?"
@@ -55,17 +60,15 @@ public class ChiSoRepository {
                               + DatabaseHelper.COL_CHI_SO_THANG + " DESC"
                 + " LIMIT 1";
 
-        // rawQuery chạy câu SQL với các tham số thay thế dấu ?
         try (Cursor cursor = db.rawQuery(sql, new String[]{
                 String.valueOf(phongId),
                 String.valueOf(loaiDichVuId)
         })) {
-            // moveToFirst() = di chuyển con trỏ đến dòng đầu tiên, trả về false nếu không có kết quả
             if (cursor.moveToFirst()) {
-                return cursor.getDouble(0); // Cột đầu tiên (index 0) là chi_so_moi
+                return cursor.getDouble(0); // Trả về giá trị ở cột đầu tiên của kết quả
             }
         }
-        return 0.0; // Phòng mới, chưa có chỉ số lịch sử
+        return 0.0;
     }
 
     // ==========================================================================
@@ -177,14 +180,18 @@ public class ChiSoRepository {
      * @param chiSoMoi        Chỉ số tháng này (người dùng vừa nhập)
      * @return                ID của bản ghi vừa tạo, hoặc -1 nếu lỗi
      */
+    /**
+     * Thực hiện lưu bản ghi chỉ số mới vào cơ sở dữ liệu
+     * @param chiSoCu Chỉ số của tháng trước đó
+     * @param chiSoMoi Chỉ số vừa ghi nhận được
+     * @return ID dòng vừa chèn, hoặc -1 nếu thất bại
+     */
     public long luuChiSo(int phongId, int loaiDichVuId,
                          int thang, int nam,
                          double chiSoCu, double chiSoMoi) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // ContentValues giống như một "chiếc hộp" chứa các cặp key-value
-        // để truyền dữ liệu vào câu lệnh INSERT
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COL_CHI_SO_PHONG_ID,        phongId);
         values.put(DatabaseHelper.COL_CHI_SO_LOAI_DICH_VU_ID, loaiDichVuId);
@@ -193,15 +200,13 @@ public class ChiSoRepository {
         values.put(DatabaseHelper.COL_CHI_SO_CU,              chiSoCu);
         values.put(DatabaseHelper.COL_CHI_SO_MOI,             chiSoMoi);
 
-        // Tính tiêu thụ = chỉ số mới - chỉ số cũ
+        // Tính toán lượng tiêu thụ ngay tại đây để lưu vào DB
         double tieuThu = chiSoMoi - chiSoCu;
         values.put(DatabaseHelper.COL_CHI_SO_SO_LUONG_TIEU_THU, tieuThu);
 
-        // Lưu ngày chốt là hôm nay, định dạng yyyy-MM-dd
         values.put(DatabaseHelper.COL_CHI_SO_NGAY_CHOT, ngayHomNay());
         values.put(DatabaseHelper.COL_CREATED_AT, nowFull());
 
-        // db.insert() trả về ID của dòng vừa tạo, hoặc -1 nếu thất bại
         return db.insert(DatabaseHelper.TABLE_CHI_SO_DICH_VU_THANG, null, values);
     }
 

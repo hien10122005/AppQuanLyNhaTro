@@ -18,9 +18,13 @@ public class DichVuRepository {
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    /**
+     * Lấy toàn bộ danh sách các loại dịch vụ đang hoạt động (Ví dụ: Điện, Nước, Wifi, Rác...)
+     */
     public List<LoaiDichVu> getAllLoaiDichVu() {
         List<LoaiDichVu> list = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        // Lọc những dịch vụ có hoat_dong = 1
         try (Cursor cursor = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, null, 
                 DatabaseHelper.COL_LOAI_DICH_VU_HOAT_DONG + "=1", null, null, null, null)) {
             while (cursor.moveToNext()) {
@@ -37,10 +41,17 @@ public class DichVuRepository {
         return list;
     }
 
+    /**
+     * Lấy đơn giá của một loại dịch vụ cho một phòng cụ thể.
+     * Thứ tự ưu tiên:
+     * 1. Tìm trong bảng giá riêng của phòng đó (Nếu chủ nhà quy định giá riêng cho phòng này).
+     * 2. Nếu không có giá riêng, lấy giá chung của toàn hệ thống (phong_id IS NULL).
+     * @return Đơn giá áp dụng, hoặc 0 nếu không tìm thấy cấu hình.
+     */
     public double getDonGia(int loaiDichVuId, int phongId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         
-        // 1. Thử tìm giá riêng cho phòng
+        // Bước 1: Thử tìm giá riêng quy định cho phòng này
         try (Cursor cursor = db.query(DatabaseHelper.TABLE_BANG_GIA_DICH_VU, 
                 new String[]{DatabaseHelper.COL_BANG_GIA_DON_GIA},
                 DatabaseHelper.COL_BANG_GIA_LOAI_DICH_VU_ID + "=? AND " + DatabaseHelper.COL_BANG_GIA_PHONG_ID + "=?",
@@ -51,7 +62,7 @@ public class DichVuRepository {
             }
         }
 
-        // 2. Nếu không có giá riêng, tìm giá chung (phong_id is null)
+        // Bước 2: Nếu không thấy giá riêng, lấy giá cấu hình chung (phong_id is null)
         try (Cursor cursor = db.query(DatabaseHelper.TABLE_BANG_GIA_DICH_VU, 
                 new String[]{DatabaseHelper.COL_BANG_GIA_DON_GIA},
                 DatabaseHelper.COL_BANG_GIA_LOAI_DICH_VU_ID + "=? AND " + DatabaseHelper.COL_BANG_GIA_PHONG_ID + " IS NULL",
@@ -62,15 +73,17 @@ public class DichVuRepository {
             }
         }
 
-        // 3. Mặc định nếu không thấy cấu hình (ví dụ: Điện 3.5k, Nước 15k)
-        // Đây là fallback an toàn
-        return 0;
+        return 0; // Trả về 0 nếu hoàn toàn không có cấu hình
     }
 
+    /**
+     * Lưu hoặc cập nhật bảng giá chung cho một loại dịch vụ.
+     * Hàm này xóa giá chung cũ trước khi chèn giá mới để đảm bảo tính duy nhất.
+     */
     public void saveBangGiaChung(String maLoaiDichVu, double donGia) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
-        // 1. Tìm ID của loại dịch vụ theo mã
+        // 1. Tìm ID của loại dịch vụ dựa trên mã (DIEN, NUOC...)
         int loaiDichVuId = -1;
         try (Cursor cursor = db.query(DatabaseHelper.TABLE_LOAI_DICH_VU, new String[]{DatabaseHelper.COL_ID},
                 DatabaseHelper.COL_LOAI_DICH_VU_MA_LOAI + "=?", new String[]{maLoaiDichVu}, null, null, null)) {
@@ -81,15 +94,15 @@ public class DichVuRepository {
 
         if (loaiDichVuId == -1) return;
 
-        // 2. Lưu giá mới (Cập nhật nếu đã tồn tại giá chung cho ngày hiệu lực này, hoặc tạo mới)
-        // Đơn giản hóa: Xóa giá chung cũ và thêm giá mới
+        // 2. Xóa các cấu hình giá chung cũ của loại dịch vụ này
         db.delete(DatabaseHelper.TABLE_BANG_GIA_DICH_VU, 
                 DatabaseHelper.COL_BANG_GIA_LOAI_DICH_VU_ID + "=? AND " + DatabaseHelper.COL_BANG_GIA_PHONG_ID + " IS NULL",
                 new String[]{String.valueOf(loaiDichVuId)});
 
+        // 3. Thêm cấu hình giá mới
         android.content.ContentValues values = new android.content.ContentValues();
         values.put(DatabaseHelper.COL_BANG_GIA_LOAI_DICH_VU_ID, loaiDichVuId);
-        values.put(DatabaseHelper.COL_BANG_GIA_PHONG_ID, (Integer) null);
+        values.put(DatabaseHelper.COL_BANG_GIA_PHONG_ID, (Integer) null); // Null nghĩa là áp dụng chung
         values.put(DatabaseHelper.COL_BANG_GIA_DON_GIA, donGia);
         values.put(DatabaseHelper.COL_BANG_GIA_NGAY_HIEU_LUC, new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date()));
         values.put(DatabaseHelper.COL_CREATED_AT, new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(new java.util.Date()));

@@ -132,8 +132,8 @@ public class NhapChiSoActivity extends AppCompatActivity {
      * ArrayAdapter là "cầu nối" giữa dữ liệu (List) và View (Spinner).
      */
     private void taiDanhSachPhong() {
-        // Lấy tất cả phòng từ database
-        danhSachPhong = phongRepo.getAllPhong();
+        // Chỉ lấy những phòng đang có người ở (DANG_THUE) để chốt điện nước
+        danhSachPhong = phongRepo.getPhongByTrangThai(DatabaseHelper.TRANG_THAI_PHONG_DANG_THUE);
 
         if (danhSachPhong.isEmpty()) {
             Toast.makeText(this, "Chưa có phòng nào trong hệ thống!", Toast.LENGTH_LONG).show();

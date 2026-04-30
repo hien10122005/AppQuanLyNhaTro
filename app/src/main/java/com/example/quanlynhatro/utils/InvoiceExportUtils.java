@@ -75,7 +75,7 @@ public class InvoiceExportUtils {
             canvas.drawText(CurrencyUtils.formatCurrency(item.getThanhTien()), 450, y, paint);
             y += 25;
             
-            // Nếu có chỉ số điện nước thì vẽ thêm hàng phụ
+            // Nếu có chỉ số điện nước thì vẽ thêm hàng phụ 
             if (item.getChiSoCu() != null && item.getChiSoMoi() != null) {
                 paint.setTextSize(12);
                 paint.setColor(Color.GRAY);

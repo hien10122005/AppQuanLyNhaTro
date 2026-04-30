@@ -18,13 +18,21 @@ public class PhongRepository {
     private final DatabaseHelper dbHelper;
 
     public PhongRepository(Context context) {
+        // DatabaseHelper là cầu nối để mở và quản lý file SQLite
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    /**
+     * Thêm mới một phòng trọ vào cơ sở dữ liệu
+     * @param phong Đối tượng chứa thông tin phòng cần thêm
+     * @return ID của bản ghi mới được tạo, hoặc -1 nếu có lỗi
+     */
     public long addPhong(Phong phong) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase(); // Mở DB ở chế độ ghi
         String now = now();
         ContentValues values = new ContentValues();
+        
+        // Đưa dữ liệu từ đối tượng Phong vào cặp (Cột, Giá trị)
         values.put(DatabaseHelper.COL_PHONG_SO_PHONG, phong.getSoPhong());
         values.put(DatabaseHelper.COL_PHONG_TEN_PHONG, phong.getTenPhong());
         values.put(DatabaseHelper.COL_PHONG_LOAI_PHONG, phong.getLoaiPhong());
@@ -33,11 +41,19 @@ public class PhongRepository {
         values.put(DatabaseHelper.COL_PHONG_SO_NGUOI_TOI_DA, phong.getSoNguoiToiDa());
         values.put(DatabaseHelper.COL_PHONG_TRANG_THAI, phong.getTrangThai());
         values.put(DatabaseHelper.COL_PHONG_MO_TA, phong.getMoTa());
+        
+        // Tự động gán thời gian tạo nếu chưa có
         values.put(DatabaseHelper.COL_CREATED_AT, phong.getCreatedAt() != null ? phong.getCreatedAt() : now);
         values.put(DatabaseHelper.COL_UPDATED_AT, phong.getUpdatedAt() != null ? phong.getUpdatedAt() : now);
+        
         return db.insert(DatabaseHelper.TABLE_PHONG, null, values);
     }
 
+    /**
+     * Cập nhật toàn bộ thông tin của một phòng trọ hiện có
+     * @param phong Đối tượng chứa thông tin mới kèm theo ID hợp lệ
+     * @return Số lượng dòng bị ảnh hưởng (thường là 1)
+     */
     public int updatePhong(Phong phong) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -49,17 +65,18 @@ public class PhongRepository {
         values.put(DatabaseHelper.COL_PHONG_SO_NGUOI_TOI_DA, phong.getSoNguoiToiDa());
         values.put(DatabaseHelper.COL_PHONG_TRANG_THAI, phong.getTrangThai());
         values.put(DatabaseHelper.COL_PHONG_MO_TA, phong.getMoTa());
-        values.put(DatabaseHelper.COL_UPDATED_AT, now());
+        values.put(DatabaseHelper.COL_UPDATED_AT, now()); // Cập nhật thời gian sửa
+        
         return db.update(
                 DatabaseHelper.TABLE_PHONG,
                 values,
-                DatabaseHelper.COL_ID + "=?",
+                DatabaseHelper.COL_ID + "=?", // Điều kiện theo ID
                 new String[]{String.valueOf(phong.getId())}
         );
     }
 
     /**
-     * Cập nhật nhanh trạng thái phòng (Trống, Đang thuê, Bảo trì)
+     * Cập nhật nhanh trạng thái phòng (Ví dụ: Chuyển sang 'Đang thuê' khi có hợp đồng)
      */
     public int updateTrangThaiPhong(int phongId, String trangThai) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -74,6 +91,9 @@ public class PhongRepository {
         );
     }
 
+    /**
+     * Xóa một phòng khỏi hệ thống
+     */
     public int deletePhong(int phongId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.delete(
@@ -83,11 +103,15 @@ public class PhongRepository {
         );
     }
 
+    /**
+     * Tìm kiếm phòng theo ID
+     * @return Đối tượng Phong nếu tìm thấy, null nếu không có
+     */
     public Phong getPhongById(int phongId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase(); // Mở DB ở chế độ đọc
         try (Cursor cursor = db.query(
                 DatabaseHelper.TABLE_PHONG,
-                null,
+                null, // Lấy tất cả các cột
                 DatabaseHelper.COL_ID + "=?",
                 new String[]{String.valueOf(phongId)},
                 null,
@@ -95,12 +119,15 @@ public class PhongRepository {
                 null
         )) {
             if (cursor.moveToFirst()) {
-                return mapPhong(cursor);
+                return mapPhong(cursor); // Chuyển đổi từ Cursor sang đối tượng Java
             }
         }
         return null;
     }
 
+    /**
+     * Lấy toàn bộ danh sách phòng, sắp xếp theo số phòng tăng dần
+     */
     public List<Phong> getAllPhong() {
         List<Phong> danhSachPhong = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -111,7 +138,7 @@ public class PhongRepository {
                 null,
                 null,
                 null,
-                DatabaseHelper.COL_PHONG_SO_PHONG + " ASC"
+                DatabaseHelper.COL_PHONG_SO_PHONG + " ASC" // Sắp xếp A-Z
         )) {
             while (cursor.moveToNext()) {
                 danhSachPhong.add(mapPhong(cursor));
@@ -147,8 +174,12 @@ public class PhongRepository {
         return list;
     }
 
+    /**
+     * Hàm phụ trợ (Utility) để chuyển đổi dữ liệu từ Cursor (SQLite) sang đối tượng Phong (Java)
+     */
     private Phong mapPhong(Cursor cursor) {
         Phong phong = new Phong();
+        //getColumnIndexOrThrow giúp lấy vị trí cột một cách an toàn
         phong.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID)));
         phong.setSoPhong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PHONG_SO_PHONG)));
         phong.setTenPhong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PHONG_TEN_PHONG)));

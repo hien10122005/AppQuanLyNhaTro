@@ -21,6 +21,10 @@ public class HopDongRepository {
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    /**
+     * Tạo một hợp đồng thuê phòng mới
+     * @return ID của hợp đồng vừa tạo
+     */
     public long addHopDong(HopDong hopDong) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String now = now();
@@ -59,8 +63,12 @@ public class HopDongRepository {
         return null;
     }
 
+    /**
+     * Lấy thông tin hợp đồng đầy đủ (kèm tên phòng và tên khách đại diện) theo ID
+     */
     public com.example.quanlynhatro.data.model.HopDongVm getHopDongVmById(int hopDongId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        // Câu lệnh SQL JOIN để lấy dữ liệu từ 3 bảng: HopDong, Phong, KhachThue
         String query = "SELECT h.*, p." + DatabaseHelper.COL_PHONG_TEN_PHONG + ", k." + DatabaseHelper.COL_KHACH_THUE_HO_TEN 
                      + ", k." + DatabaseHelper.COL_KHACH_THUE_SO_DIEN_THOAI + ", k." + DatabaseHelper.COL_KHACH_THUE_CCCD
                      + " FROM " + DatabaseHelper.TABLE_HOP_DONG + " h"
@@ -113,6 +121,10 @@ public class HopDongRepository {
         return list;
     }
 
+    /**
+     * Tìm hợp đồng đang có hiệu lực của một phòng cụ thể
+     * Thường dùng để lấy giá thuê và thông tin khách đang ở trong phòng đó
+     */
     public HopDong getHopDongHieuLucTheoPhong(int phongId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         try (Cursor cursor = db.query(
@@ -123,7 +135,7 @@ public class HopDongRepository {
                 new String[]{String.valueOf(phongId), DatabaseHelper.TRANG_THAI_HOP_DONG_HIEU_LUC},
                 null,
                 null,
-                DatabaseHelper.COL_HOP_DONG_NGAY_BAT_DAU + " DESC",
+                DatabaseHelper.COL_HOP_DONG_NGAY_BAT_DAU + " DESC", // Lấy cái mới nhất
                 "1"
         )) {
             if (cursor.moveToFirst()) {
@@ -200,32 +212,33 @@ public class HopDongRepository {
     }
 
     /**
-     * Thanh lý hợp đồng: 
-     * 1. Chuyển trạng thái hợp đồng thành DA_THANH_LY
-     * 2. Chuyển trạng thái phòng thành TRONG
+     * Thanh lý hợp đồng (Trả phòng): 
+     * Đây là quy trình nghiệp vụ quan trọng, sử dụng Transaction để đảm bảo tính toàn vẹn:
+     * 1. Chuyển trạng thái hợp đồng thành DA_THANH_LY (Đã thanh lý)
+     * 2. Chuyển trạng thái phòng tương ứng về TRONG (Trống) để người khác có thể thuê
      */
     public boolean thanhLyHopDong(int hopDongId, int phongId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.beginTransaction();
+        db.beginTransaction(); // Bắt đầu giao dịch (Transaction)
         try {
-            // 1. Cập nhật Hợp đồng
+            // Bước 1: Cập nhật trạng thái Hợp đồng
             ContentValues cvHd = new ContentValues();
             cvHd.put(DatabaseHelper.COL_HOP_DONG_TRANG_THAI, DatabaseHelper.TRANG_THAI_HOP_DONG_DA_THANH_LY);
             cvHd.put(DatabaseHelper.COL_UPDATED_AT, now());
             db.update(DatabaseHelper.TABLE_HOP_DONG, cvHd, DatabaseHelper.COL_ID + "=?", new String[]{String.valueOf(hopDongId)});
 
-            // 2. Cập nhật Phòng (Sử dụng PhongRepository hoặc update trực tiếp ở đây)
+            // Bước 2: Cập nhật trạng thái Phòng về 'Trống'
             ContentValues cvPhong = new ContentValues();
             cvPhong.put(DatabaseHelper.COL_PHONG_TRANG_THAI, DatabaseHelper.TRANG_THAI_PHONG_TRONG);
             cvPhong.put(DatabaseHelper.COL_UPDATED_AT, now());
             db.update(DatabaseHelper.TABLE_PHONG, cvPhong, DatabaseHelper.COL_ID + "=?", new String[]{String.valueOf(phongId)});
 
-            db.setTransactionSuccessful();
+            db.setTransactionSuccessful(); // Đánh dấu thành công
             return true;
         } catch (Exception e) {
-            return false;
+            return false; // Có lỗi xảy ra, transaction sẽ tự động rollback
         } finally {
-            db.endTransaction();
+            db.endTransaction(); // Kết thúc giao dịch
         }
     }
 
@@ -279,6 +292,23 @@ public class HopDongRepository {
     public boolean removeThanhVien(int thanhVienId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.delete(DatabaseHelper.TABLE_HOP_DONG_THANH_VIEN, DatabaseHelper.COL_ID + "=?", new String[]{String.valueOf(thanhVienId)}) > 0;
+    }
+
+    /**
+     * Lấy hợp đồng đang hiệu lực của một khách thuê
+     */
+    public HopDong getActiveHopDongByKhachThue(int khachThueId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM " + DatabaseHelper.TABLE_HOP_DONG + 
+                      " WHERE " + DatabaseHelper.COL_HOP_DONG_KHACH_THUE_DAI_DIEN_ID + " = ? " +
+                      " AND " + DatabaseHelper.COL_HOP_DONG_TRANG_THAI + " = ? LIMIT 1";
+        
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(khachThueId), DatabaseHelper.TRANG_THAI_HOP_DONG_HIEU_LUC})) {
+            if (cursor.moveToFirst()) {
+                return mapHopDong(cursor);
+            }
+        }
+        return null;
     }
 
     private String now() {

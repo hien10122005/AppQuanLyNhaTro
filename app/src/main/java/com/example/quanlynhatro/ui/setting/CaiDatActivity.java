@@ -25,11 +25,12 @@ public class CaiDatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cai_dat);
 
+        // Khởi tạo SharedPreferences để lưu trữ thông tin cấu hình người dùng
         sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE);
 
-        initViews();
-        setupEvents();
-        setupBottomNavigation();
+        initViews();            // Ánh xạ các View
+        setupEvents();          // Cài đặt sự kiện click cho các mục cài đặt
+        setupBottomNavigation(); // Cài đặt thanh điều hướng bên dưới
     }
 
     @Override
@@ -38,6 +39,9 @@ public class CaiDatActivity extends AppCompatActivity {
         refreshProfileData();
     }
 
+    /**
+     * Cập nhật lại thông tin hồ sơ (tên người dùng) từ SharedPreferences
+     */
     private void refreshProfileData() {
         String fullName = sharedPreferences.getString("fullName", "Hien Phan");
         tvUserName.setText(fullName);
@@ -62,63 +66,75 @@ public class CaiDatActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.nav_settings); 
     }
 
+    /**
+     * Thiết lập các sự kiện khi người dùng click vào các mục trong menu cài đặt
+     */
     private void setupEvents() {
+        // Nút quay lại
         btnBack.setOnClickListener(v -> finish());
 
+        // Đi tới màn hình chỉnh sửa hồ sơ
         btnEditProfile.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, ChinhSuaHoSoActivity.class);
             startActivity(intent);
         });
 
+        // Cấu hình giá điện, nước, internet, rác
         itemConfigService.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, CauHinhGiaDichVuActivity.class);
             startActivity(intent);
         });
 
-
+        // Quản lý khách thuê
         itemManageTenants.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.khach_thue.DanhSachKhachThueActivity.class);
             startActivity(intent);
         });
 
+        // Quản lý hợp đồng
         itemManageContracts.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.hop_dong.DanhSachHopDongActivity.class);
             startActivity(intent);
         });
 
+        // Quản lý bảo trì, sửa chữa
         itemManageMaintenance.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, com.example.quanlynhatro.ui.bao_tri.DanhSachBaoTriActivity.class);
             startActivity(intent);
         });
 
-
+        // Cài đặt thông báo
         itemNotifications.setOnClickListener(v -> 
             Toast.makeText(this, "Cài đặt thông báo", Toast.LENGTH_SHORT).show()
         );
 
+        // Xuất dữ liệu ra file Excel
         itemExportExcel.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(this, XuatExcelActivity.class);
             startActivity(intent);
         });
 
+        // Thay đổi mật khẩu đăng nhập
         itemChangePassword.setOnClickListener(v -> {
-
             android.content.Intent intent = new android.content.Intent(this, DoiMatKhauActivity.class);
             startActivity(intent);
         });
 
+        // Đăng xuất khỏi ứng dụng
         itemLogout.setOnClickListener(v -> 
-
             Toast.makeText(this, "Đăng xuất tài khoản", Toast.LENGTH_SHORT).show()
         );
     }
 
+    /**
+     * Cài đặt thanh Bottom Navigation để chuyển đổi giữa các màn hình chính
+     */
     private void setupBottomNavigation() {
         bottomNavigationView.setSelectedItemId(R.id.nav_settings);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                finish();
+                finish(); // Quay lại màn hình Tổng quan
                 return true;
             } else if (id == R.id.nav_rooms) {
                 startActivity(new android.content.Intent(this, com.example.quanlynhatro.ui.phong.DanhSachPhongActivity.class));
@@ -130,7 +146,7 @@ public class CaiDatActivity extends AppCompatActivity {
                 startActivity(new android.content.Intent(this, com.example.quanlynhatro.ui.thong_ke.BaoCaoActivity.class));
                 return true;
             } else if (id == R.id.nav_settings) {
-
+                // Đang ở màn hình Cài đặt, không cần làm gì
                 return true;
             }
             return false;

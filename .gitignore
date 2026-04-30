@@ -4,6 +4,7 @@
 /.idea/
 .android-user-home/
 .gradle-user-home/
+.gradle-home/
 .vscode/
 .DS_Store
 /build
@@ -11,3 +12,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+pdf_extract_sample.txt

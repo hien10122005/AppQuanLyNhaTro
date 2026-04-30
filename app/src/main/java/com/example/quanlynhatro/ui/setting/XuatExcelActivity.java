@@ -61,9 +61,9 @@ public class XuatExcelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xuat_excel);
 
-        initViews();
-        setupEvents();
-        updateDateViews();
+        initViews();            // Ánh xạ các View và thiết lập giao diện mặc định
+        setupEvents();          // Cài đặt sự kiện chọn loại dữ liệu và xuất file
+        updateDateViews();      // Hiển thị ngày tháng mặc định lên giao diện
     }
 
     private void initViews() {
@@ -82,34 +82,45 @@ public class XuatExcelActivity extends AppCompatActivity {
         highlightOption(optRooms);
     }
 
+    /**
+     * Thiết lập các sự kiện click cho các thành phần giao diện
+     */
     private void setupEvents() {
         btnBack.setOnClickListener(v -> finish());
 
+        // Chọn loại dữ liệu cần xuất là PHÒNG
         optRooms.setOnClickListener(v -> {
             selectedDataType = "ROOMS";
             highlightOption(optRooms);
         });
 
+        // Chọn loại dữ liệu cần xuất là KHÁCH THUÊ
         optTenants.setOnClickListener(v -> {
             selectedDataType = "TENANTS";
             highlightOption(optTenants);
         });
 
+        // Chọn loại dữ liệu cần xuất là TÀI CHÍNH
         optFinance.setOnClickListener(v -> {
             selectedDataType = "FINANCE";
             highlightOption(optFinance);
         });
 
+        // Chọn loại dữ liệu cần xuất là HÓA ĐƠN
         optInvoices.setOnClickListener(v -> {
             selectedDataType = "INVOICES";
             highlightOption(optInvoices);
         });
 
+        // Chọn khoảng thời gian (Từ ngày - Đến ngày)
         btnFromDate.setOnClickListener(v -> showDatePicker(true));
         btnToDate.setOnClickListener(v -> showDatePicker(false));
 
+        // Nút lệnh bắt đầu quá trình xuất file
         btnExport.setOnClickListener(v -> {
+            // Tạo tên file gợi ý dựa trên loại dữ liệu và thời gian hiện tại
             String fileName = "Xuat_" + selectedDataType + "_" + System.currentTimeMillis() + ".csv";
+            // Kích hoạt trình chọn nơi lưu file của hệ thống Android
             createDocumentLauncher.launch(fileName);
         });
     }
@@ -122,11 +133,14 @@ public class XuatExcelActivity extends AppCompatActivity {
         view.setAlpha(1.0f);
     }
 
+    /**
+     * Hiển thị hộp thoại chọn ngày (DatePickerDialog)
+     */
     private void showDatePicker(boolean isFrom) {
         Calendar cal = isFrom ? calendarFrom : calendarTo;
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             cal.set(year, month, dayOfMonth);
-            updateDateViews();
+            updateDateViews(); // Cập nhật lại TextView hiển thị ngày sau khi chọn
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
     }
 
@@ -135,10 +149,15 @@ public class XuatExcelActivity extends AppCompatActivity {
         tvToDate.setText(String.format("%02d/%02d/%d", calendarTo.get(Calendar.DAY_OF_MONTH), calendarTo.get(Calendar.MONTH) + 1, calendarTo.get(Calendar.YEAR)));
     }
 
+    /**
+     * Thực hiện ghi nội dung văn bản CSV vào file tại vị trí người dùng đã chọn
+     */
     private void saveFile(Uri uri) {
         try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+            // Tạo nội dung CSV dựa trên loại dữ liệu đã chọn
             String csvContent = generateCsvContent();
             if (outputStream != null) {
+                // Ghi dữ liệu vào stream với bảng mã UTF-8
                 outputStream.write(csvContent.getBytes(StandardCharsets.UTF_8));
                 Toast.makeText(this, "Xuất file thành công!", Toast.LENGTH_SHORT).show();
             }

@@ -23,11 +23,12 @@ public class ChinhSuaHoSoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chinh_sua_ho_so);
 
+        // Khởi tạo SharedPreferences để quản lý dữ liệu hồ sơ người dùng
         sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE);
 
-        initViews();
-        loadProfileData();
-        setupEvents();
+        initViews();            // Ánh xạ View
+        loadProfileData();      // Đổ dữ liệu hiện tại lên các ô nhập
+        setupEvents();          // Cài đặt sự kiện Lưu dữ liệu
     }
 
     private void initViews() {
@@ -39,6 +40,9 @@ public class ChinhSuaHoSoActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
     }
 
+    /**
+     * Tải thông tin người dùng từ SharedPreferences và hiển thị lên các EditText
+     */
     private void loadProfileData() {
         String fullName = sharedPreferences.getString("fullName", "Hien Phan");
         String phone = sharedPreferences.getString("phone", "0987654321");
@@ -57,25 +61,31 @@ public class ChinhSuaHoSoActivity extends AppCompatActivity {
         btnSave.setOnClickListener(v -> saveProfile());
     }
 
+    /**
+     * Xử lý lưu các thay đổi của hồ sơ vào SharedPreferences
+     */
     private void saveProfile() {
+        // Lấy thông tin từ các ô nhập liệu
         String fullName = etFullName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String address = etAddress.getText().toString().trim();
 
+        // Kiểm tra họ tên không được để trống
         if (fullName.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập họ tên", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Thực hiện lưu dữ liệu vào SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("fullName", fullName);
         editor.putString("phone", phone);
         editor.putString("email", email);
         editor.putString("address", address);
-        editor.apply();
+        editor.apply(); // Áp dụng thay đổi
 
         Toast.makeText(this, "Cập nhật hồ sơ thành công!", Toast.LENGTH_SHORT).show();
-        finish();
+        finish(); // Đóng màn hình
     }
 }

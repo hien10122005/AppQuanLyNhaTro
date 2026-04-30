@@ -5,6 +5,7 @@ package com.example.quanlynhatro.data.model;
  * Dùng để hiển thị lên danh sách.
  */
 public class KhachThueVm extends KhachThue implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private String tenPhong;
     private boolean dangThue;
 

@@ -5,6 +5,7 @@ package com.example.quanlynhatro.data.model;
  * Model này chứa các thông tin cá nhân cơ bản để quản lý khách hàng.
  */
 public class KhachThue implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private String hoTen;
     private String soDienThoai;

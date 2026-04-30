@@ -22,14 +22,22 @@ public class HoaDonRepository {
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    /**
+     * Thêm mới một hóa đơn vào cơ sở dữ liệu
+     * @return ID của hóa đơn vừa tạo
+     */
     public long addHoaDon(HoaDon hoaDon) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String now = now();
+        // Chuyển đổi đối tượng sang ContentValues để chuẩn bị INSERT
         ContentValues values = toContentValues(hoaDon, hoaDon.getCreatedAt() != null ? hoaDon.getCreatedAt() : now);
         values.put(DatabaseHelper.COL_UPDATED_AT, hoaDon.getUpdatedAt() != null ? hoaDon.getUpdatedAt() : now);
         return db.insert(DatabaseHelper.TABLE_HOA_DON, null, values);
     }
 
+    /**
+     * Lưu chi tiết các mục trong hóa đơn (Điện, nước, tiền phòng, dịch vụ khác...)
+     */
     public long addHoaDonChiTiet(com.example.quanlynhatro.data.model.HoaDonChiTiet ct) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -39,8 +47,11 @@ public class HoaDonRepository {
         values.put(DatabaseHelper.COL_HOA_DON_CT_SO_LUONG, ct.getSoLuong());
         values.put(DatabaseHelper.COL_HOA_DON_CT_DON_GIA_AP_DUNG, ct.getDonGiaApDung());
         values.put(DatabaseHelper.COL_HOA_DON_CT_THANH_TIEN, ct.getThanhTien());
+        
+        // Nếu là dịch vụ có chỉ số (điện, nước) thì lưu thêm số cũ/mới
         if (ct.getChiSoCu() != null) values.put(DatabaseHelper.COL_HOA_DON_CT_CHI_SO_CU, ct.getChiSoCu());
         if (ct.getChiSoMoi() != null) values.put(DatabaseHelper.COL_HOA_DON_CT_CHI_SO_MOI, ct.getChiSoMoi());
+        
         values.put(DatabaseHelper.COL_GHI_CHU, ct.getGhiChu());
         return db.insert(DatabaseHelper.TABLE_HOA_DON_CHI_TIET, null, values);
     }
@@ -96,6 +107,9 @@ public class HoaDonRepository {
         return null;
     }
 
+    /**
+     * Kiểm tra xem tháng/năm này đã lập hóa đơn cho phòng này chưa
+     */
     public boolean existsHoaDon(int phongId, int thang, int nam) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         try (Cursor cursor = db.rawQuery("SELECT 1 FROM " + DatabaseHelper.TABLE_HOA_DON 
@@ -126,8 +140,12 @@ public class HoaDonRepository {
         return danhSach;
     }
 
+    /**
+     * Tính tổng số tiền khách còn nợ trên toàn hệ thống
+     */
     public double tinhTongCongNo() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        // COALESCE dùng để trả về 0 nếu kết quả SUM là null
         try (Cursor cursor = db.rawQuery(
                 "SELECT COALESCE(SUM(" + DatabaseHelper.COL_HOA_DON_CON_NO + "), 0) FROM " + DatabaseHelper.TABLE_HOA_DON,
                 null
@@ -195,17 +213,19 @@ public class HoaDonRepository {
      * @param trangThai   Lọc theo trạng thái (null = lấy tất cả)
      * @return            Danh sách HoaDonVm đã có tên phòng + tên khách
      */
+    /**
+     * Lấy danh sách hóa đơn cho một tháng/năm cụ thể kèm tên phòng và tên khách.
+     * Sử dụng SQL JOIN để kết hợp 4 bảng: hoa_don, phong, hop_dong, khach_thue.
+     * 
+     * @param thang       Tháng cần lọc (1-12), truyền 0 để lấy tất cả
+     * @param nam         Năm cần lọc, truyền 0 để lấy tất cả
+     * @param trangThai   Trạng thái (DA_THANH_TOAN, CHUA_THANH_TOAN...), null để lấy tất cả
+     */
     public List<HoaDonVm> getDanhSachHoaDonVm(int thang, int nam, String trangThai) {
         List<HoaDonVm> danhSach = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // --- Câu SQL JOIN 3 bảng ---
-        // hd  = bảng hoa_don (viết tắt để câu SQL gọn hơn)
-        // p   = bảng phong
-        // kh  = bảng khach_thue (lấy qua hợp đồng)
-        // hd  JOIN phong ON hd.phong_id = p.id
-        // hd  JOIN hop_dong ON hd.hop_dong_id = hd2.id
-        // hd2 JOIN khach_thue ON hd2.khach_thue_dai_dien_id = kh.id
+        // Xây dựng câu truy vấn phức tạp
         StringBuilder sql = new StringBuilder(
             "SELECT "
             + "hd.id, hd.ma_hoa_don, hd.thang, hd.nam, "
@@ -217,32 +237,26 @@ public class HoaDonRepository {
             + "LEFT JOIN " + DatabaseHelper.TABLE_PHONG + " p ON hd.phong_id = p.id "
             + "LEFT JOIN " + DatabaseHelper.TABLE_HOP_DONG + " hd2 ON hd.hop_dong_id = hd2.id "
             + "LEFT JOIN " + DatabaseHelper.TABLE_KHACH_THUE + " kh ON hd2.khach_thue_dai_dien_id = kh.id "
-            + "WHERE 1=1" // "WHERE 1=1" = luôn đúng, để dễ nối thêm điều kiện
+            + "WHERE 1=1" // "WHERE 1=1" giúp việc nối chuỗi điều kiện AND phía sau dễ dàng hơn
         );
 
-        // Dùng List để chứa các giá trị tham số (thay thế dấu ?)
         List<String> args = new ArrayList<>();
 
-        // Nếu có truyền tháng hợp lệ → lọc theo tháng + năm
         if (thang > 0 && nam > 0) {
             sql.append(" AND hd.thang = ? AND hd.nam = ?");
             args.add(String.valueOf(thang));
             args.add(String.valueOf(nam));
         }
 
-        // Nếu có truyền trạng thái → lọc theo trạng thái
         if (trangThai != null && !trangThai.isEmpty()) {
             sql.append(" AND hd.trang_thai = ?");
             args.add(trangThai);
         }
 
-        // Sắp xếp: mới nhất trước
+        // Sắp xếp: Thời gian mới nhất hiện lên trên đầu
         sql.append(" ORDER BY hd.nam DESC, hd.thang DESC");
 
-        // Chạy câu SQL với các tham số
-        // args.toArray(new String[0]) = chuyển List thành mảng String[]
         try (Cursor cursor = db.rawQuery(sql.toString(), args.toArray(new String[0]))) {
-            // Duyệt qua từng dòng kết quả (giống foreach DataRow trong C#)
             while (cursor.moveToNext()) {
                 HoaDonVm vm = new HoaDonVm();
                 vm.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
